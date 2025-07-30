@@ -35,9 +35,11 @@ public class OrderInvoiceController {
 
     private void loadSignature(){
         List<ContentDocumentLink> links = [
-            SELECT ContentDocumentId, ContentDocument.FileExtension, ContentDocument.LatestPublishedVersionId
+            SELECT ContentDocumentId, ContentDocument.FileExtension, 
+                ContentDocument.LatestPublishedVersionId, ContentDocument.Title
             FROM ContentDocumentLink
             WHERE LinkedEntityId = :order.Id AND ContentDocument.FileExtension = 'png'
+                AND ContentDocument.Title LIKE 'signature%'
         ];
         
         for( ContentDocumentLink link : links){
