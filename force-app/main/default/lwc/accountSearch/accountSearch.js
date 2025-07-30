@@ -12,7 +12,6 @@ import { loadStyle } from 'lightning/platformResourceLoader';
 import NoHeader from '@salesforce/resourceUrl/noHeader';
 import LightningToast from "lightning/toast";
 import createNewAccount from '@salesforce/apex/AccountSearchController.createNewAccount';
-import { refreshApex } from '@salesforce/apex';
 
 const ACTIONS = [
     { label: 'Edit', name: 'edit' },
