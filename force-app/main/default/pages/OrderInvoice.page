@@ -1,0 +1,99 @@
+<!-- contentType="application/pdf" 
+    renderAs="pdf" -->
+
+<apex:page name="OrderInvoicePDF"
+    contentType="application/pdf" 
+    renderAs="pdf"
+    showHeader="false"
+    sidebar="false"
+    standardController="Order"
+    standardStylesheets="false"
+    applyHtmlTag="false"
+    extensions="OrderInvoiceController">
+    <head>
+        <apex:stylesheet value="{!URLFOR($Resource.invoiceStyles)}" />
+    </head>
+
+    <body>
+        <div class="invoice-logo">
+            <img src="{!URLFOR($Resource.sparkSalesLogo)}" alt="Spark Sales Logo" height="50"/>
+        </div>
+        <div style="text-align:right;">
+            <b>Spark Sales</b><br/>
+            al.Kraśnickie 785<br/>
+            Lublin, 20-718<br/>
+            Poland<br/>
+            spark@example.com<br/>
+            +48 345 234 325
+        </div>
+
+        <h1 style="text-align:center;">Order Invoice</h1>
+        <hr/>
+
+        <h2>Order Information</h2>
+        <div class="information">
+        <table style="width:100%; margin-bottom:10px;">
+            <tr>
+                <td><b>Order Number:</b> {!Order.OrderNumber}</td>
+                <td><b>Date issued:</b> {!formatedIssuedDate}</td>
+            </tr>
+        </table>
+        </div>
+
+        <h2>Recipient Details</h2>
+        <p>
+            {!Order.Account.Name}<br/>
+            {!Order.BillingStreet}<br/>
+            {!Order.BillingCity}, {!Order.BillingState} {!Order.BillingPostalCode}<br/>
+            {!Order.BillingCountry}
+        </p>
+
+        <h2>Order Items</h2>
+        <div class="information">
+        <table width="100%" cellpadding="5" cellspacing="0">
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total Price</th>
+            </tr>
+            <apex:repeat value="{!OrderItems}" var="item">
+                <tr>
+                    <td>{!item.PricebookEntry.Name}</td>
+                    <td>{!item.Quantity}</td>
+                    <td>${!item.UnitPrice}</td>
+                    <td>${!item.TotalPrice}</td>
+                </tr>
+            </apex:repeat>
+        </table>
+        </div>
+
+        <table class="related-elements" style="width: 200px; float: right; border-collapse: collapse; margin-top: 5px; font-size: 10pt;">
+            <tr>
+                <td style="text-align: left; padding: 4px;">SUBTOTAL:</td>
+                <td style="text-align: right; padding: 4px;">${!SubTotal}</td>
+            </tr>
+            <tr>
+                <td style="text-align: left; padding: 4px;">TAX:</td>
+                <td style="text-align: right; padding: 4px;">{!Tax}%</td>
+            </tr>
+            <tr style="font-weight: bold; border-top: 1px solid #000;">
+                <td style="text-align: left; padding: 6px 4px;">TOTAL:</td>
+                <td style="text-align: right; padding: 6px 4px;">${!TotalAmount}</td>
+            </tr>
+        </table>
+        <br/>
+
+        <div class="signature-container related-elements">
+            <b>Issued by:</b><br/>
+            <apex:outputPanel rendered="{!NOT(ISBLANK(signature))}">
+                <img src="{!signature}" height="35pt"/><br/>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!ISBLANK(signature)}">
+                <div style="min-height: 35pt;"></div>
+            </apex:outputPanel>
+            ____________________________<br/>
+            Authorized Signature
+        </div>
+    </body>
+</apex:page>

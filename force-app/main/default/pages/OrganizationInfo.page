@@ -1,0 +1,43 @@
+<apex:page controller="OrganizationInfoController" lightningStylesheets="true" showHeader="false" sidebar="false">
+    <style>
+    .separator{
+        display: inline;
+        padding: 0 0.5vw;
+    }
+    </style>
+    
+    <apex:sectionHeader title="Organization Info"/>
+    
+    <apex:pageBlock title="License Information">
+        <apex:pageBlockTable value="{!availableLicenseCounts}" var="license">
+            <apex:column value="{!license}" headerValue="License Type"/>
+            <apex:column value="{!availableLicenseCounts[license]}" headerValue="Available"/>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+    
+    <apex:pageBlock title="Metadata Counts">
+        <apex:pageBlockSection columns="2">
+            <apex:outputText label="Apex Classes" value="{!apexClassCount}"/>
+            <apex:outputText label="Visualforce Pages" value="{!visualforcePageCount}"/>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+
+    <apex:form >
+    <apex:pageBlock title="Users">
+        <apex:pageBlockTable value="{!usersWrappers}" var="userWrapper">
+            <apex:column value="{!userWrapper.user.Username}" headerValue="Username"/>
+            <apex:column value="{!userWrapper.user.Email}" headerValue="Email"/>
+            <apex:column value="{!userWrapper.user.IsActive}" headerValue="Is Active"/>
+            <apex:column value="{!userWrapper.device}" headerValue="Last Login Device"/>
+            <apex:column headerValue="Actions">
+                <apex:commandLink action="{!viewUser}" value="View" styleClass="linkToButton">
+                    <apex:param name="userId" value="{!userWrapper.user.Id}" assignTo="{!selectedId}"/>
+                </apex:commandLink>
+            </apex:column>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+    </apex:form>
+    <apex:pageBlock title="Session Info">
+        <apex:outputText value="Session ID: {!sessionId}"/>
+    </apex:pageBlock>
+</apex:page>

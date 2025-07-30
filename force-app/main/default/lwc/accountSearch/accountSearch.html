@@ -1,0 +1,157 @@
+<template>
+    <lightning-card title="Account Search">
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium" style="z-index: 9100;"></lightning-spinner>
+        </template>
+        <div class="slds-m-around_large slds-grid slds-grid_align-end">
+            <lightning-button 
+                label="Add Account"
+                onclick={addNewAccountClick} 
+                variant="brand">
+            </lightning-button>
+        </div>
+
+        <div class="slds-p-horizontal_medium slds-p-vertical_small">
+            <div class="slds-grid">
+                <lightning-input 
+                    label="Name"
+                    name="name"
+                    value={name}
+                    onchange={handleInputChange}
+                    class="slds-col slds-col--padded slds-size_1-of-3">
+                </lightning-input>
+
+                <lightning-combobox 
+                    label="Type"
+                    name="type"
+                    value={type}
+                    placeholder="All"
+                    options={typeFilterOptions}
+                    onchange={handleInputChange}
+                    class="slds-col slds-col--padded slds-size_1-of-3">
+                </lightning-combobox>
+
+                <lightning-combobox 
+                    label="Industry"
+                    name="industry"
+                    value={industry}
+                    placeholder="All" 
+                    options={industryFilterOptions} 
+                    onchange={handleInputChange}
+                    class="slds-col slds-col--padded slds-size_1-of-3">
+                </lightning-combobox>
+            </div>
+            <div class="slds-m-top_medium slds-p-horizontal_medium">
+                <lightning-button label="Search" onclick={handleSearchButton} class="slds-m-right_small"></lightning-button>
+                <lightning-button label="Reset Filters" onclick={resetFilters} variant="destructive"></lightning-button>
+            </div>
+        </div>
+
+        <template if:false={noResults}>
+            <template if:true={accounts}>
+                <div class="slds-p-horizontal_medium">
+                    <div class="slds-grid slds-grid_align-end">
+                        <lightning-combobox
+                            label="Records per page"
+                            value={recordsPerPageString}
+                            options={pageSizeOptions}
+                            onchange={handlePageSizeChange}
+                            class="slds-m-bottom_small slds-col slds-size_1-of-12"
+                        ></lightning-combobox>
+                    </div>
+
+                    <lightning-datatable
+                        key-field="Id"
+                        data={accounts}
+                        columns={columns}
+                        class="slds-m-top_medium"
+                        hide-checkbox-column
+                        onrowaction={handleRowAction}
+                    ></lightning-datatable>
+
+                    <div class="slds-m-top_medium slds-align_absolute-center">
+                        <lightning-button label="First" onclick={handleFirstPageClick} disabled={disableFirstAndPreviousButton} class="slds-m-horizontal_x-small"></lightning-button>
+                        <lightning-button label="Previous" onclick={handlePreviousPageClick} disabled={disableFirstAndPreviousButton} class="slds-m-horizontal_x-small"></lightning-button>
+                        <span class="slds-m-horizontal_small">{pageInfo}</span>
+                        <lightning-button label="Next" onclick={handleNextPageClick} disabled={disableNextAndLastButton} class="slds-m-horizontal_x-small"></lightning-button>
+                        <lightning-button label="Last" onclick={handleLastPageClick} disabled={disableNextAndLastButton} class="slds-m-horizontal_x-small"></lightning-button>
+                    </div>
+                </div>
+            </template>
+        </template>
+        <template if:true={noResults}>
+            <div class="slds-m-bottom_large">
+                <p class="slds-text-align_center slds-text-heading_medium">
+                    No records found
+                </p>
+            </div>
+        </template>
+
+        <template if:true={error}>
+            <p class="slds-text-color_error">{error.body.message}</p>
+        </template>
+    </lightning-card>
+
+
+    <template if:true={isEditModalOpen}>
+        <section role="dialog" tabindex="-1" aria-modal="true" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 class="slds-text-heading_medium">{modalTitle}</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_large">
+                    <div class="slds-grid slds-grid_vertical slds-p-horizontal_xx-large">
+                        <lightning-input 
+                            label="Account Name" 
+                            value={editAccount.Name} 
+                            onchange={handleEditChange} 
+                            name="Name"
+                            class="slds-row slds-col--padded slds-size_1-of-1"
+                            minlength="5"
+                            maxlength="255"
+                            message-when-too-long="Name can be at most 255 characters long"
+                            message-when-too-short="Name must be at least 5 characters long"
+                            required>
+                        </lightning-input>
+
+                        <lightning-combobox 
+                            label="Type" 
+                            value={editAccount.Type} 
+                            options={typeOptions} 
+                            onchange={handleEditChange} 
+                            name="Type"
+                            class="slds-row slds-col--padded slds-size_1-of-1"
+                            required>
+                        </lightning-combobox>
+
+                        <lightning-combobox 
+                            label="Industry" 
+                            value={editAccount.Industry} 
+                            options={industryOptions} 
+                            onchange={handleEditChange} 
+                            name="Industry"
+                            class="slds-row slds-col--padded slds-size_1-of-1"
+                            required>
+                        </lightning-combobox>
+                        <lightning-combobox 
+                            if:true={isCreatingNewAccount}
+                            label="Destination" 
+                            value={editAccount.Destination} 
+                            options={destinationOptions} 
+                            onchange={handleEditChange} 
+                            name="Destination"
+                            class="slds-row slds-col--padded slds-size_1-of-1"
+                            required>
+                        </lightning-combobox>
+                    </div>
+                
+                    <div class="slds-m-top_medium slds-p-horizontal_medium slds-align_absolute-center">
+                        <lightning-button variant="neutral" label="Cancel" onclick={closeEditModal}></lightning-button>
+                        <lightning-button variant="brand" label="Save" onclick={saveEditedAccount} class="slds-m-left_small"></lightning-button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>
