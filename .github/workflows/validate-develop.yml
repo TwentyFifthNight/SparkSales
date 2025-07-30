@@ -1,0 +1,30 @@
+name: Validate Develop PR
+
+on:
+  pull_request:
+    branches:
+      - development
+      - QA
+      - main
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Salesforce CLI
+        run: npm install -g @salesforce/cli
+      
+      - name: Authenticate to Salesforce (JWT)
+        run: |
+          echo "${{ secrets.SF_JWT_KEY }}" > server.key
+          sf org login jwt \
+            --client-id ${{ secrets.SF_CONSUMER_KEY }} \
+            --jwt-key-file server.key \
+            --username ${{ secrets.SF_USERNAME }} \
+            --instance-url ${{ secrets.SF_SERVER_URL }} \
+            --alias SFDC_v1 \
+            --set-default
+      - name: Validate Deployment
+        run: |
+          sf project deploy validate --test-level RunLocalTests --source-dir force-app
+

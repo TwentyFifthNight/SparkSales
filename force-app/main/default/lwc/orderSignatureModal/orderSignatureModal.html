@@ -1,0 +1,45 @@
+<template>
+    <lightning-card title="Signature Panel">
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+
+        <lightning-record-view-form record-id={recordId} object-api-name="Order" class="slds-align_absolute-center">
+            <div class="slds-grid slds-grid_align-space slds-grid slds-wrap">
+                <div class="slds-grid slds-col slds-grid_vertical">
+                    <lightning-output-field field-name="OrderNumber"></lightning-output-field>
+                    <lightning-output-field field-name="TotalAmount"></lightning-output-field>
+                    <lightning-output-field field-name="EffectiveDate"></lightning-output-field>
+                </div>
+
+                <div class="slds-grid slds-col slds-grid_align-end slds-grid_vertical">
+                    <div class="slds-form-element slds-form-element_stacked">
+                        <label class="slds-form-element__label" for="contract">{contractNumberLabel}</label>
+                        <lightning-output-field aura:id="contract" variant="label-hidden" field-name="ContractId"></lightning-output-field>
+                    </div>
+                    <div class="slds-form-element slds-form-element_stacked">
+                        <label class="slds-form-element__label" for="account">{accountNameLabel}</label>
+                        <lightning-output-field aura:id="account" variant="label-hidden" field-name="AccountId"></lightning-output-field>
+                    </div>
+                    <div class="slds-form-element slds-form-element_stacked">
+                        <label class="slds-form-element__label" for="owner">{orderOwnerNameLabel}</label>
+                        <lightning-output-field aura:id="owner" variant="label-hidden" field-name="OwnerId"></lightning-output-field>
+                    </div>
+                </div>
+                
+                <div class="slds-col slds-size_1-of-1 slds-align_absolute-center" >
+                    <div class="slds-p-horizontal_small" style="width: 100%; max-width: 500px;">
+                        <c-signature-canvas></c-signature-canvas>
+                        <p class="slds-m-bottom_small"> 
+                        <lightning-button variant="brand" label="Save Signature" title="Save" 
+                            onclick={handleSaveButton} class="slds-m-left_x-small"></lightning-button>
+
+                        <lightning-button variant="brand" label="Clear" title="Clear" 
+                            onclick={handleClearClick} class="slds-m-left_x-small"></lightning-button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </lightning-record-view-form>
+    </lightning-card>
+</template>

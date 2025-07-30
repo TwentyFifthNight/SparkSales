@@ -1,0 +1,355 @@
+body {
+     margin: 0;
+     padding: 0;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     height: 100%;
+     min-height: 100vh;
+     position: relative;
+     flex-direction: column;
+}
+.content {
+  z-index: 2;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 20px;
+}
+.logo-container {
+     position: fixed;
+     top: 10px;
+     left: 10px;
+     z-index: 2;
+}
+.logo-container img {
+     height: max(5vw, 5vh);
+     width: auto;
+}
+.wrapper {
+     text-align: center;
+     width: 100%;
+}
+.wrapper h2, h1 {
+     margin-bottom: 20px;
+     color: #0f99ed;
+     font-size: 2.5rem;
+}
+.wrapper h1 {
+     font-size: 3rem;
+}
+.company-message, 
+.thankyou-message {
+     margin-bottom: 20px;
+     color: #dfdfdf;
+     font-size: 0.9rem;
+     line-height: 1.5;
+     padding: 0 10px;
+     margin: 0 auto;
+     max-width: 600px;
+}
+.thankyou-message {
+	 padding: 15px 10px;
+	 font-size: 1.1rem;
+}
+.card {
+     background-color: #000000d1;
+     padding: 20px 30px;
+     border-radius: 12px;
+     box-shadow: inset 3px 5px 5px 5px rgba(0, 0, 0, 0.15);
+     max-width: 500px;
+     width: 100%;
+     margin: 20px auto;
+}
+label {
+     display: block;
+     margin-top: 10px;
+     font-weight: bold;
+     color: #ffffff;
+     text-align: start;
+     padding-left: 10px;
+     font-size: 0.9rem;
+}
+.required-label::after {
+     content: "*";
+     color: red;
+     margin-left: 4px;
+}
+input[type="text"], 
+input[type="tel"], 
+input[type="email"] {
+     width: 100%;
+     padding: 10px 12px;
+     margin-top: 5px;
+     border: 1px solid #ccc;
+     border-radius: 10px;
+     box-sizing: border-box;
+     font-size: 1rem;
+}
+input[type="submit"], 
+input[type="reset"] {
+     color: white;
+     width: 100%;
+     padding: 10px 16px;
+     border: none;
+     border-radius: 6px;
+     cursor: pointer;
+     font-size: 16px;
+     transition: background-color 0.3s ease;
+     margin-top: 20px;
+     font-size: 1rem;
+}
+input[type="submit"] {
+     background-color: #0581cc;
+}
+input[type="reset"] {
+     background-color: #c41515;
+}
+input[type="submit"]:hover {
+     background-color: #0767a1;
+}
+input[type="reset"]:hover {
+     background-color: #aa0a0a;
+}
+.loader {
+     visibility: hidden;
+     position: fixed;
+     left: calc(50% - 35px);
+     top: 45%;
+     width: 70px;
+     height: 70px;
+     z-index: 9999;
+     border: 5px solid #000;
+     border-bottom-color: transparent;
+     border-radius: 50%;
+     display: inline-block;
+     box-sizing: border-box;
+     animation: rotation 1s linear infinite;
+}
+@keyframes rotation {
+     0% {
+         transform: rotate(0deg);
+    }
+     100% {
+         transform: rotate(360deg);
+    }
+}
+.error-message {
+     color: #c41515;;
+     font-size: 0.9rem;
+     margin-top: 5px;
+     text-align: start;
+     padding-left: 0.5vw;
+     display: none;
+}
+.captcha{
+     margin-top: 15px;
+}
+
+.agreement-container{
+    margin-top: 10px;
+    text-align: start;
+    color: rgb(197, 197, 197);
+}
+.agreement-container input[type="checkbox"]{
+    margin-left: -18px;
+}
+.agreement-container label{
+     margin-left: 10px;
+     font-size: 0.7rem;
+}
+
+
+
+.site-footer {
+  background-color: #000000d1;
+  color: #ffffff;
+  padding-bottom: 10px;
+  padding-top: 15px;
+  width: 100%;
+  z-index: 2;
+  text-align: center;
+  font-size: 0.85rem;
+  position: sticky;
+  height: 50px;
+  top: calc(100% + 50px);
+}
+
+.footer-company {
+     padding-bottom: 10px;
+}
+
+.footer-bottom a {
+  color: #0f99ed;
+  text-decoration: none;
+}
+
+.footer-bottom a:hover {
+  text-decoration: underline;
+}
+
+.footer-bottom {
+  border-top: 1px solid #333;
+  padding-top: 10px;
+}
+
+
+
+@media (max-width: 1024px) and (min-width: 769px) {
+     .wrapper h2, h1 {
+        font-size: 2.2rem;
+    }
+
+    .company-message,
+    .thankyou-message,
+    .error-message {
+        font-size: 1.2rem;
+    }
+
+    label {
+        font-size: 1rem;
+    }
+
+    input[type="submit"],
+    input[type="reset"],
+    input[type="text"], 
+     input[type="tel"], 
+     input[type="email"] {
+        font-size: 1.2rem;
+    }
+
+    .card {
+        max-width: 60dvw;
+    }
+
+    .agreement-container label{
+          font-size: 1rem;
+     }
+
+     .site-footer{
+          font-size: 1.1rem;
+     }
+}
+
+@media (max-width: 768px) {
+    .wrapper h2, h1 {
+        font-size: 2rem;
+    }
+
+    .company-message,
+    .thankyou-message {
+        font-size: 1rem;
+    }
+
+    .error-message{
+     font-size: 0.7rem;
+    }
+
+    label {
+        font-size: 0.6rem;
+    }
+
+    input[type="submit"],
+    input[type="reset"]{
+          margin-top: 10px;
+    }
+
+    input[type="submit"],
+    input[type="reset"],
+    input[type="text"], 
+     input[type="tel"], 
+     input[type="email"] {
+        font-size: 0.7rem;
+    }
+
+    input[type="text"], 
+     input[type="tel"], 
+     input[type="email"] {
+          padding: 5px 6px;
+     }
+
+    .logo-container {
+        top: 5px;
+        left: 5px;
+    }
+
+    .card {
+        max-width: 70dvw;
+    }
+
+    .agreement-container label{
+          font-size: 0.9rem;
+     }
+
+     .captcha{
+          transform: scale(0.60);
+          transform-origin: left;
+          margin-top: -5px;
+          margin-bottom: -15px;
+     }
+
+     .site-footer {
+          height: 60px;
+          top: calc(100% - 60px);
+     }
+}
+
+@media (max-width: 480px) {
+    .wrapper h2, h1 {
+        font-size: 1.6rem;
+    }
+
+    .company-message,
+    .thankyou-message {
+        font-size: 0.7rem;
+    }
+
+    .error-message{
+     font-size: 0.7rem;
+    }
+
+    label {
+        font-size: 0.6rem;
+    }
+
+    input[type="submit"],
+    input[type="reset"]{
+          margin-top: 10px;
+    }
+
+    input[type="submit"],
+    input[type="reset"],
+    input[type="text"], 
+     input[type="tel"], 
+     input[type="email"] {
+        font-size: 0.7rem;
+    }
+
+    input[type="text"], 
+     input[type="tel"], 
+     input[type="email"] {
+          padding: 5px 6px;
+     }
+
+    .logo-container {
+        top: 5px;
+        left: 5px;
+    }
+
+    .card {
+        margin: 10px auto;
+        max-width: 70dvw;
+    }
+
+    .agreement-container label{
+          font-size: 0.6rem;
+     }
+
+     .captcha{
+          transform: scale(0.60);
+          transform-origin: left;
+     }
+
+     .site-footer {
+          font-size: 0.7rem;
+     }
+}
