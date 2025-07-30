@@ -3,7 +3,7 @@ name: Validate Develop PR
 on:
   pull_request:
     branches:
-      - developer
+      - development
       - QA
       - main
 jobs:
