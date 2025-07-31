@@ -1,4 +1,4 @@
-import { LightningElement, wire } from 'lwc';
+import { LightningElement, wire, track} from 'lwc';
 import { getPicklistValues, getObjectInfo } from 'lightning/uiObjectInfoApi';
 import getRecordList from '@salesforce/apex/ProductSearchController.getRecordList';
 import getRecordCount from '@salesforce/apex/ProductSearchController.getRecordCount';
@@ -6,8 +6,11 @@ import PRODUCT_OBJECT from '@salesforce/schema/Product2';
 import FAMILY_FIELD from '@salesforce/schema/Product2.Family';
 import { loadStyle } from 'lightning/platformResourceLoader';
 import NoHeader from '@salesforce/resourceUrl/noHeader';
+import { CloseActionScreenEvent } from 'lightning/actions';
 
 export default class ProductSearch extends LightningElement {
+    isSummaryVisible = false;
+
     columns = [
         { label: 'Name', fieldName: 'Name', type: 'text'},
         //{ label: 'Name', fieldName: 'URL', type: 'url', typeAttributes: { label: {fieldName: 'Name'}}},
@@ -19,9 +22,11 @@ export default class ProductSearch extends LightningElement {
         { label: '5', value: '5' },
         { label: '10', value: '10' },
         { label: '15', value: '15' },
-        { label: '20', value: '20' },
-        { label: '30', value: '30' }
+        { label: '20', value: '20' }
     ];
+
+    @track selectedProductIds  = [];
+    @track selectedProducts = [];
 
     nameAndCode = '';
     family = '';
@@ -36,7 +41,7 @@ export default class ProductSearch extends LightningElement {
     localPages = 0;
     totalPages = 0;
     LocalRecordsCount = 0;
-    
+
     connectedCallback() {
         loadStyle(this, NoHeader)
             .then(result => {});
@@ -61,6 +66,47 @@ export default class ProductSearch extends LightningElement {
             {label: 'All', value: ''},
             ...this.familyOptions
         ]
+    }
+
+    handleNextButton() {
+        this.isSummaryVisible = true;
+    }
+
+    handleRowSelection(event){
+        switch (event.detail.config.action){
+            case 'selectAllRows':
+                for (let i = 0; i < event.detail.selectedRows.length; i++) {
+                    if (!this.selectedProductIds.includes(event.detail.selectedRows[i].Id)){
+                        this.selectedProductIds.push(event.detail.selectedRows[i].Id);
+                        this.selectedProducts.push(event.detail.selectedRows[i]);
+                    }
+                }
+                break;
+            case 'deselectAllRows':
+                let pageProductIds = this.products.map(product => product.Id);
+                this.selectedProductIds = this.selectedProductIds
+                    .filter(productId => !pageProductIds.includes(productId));
+                this.selectedProducts = this.selectedProducts
+                    .filter(product => !pageProductIds.includes(product.Id));
+                break;
+            case 'rowSelect':
+                if (!this.selectedProductIds.includes(event.detail.config.value)){
+                    this.selectedProductIds.push(event.detail.config.value);
+                    let product = this.products.find(product => product.Id === event.detail.config.value);
+                    this.selectedProducts.push(product);
+                }
+                break;
+            case 'rowDeselect':
+                const index = this.selectedProductIds.indexOf(event.detail.config.value);
+                if (index > -1) {
+                    this.selectedProductIds.splice(index, 1);
+                    this.selectedProducts.splice(index, 1);
+                }
+                break;
+            default:
+                break;
+        }
+        this.selectedProducts = [...this.selectedProducts];
     }
 
     handleInputChange(event){
@@ -93,6 +139,7 @@ export default class ProductSearch extends LightningElement {
 
     async handleRecordRequest(pageNumber) {
         await this.getLocalRecords(pageNumber);
+        this.reloadSelectedRecords();
     }
 
     async getLocalRecords(pageNumber){
@@ -172,5 +219,13 @@ export default class ProductSearch extends LightningElement {
 
     get noResults() {
         return !this.isLoading && this.products?.length === 0 && !this.error;
+    }
+
+    reloadSelectedRecords() {
+        this.selectedProductIds = [...this.selectedProductIds];
+    }
+
+    handleDismiss(){
+        this.dispatchEvent(new CloseActionScreenEvent());
     }
 }
