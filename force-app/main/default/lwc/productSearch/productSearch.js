@@ -1,22 +1,31 @@
-import { LightningElement, wire, track} from 'lwc';
+import { LightningElement, wire, track, api} from 'lwc';
 import { getPicklistValues, getObjectInfo } from 'lightning/uiObjectInfoApi';
 import getRecordList from '@salesforce/apex/ProductSearchController.getRecordList';
 import getRecordCount from '@salesforce/apex/ProductSearchController.getRecordCount';
+import getSelectedProducts from '@salesforce/apex/ProductSearchController.getOpportunityProducts';
+import getNewOrderItemList from '@salesforce/apex/ProductSearchController.getNewOrderItemList';
+import createNewOrder from '@salesforce/apex/ProductSearchController.createNewOrder';
 import PRODUCT_OBJECT from '@salesforce/schema/Product2';
 import FAMILY_FIELD from '@salesforce/schema/Product2.Family';
 import { loadStyle } from 'lightning/platformResourceLoader';
 import NoHeader from '@salesforce/resourceUrl/noHeader';
 import { CloseActionScreenEvent } from 'lightning/actions';
+import searchPage from './productSearch.html';
+import summaryPage from './productListSummary.html';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { NavigationMixin } from "lightning/navigation";
 
-export default class ProductSearch extends LightningElement {
-    isSummaryVisible = false;
+const Page = {
+    ProductSearch: 'productSearch',
+    ProductSummary: 'productSummary'
+}
 
+export default class ProductSearch extends NavigationMixin(LightningElement) {
+    currentLWCPage = Page.ProductSearch;
     columns = [
         { label: 'Name', fieldName: 'Name', type: 'text'},
-        //{ label: 'Name', fieldName: 'URL', type: 'url', typeAttributes: { label: {fieldName: 'Name'}}},
         { label: 'Product Code', fieldName: 'ProductCode', type: 'text'},
         { label: 'Family', fieldName: 'Family', type: 'text'},
-        //{ type: 'action', typeAttributes: { rowActions: ACTIONS } }
     ];
     pageSizeOptions = [
         { label: '5', value: '5' },
@@ -26,7 +35,25 @@ export default class ProductSearch extends LightningElement {
     ];
 
     @track selectedProductIds  = [];
-    @track selectedProducts = [];
+    selectedProducts = [];
+    
+    _recordId = undefined;
+    @api set recordId(value) {
+        if(this._recordId === undefined){
+            getSelectedProducts({ opportunityId: value})
+                .then(result => {
+                    this.selectedProducts = result;
+                    this.selectedProductIds = result.map(record => record.Id);
+                })
+                .catch(error => {
+                    this.error = error;
+                });
+        }
+        this._recordId = value;
+    }
+    get recordId() {
+        return this._recordId;
+    }
 
     nameAndCode = '';
     family = '';
@@ -34,13 +61,23 @@ export default class ProductSearch extends LightningElement {
     familyOptions = [];
     error = undefined;
     isLoading = false;
-    nextBlock = false;
 
     recordsPerPage = 10;
     currentPage = 1;
-    localPages = 0;
     totalPages = 0;
-    LocalRecordsCount = 0;
+    allRecordsCount = 0;
+    showSelected = false;
+    afterFirstSearch = false;
+    orderItems = undefined;
+
+    render() {
+        switch(this.currentLWCPage) {
+            case Page.ProductSearch:
+                return searchPage;
+            case Page.ProductSummary:
+                return summaryPage;
+        }
+    }
 
     connectedCallback() {
         loadStyle(this, NoHeader)
@@ -68,10 +105,6 @@ export default class ProductSearch extends LightningElement {
         ]
     }
 
-    handleNextButton() {
-        this.isSummaryVisible = true;
-    }
-
     handleRowSelection(event){
         switch (event.detail.config.action){
             case 'selectAllRows':
@@ -83,17 +116,19 @@ export default class ProductSearch extends LightningElement {
                 }
                 break;
             case 'deselectAllRows':
-                let pageProductIds = this.products.map(product => product.Id);
-                this.selectedProductIds = this.selectedProductIds
-                    .filter(productId => !pageProductIds.includes(productId));
+                let currentlyShownProducts = this.showSelected ? this.selectedProducts : this.products;
+                let currentlyShownProductIds = currentlyShownProducts.map(product => product.Id);
+                
                 this.selectedProducts = this.selectedProducts
-                    .filter(product => !pageProductIds.includes(product.Id));
+                    .filter(product => !currentlyShownProductIds.includes(product.Id));
+                this.selectedProductIds = this.selectedProducts.map(product => product.Id);
                 break;
             case 'rowSelect':
-                if (!this.selectedProductIds.includes(event.detail.config.value)){
-                    this.selectedProductIds.push(event.detail.config.value);
-                    let product = this.products.find(product => product.Id === event.detail.config.value);
-                    this.selectedProducts.push(product);
+                let selectedId = event.detail.config.value;
+                if (!this.selectedProductIds.includes(selectedId)){
+                    this.selectedProductIds.push(selectedId);
+                    let selectedProduct = this.products.find(product => product.Id === selectedId);
+                    this.selectedProducts.push(selectedProduct);
                 }
                 break;
             case 'rowDeselect':
@@ -113,23 +148,36 @@ export default class ProductSearch extends LightningElement {
         this[event.target.name] = event.target.value;
     }
 
-    async handleSearchButton(event) {
-        this.currentPage = 1;
-        await this.getAccountPageCount();
-        await this.handleRecordRequest(1);
+    handleSummaryInputChange(event){
+        const itemId = event.target.dataset.id;
+        const field = event.target.dataset.field;
+        const value = event.target.value;
+
+        this.orderItems = this.orderItems.map(item => {
+            if (item.product2Id === itemId) {
+                return { ...item, [field]: parseFloat(value) };
+            }
+            return item;
+        });
     }
 
-    async getAccountPageCount(){
-        await this.getLocalRecordCount();
-        this.totalPages = Math.ceil(this.LocalRecordsCount/this.recordsPerPage);
+    async handleSearchButton(event) {
+        this.currentPage = 1;
+        await this.getPageCount();
+        await this.handleRecordRequest(1);
+        this.afterFirstSearch = true;
+    }
+
+    async getPageCount(){
+        await this.getRecordCount();
+        this.totalPages = Math.ceil(this.allRecordsCount/this.recordsPerPage);
     }
     
-    async getLocalRecordCount(){
+    async getRecordCount(){
         this.isLoading = true;
         await getRecordCount({ parameters: { nameAndCode: this.nameAndCode, family: this.family } })
             .then(result => {
-                this.LocalRecordsCount = result;
-                this.localPages = Math.ceil(this.LocalRecordsCount/this.recordsPerPage);
+                this.allRecordsCount = result;
             })
             .catch(error => {
                 this.error = error;
@@ -138,11 +186,11 @@ export default class ProductSearch extends LightningElement {
     }
 
     async handleRecordRequest(pageNumber) {
-        await this.getLocalRecords(pageNumber);
+        await this.getRecords(pageNumber);
         this.reloadSelectedRecords();
     }
 
-    async getLocalRecords(pageNumber){
+    async getRecords(pageNumber){
         this.isLoading = true;
         let offsetValue = this.recordsPerPage * (pageNumber - 1);
         await getRecordList({ parameters: { nameAndCode: this.nameAndCode, family: this.family, offset: offsetValue, recordsPerPage: this.recordsPerPage } })
@@ -156,10 +204,14 @@ export default class ProductSearch extends LightningElement {
         this.isLoading = false;
     }
 
+    reloadSelectedRecords() {
+        this.selectedProductIds = [...this.selectedProductIds];
+    }
+
     handlePageSizeChange(event) {
         this.recordsPerPage = parseInt(event.detail.value);
         this.currentPage = 1;
-        this.totalPages = Math.ceil(this.LocalRecordsCount/this.recordsPerPage);
+        this.totalPages = Math.ceil(this.allRecordsCount/this.recordsPerPage);
         this.handleRecordRequest(this.currentPage);
     }
 
@@ -207,6 +259,10 @@ export default class ProductSearch extends LightningElement {
         return this.recordsPerPage.toString();
     }
 
+    get noResults() {
+        return !this.isLoading && this.products?.length === 0 && !this.error;
+    }
+
     resetFilters() {
         this.nameAndCode = '';
         this.family = '';
@@ -214,18 +270,76 @@ export default class ProductSearch extends LightningElement {
         this.error = undefined;
         this.currentPage = 1;
         this.totalPages = 0;
-        this.LocalRecordsCount = 0;
-    }
-
-    get noResults() {
-        return !this.isLoading && this.products?.length === 0 && !this.error;
-    }
-
-    reloadSelectedRecords() {
-        this.selectedProductIds = [...this.selectedProductIds];
+        this.allRecordsCount = 0;
     }
 
     handleDismiss(){
         this.dispatchEvent(new CloseActionScreenEvent());
+    }
+
+    async handleNextButton() {
+        if(this.selectedProducts.length < 1) {
+            const event = new ShowToastEvent({
+                title: 'Missing products',
+                message: 'Please select at least one product',
+                variant: 'error'
+            });
+            this.dispatchEvent(event);
+            return;
+        }
+
+        await this.getOrderItemList();
+        this.currentLWCPage = Page.ProductSummary;
+    }
+
+    async handleCreateButton(){
+        this.isLoading = true;
+        await createNewOrder({orderItems: this.orderItems, opportunityId: this.recordId})
+            .then(result => {
+                this[NavigationMixin.Navigate]({
+                    type: 'standard__recordPage',
+                    attributes: {
+                        recordId: result,
+                        actionName: 'view'
+                    }
+                });
+            })
+            .catch(error => {
+                this.error = error;
+            })
+            .finally(() => {
+                this.isLoading = false;
+            });
+    }
+
+    async getOrderItemList(){
+        this.isLoading = true;
+        await getNewOrderItemList({products: this.selectedProducts, opportunityId: this.recordId})
+            .then(result => {
+                this.orderItems = result;
+            })
+            .catch(error => {
+                this.error = error;
+                this.orderItems = undefined;
+            })
+            .finally(() => {
+                this.isLoading = false;
+            });
+    }
+
+    get toggleListViewButtonLabel(){
+        return this.showSelected ? 'View All' : 'Show Selected';
+    }
+
+    toggleListViewType(){
+        this.showSelected = !this.showSelected;
+    }
+
+    get showAll(){
+        return !this.showSelected;
+    }
+
+    get showNextButton(){
+        return this.selectedProductIds.length > 0 && this.afterFirstSearch;
     }
 }

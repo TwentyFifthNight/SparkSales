@@ -1,0 +1,60 @@
+<template>
+    <lightning-modal-header label="Product Summary"></lightning-modal-header>
+    <lightning-modal-body>
+        <div class="slds-is-relative">
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="medium" style="z-index: 9100;"></lightning-spinner>
+            </template>
+            <div class="slds-p-horizontal_medium">
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={orderItems} for:item="orderItem">
+                            <tr key={orderItem.product2Id}>
+                                <td>{orderItem.name}</td>
+                                <td>
+                                    <lightning-input type="number" min="0" value={orderItem.quantity}
+                                                    data-target-id={orderItem.product2Id}
+                                                    data-field="quantity"
+                                                    onchange={handleSummaryInputChange}>
+                                    </lightning-input>
+                                </td>
+                                <td>
+                                    <lightning-input type="number" min="0" step="0.01" value={orderItem.unitPrice}
+                                                    formatter="currency"
+                                                    data-target-id={orderItem.product2Id}
+                                                    data-field="unitPrice"
+                                                    onchange={handleSummaryInputChange}>
+                                    </lightning-input>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+            <template if:true={error}>
+                <p class="slds-text-color_error">{error.body.message}</p>
+            </template>
+        </div>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button
+            class="slds-button"
+            variant="neutral"
+            label="Cancel"
+            onclick={handleDismiss}
+        ></lightning-button>
+        <lightning-button
+            class="slds-button slds-m-left_x-small"
+            variant="brand"
+            label="Create Order"
+            onclick={handleCreateButton}
+        ></lightning-button>
+    </lightning-modal-footer>
+</template>

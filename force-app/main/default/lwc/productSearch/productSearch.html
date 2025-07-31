@@ -1,10 +1,10 @@
 <template>
     <lightning-modal-header label="Product Search"></lightning-modal-header>
     <lightning-modal-body>
-        <template lwc:if={isSummaryVisible}>
+        <!-- <template lwc:if={isSummaryVisible}>
             <c-product-list-summary products={selectedProducts}></c-product-list-summary>
         </template>
-        <template lwc:else>
+        <template lwc:else> -->
             <div class="slds-is-relative">
                 <template if:true={isLoading}>
                     <lightning-spinner alternative-text="Loading" size="medium" style="z-index: 9100;"></lightning-spinner>
@@ -38,8 +38,18 @@
                 <template if:false={noResults}>
                     <template if:true={products}>
                         <div class="slds-p-horizontal_medium">
-                            <div class="slds-grid slds-grid_align-end">
-                                <lightning-combobox
+                            <!-- slds-grid_align-end -->
+                            <div class="slds-grid">
+                                <div class="slds-grid slds-grid_vertical-align-end slds-col_bump-right">
+                                    <lightning-button 
+                                        variant="base" 
+                                        label={toggleListViewButtonLabel} 
+                                        title="List view type" 
+                                        onclick={toggleListViewType} 
+                                        class="slds-col slds-p-bottom_xx-small"
+                                    ></lightning-button>
+                                </div>
+                                <lightning-combobox lwc:if={showAll}
                                     label="Records per page"
                                     value={recordsPerPageString}
                                     options={pageSizeOptions}
@@ -48,22 +58,32 @@
                                 ></lightning-combobox>
                             </div>
 
-                            <lightning-datatable
+                            <lightning-datatable lwc:if={showSelected}
                                 key-field="Id"
-                                data={products}
+                                data={selectedProducts}
                                 columns={columns}
                                 class="slds-m-top_medium"
                                 selected-rows={selectedProductIds}
                                 onrowselection={handleRowSelection}
                             ></lightning-datatable>
+                            <template lwc:else>
+                                <lightning-datatable
+                                    key-field="Id"
+                                    data={products}
+                                    columns={columns}
+                                    class="slds-m-top_medium"
+                                    selected-rows={selectedProductIds}
+                                    onrowselection={handleRowSelection}
+                                ></lightning-datatable>
 
-                            <div class="slds-m-top_medium slds-align_absolute-center">
-                                <lightning-button label="First" onclick={handleFirstPageClick} disabled={disableFirstAndPreviousButton} class="slds-m-horizontal_x-small"></lightning-button>
-                                <lightning-button label="Previous" onclick={handlePreviousPageClick} disabled={disableFirstAndPreviousButton} class="slds-m-horizontal_x-small"></lightning-button>
-                                <span class="slds-m-horizontal_small">{pageInfo}</span>
-                                <lightning-button label="Next" onclick={handleNextPageClick} disabled={disableNextAndLastButton} class="slds-m-horizontal_x-small"></lightning-button>
-                                <lightning-button label="Last" onclick={handleLastPageClick} disabled={disableNextAndLastButton} class="slds-m-horizontal_x-small"></lightning-button>
-                            </div>
+                                <div class="slds-m-top_medium slds-align_absolute-center">
+                                    <lightning-button label="First" onclick={handleFirstPageClick} disabled={disableFirstAndPreviousButton} class="slds-m-horizontal_x-small"></lightning-button>
+                                    <lightning-button label="Previous" onclick={handlePreviousPageClick} disabled={disableFirstAndPreviousButton} class="slds-m-horizontal_x-small"></lightning-button>
+                                    <span class="slds-m-horizontal_small">{pageInfo}</span>
+                                    <lightning-button label="Next" onclick={handleNextPageClick} disabled={disableNextAndLastButton} class="slds-m-horizontal_x-small"></lightning-button>
+                                    <lightning-button label="Last" onclick={handleLastPageClick} disabled={disableNextAndLastButton} class="slds-m-horizontal_x-small"></lightning-button>
+                                </div>
+                            </template>
                         </div>
                     </template>
                 </template>
@@ -79,7 +99,7 @@
                     <p class="slds-text-color_error">{error.body.message}</p>
                 </template>
             </div>
-        </template>
+        <!-- </template> -->
     </lightning-modal-body>
     <lightning-modal-footer>
         <lightning-button
@@ -88,7 +108,7 @@
             label="Cancel"
             onclick={handleDismiss}
         ></lightning-button>
-        <lightning-button lwc:if={selectedProductIds.length}
+        <lightning-button lwc:if={showNextButton}
             class="slds-button slds-m-left_x-small"
             variant="brand"
             label="Next"
