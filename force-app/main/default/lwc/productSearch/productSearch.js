@@ -3,7 +3,7 @@ import { getPicklistValues, getObjectInfo } from 'lightning/uiObjectInfoApi';
 import getRecordList from '@salesforce/apex/ProductSearchController.getRecordList';
 import getRecordCount from '@salesforce/apex/ProductSearchController.getRecordCount';
 import getSelectedProducts from '@salesforce/apex/ProductSearchController.getOpportunityProducts';
-import getNewOrderItemList from '@salesforce/apex/ProductSearchController.getNewOrderItemList';
+import generateOrderItemsFromProducts from '@salesforce/apex/ProductSearchController.generateOrderItemsFromProducts';
 import createNewOrder from '@salesforce/apex/ProductSearchController.createNewOrder';
 import PRODUCT_OBJECT from '@salesforce/schema/Product2';
 import FAMILY_FIELD from '@salesforce/schema/Product2.Family';
@@ -26,6 +26,11 @@ export default class ProductSearch extends NavigationMixin(LightningElement) {
         { label: 'Name', fieldName: 'Name', type: 'text'},
         { label: 'Product Code', fieldName: 'ProductCode', type: 'text'},
         { label: 'Family', fieldName: 'Family', type: 'text'},
+    ];
+    orderColumns = [
+        { label: 'Product Name', fieldName: 'name', type: 'text'},
+        { label: 'Quantity', fieldName: 'quantity', type: 'number', editable: true },
+        { label: 'Unit Price', fieldName: 'unitPrice', type: 'currency', editable: true},
     ];
     pageSizeOptions = [
         { label: '5', value: '5' },
@@ -69,6 +74,7 @@ export default class ProductSearch extends NavigationMixin(LightningElement) {
     showSelected = false;
     afterFirstSearch = false;
     orderItems = undefined;
+    totalPrice = 0;
 
     render() {
         switch(this.currentLWCPage) {
@@ -148,16 +154,20 @@ export default class ProductSearch extends NavigationMixin(LightningElement) {
         this[event.target.name] = event.target.value;
     }
 
+    draftValues;
     handleSummaryInputChange(event){
-        const itemId = event.target.dataset.id;
-        const field = event.target.dataset.field;
-        const value = event.target.value;
+        const changedFields = event.detail.draftValues;
+        const itemId = changedFields[0].product2Id;
+        const field = Object.keys(changedFields[0])[0];
+        const value = changedFields[0][field];
         this.orderItems = this.orderItems.map(item => {
             if (item.product2Id === itemId) {
-                return { ...item, [field]: parseFloat(value) };
+                return { ...item, [field]: Math.round(parseFloat(value) * 100) / 100 }; // Cut off to 2 decimal places
             }
             return item;
         });
+        this.draftValues = []; // Remove highlighted rows from datatable
+        this.totalPrice = this.orderItems.reduce((total, item) => total + (item.quantity * item.unitPrice), 0);
     }
 
     async handleSearchButton(event) {
@@ -332,9 +342,10 @@ export default class ProductSearch extends NavigationMixin(LightningElement) {
 
     async getOrderItemList(){
         this.isLoading = true;
-        await getNewOrderItemList({products: this.selectedProducts, opportunityId: this.recordId})
+        await generateOrderItemsFromProducts({products: this.selectedProducts, opportunityId: this.recordId})
             .then(result => {
                 this.orderItems = result;
+                this.totalPrice = this.orderItems.reduce((total, item) => total + (item.quantity * item.unitPrice), 0);
             })
             .catch(error => {
                 this.error = error;

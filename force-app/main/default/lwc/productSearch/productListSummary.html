@@ -6,48 +6,22 @@
                 <lightning-spinner alternative-text="Loading" size="medium" style="z-index: 9100;"></lightning-spinner>
             </template>
             <div class="slds-p-horizontal_medium">
-                <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
-                    <thead>
-                        <tr>
-                            <th>Product Name</th>
-                            <th>
-                                Quantity<span class="slds-required requiredHeader">*</span>
-                            </th>
-                            <th>
-                                Unit Price<span class="slds-required requiredHeader">*</span>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <template for:each={orderItems} for:item="orderItem">
-                            <tr key={orderItem.product2Id}>
-                                <td>{orderItem.name}</td>
-                                <td>
-                                    <lightning-input 
-                                        type="number" 
-                                        min="0" 
-                                        value={orderItem.quantity}
-                                        data-id={orderItem.product2Id}
-                                        data-field="quantity"
-                                        onchange={handleSummaryInputChange}>
-                                    </lightning-input>
-                                </td>
-                                <td>
-                                    <lightning-input 
-                                        type="number" 
-                                        min="0" 
-                                        step="0.01" 
-                                        value={orderItem.unitPrice}
-                                        formatter="currency"
-                                        data-id={orderItem.product2Id}
-                                        data-field="unitPrice"
-                                        onchange={handleSummaryInputChange}>
-                                    </lightning-input>
-                                </td>
-                            </tr>
-                        </template>
-                    </tbody>
-                </table>
+                <lightning-datatable
+                    key-field="product2Id"
+                    data={orderItems}
+                    columns={orderColumns}
+                    class="slds-m-top_medium"
+                    oncellchange={handleSummaryInputChange}
+                    draft-values={draftValues}
+                    hide-checkbox-column
+                    suppress-bottom-bar
+                >
+                </lightning-datatable>
+                <div class="slds-grid slds-grid_align-end">
+                    <p class="slds-m-bottom_small slds-col">
+                        Total Price: {totalPrice}
+                    </p>
+                </div>
             </div>
             <template if:true={error}>
                 <p class="slds-text-color_error">{error.body.message}</p>

@@ -193,7 +193,7 @@ private class ProductSearchControllerTest {
         List<Product2> products = [SELECT Id, Name FROM Product2 WHERE Id IN :opportunityLineItemProductIds];
         
         Test.startTest();
-        List<ProductSearchController.OrderItemWrapper> orderItems = ProductSearchController.getNewOrderItemList(products, opportunities[0].Id);
+        List<ProductSearchController.OrderItemWrapper> orderItems = ProductSearchController.generateOrderItemsFromProducts(products, opportunities[0].Id);
         Test.stopTest();
         System.assertEquals(8, orderItems.size());
         for(ProductSearchController.OrderItemWrapper orderItem : orderItems){

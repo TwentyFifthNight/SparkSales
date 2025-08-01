@@ -1,17 +1,13 @@
 <template>
     <lightning-modal-header label="Product Search"></lightning-modal-header>
     <lightning-modal-body>
-        <!-- <template lwc:if={isSummaryVisible}>
-            <c-product-list-summary products={selectedProducts}></c-product-list-summary>
-        </template>
-        <template lwc:else> -->
             <div class="slds-is-relative">
                 <template if:true={isLoading}>
                     <lightning-spinner alternative-text="Loading" size="medium" style="z-index: 9100;"></lightning-spinner>
                 </template>
                 <div class="slds-p-horizontal_medium slds-p-vertical_small">
                     <div class="slds-grid">
-                        <lightning-input 
+                        <lightning-input
                             label="Product"
                             name="nameAndCode"
                             value={nameAndCode}
@@ -38,7 +34,6 @@
                 <template if:false={noResults}>
                     <template if:true={products}>
                         <div class="slds-p-horizontal_medium">
-                            <!-- slds-grid_align-end -->
                             <div class="slds-grid">
                                 <div class="slds-grid slds-grid_vertical-align-end slds-col_bump-right">
                                     <lightning-button 
@@ -99,7 +94,6 @@
                     <p class="slds-text-color_error">{error.body.message}</p>
                 </template>
             </div>
-        <!-- </template> -->
     </lightning-modal-body>
     <lightning-modal-footer>
         <lightning-button

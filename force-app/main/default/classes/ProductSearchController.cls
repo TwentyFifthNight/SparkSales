@@ -118,7 +118,7 @@ public with sharing class ProductSearchController {
     }
 
     @AuraEnabled(cacheable=false)
-    public static List<OrderItemWrapper> getNewOrderItemList(List<Product2> products, Id opportunityId){
+    public static List<OrderItemWrapper> generateOrderItemsFromProducts(List<Product2> products, Id opportunityId){
         List<OrderItemWrapper> orderItems = new List<OrderItemWrapper>();
 
         Map<Id, OpportunityLineItem> opportunityLineItemsByProductId = new Map<Id, OpportunityLineItem>();
@@ -182,7 +182,7 @@ public with sharing class ProductSearchController {
     }
 
     @AuraEnabled(cacheable=false)
-    public static Id createNewOrder(List<OrderItemWrapper> orderItems, Id opportunityId){
+    public static Id createNewOrder(List<OrderItemWrapper> orderItemWrappers, Id opportunityId){
         List<Opportunity> opportunity = [
             SELECT AccountId, Pricebook2Id, OwnerId
             FROM Opportunity
@@ -193,22 +193,15 @@ public with sharing class ProductSearchController {
             throw new AuraHandledException('The Opportunity was not found');
         }
         List<Id> productId = new List<Id>();
-        for(OrderItemWrapper orderItem : orderItems){
+        for(OrderItemWrapper orderItem : orderItemWrappers){
             productId.add(orderItem.product2Id);
         }
         
-        Map<Id, PricebookEntry> pricebookEntriesByProductId = new Map<Id, PricebookEntry>();
         Id pricebookId = opportunity[0].Pricebook2Id;
         if (pricebookId == null) {
             pricebookId = Constants.STANDARD_PRICEBOOK_ID;
         }
-        for(PricebookEntry pricebookEntry : [
-            SELECT Id, Product2Id
-            FROM PricebookEntry
-            WHERE Pricebook2Id = :pricebookId AND Product2Id IN :productId
-        ]) {
-            pricebookEntriesByProductId.put(pricebookEntry.Product2Id, pricebookEntry);
-        }
+        Map<Id, PricebookEntry> pricebookEntriesByProductId = getPricebookEntriesByProductId(pricebookId, productId);
 
         Savepoint savePoint = Database.setSavepoint();
         try{
@@ -218,26 +211,44 @@ public with sharing class ProductSearchController {
             order.AccountId = opportunity[0].AccountId;
             order.OwnerId = opportunity[0].OwnerId;
             if(opportunity[0].Pricebook2Id != null){
-                order.Pricebook2Id = opportunity[0].Pricebook2Id;
+                order.Pricebook2Id = pricebookId;
             } else {
                 order.Pricebook2Id = Constants.STANDARD_PRICEBOOK_ID;
             }
             insert order;
-            List<OrderItem> orderItemToInsert = new List<OrderItem>();
-            for(OrderItemWrapper orderItem: orderItems){
-                OrderItem item = new OrderItem();
-                item.OrderId = order.Id;
-                item.Product2Id = orderItem.product2Id;
-                item.Quantity = orderItem.quantity;
-                item.UnitPrice = orderItem.unitPrice;
-                item.PricebookEntryId = pricebookEntriesByProductId.get(orderItem.product2Id).Id;
-                orderItemToInsert.add(item);
-            }
+
+            List<OrderItem> orderItemToInsert = orderItemWrapperToOrderItem(orderItemWrappers, order.Id, pricebookEntriesByProductId);
             insert orderItemToInsert;
             return order.Id;
         } catch (Exception e) {
             Database.rollback(savePoint);
             throw new AuraHandledException(e.getMessage());
         }
+    }
+
+    private static Map<Id, PricebookEntry> getPricebookEntriesByProductId(Id pricebookId, List<Id> productId) {
+        Map<Id, PricebookEntry> pricebookEntriesByProductId = new Map<Id, PricebookEntry>();
+        for(PricebookEntry pricebookEntry : [
+            SELECT Id, Product2Id
+            FROM PricebookEntry
+            WHERE Pricebook2Id = :pricebookId AND Product2Id IN :productId
+        ]) {
+            pricebookEntriesByProductId.put(pricebookEntry.Product2Id, pricebookEntry);
+        }
+        return pricebookEntriesByProductId;
+    }
+
+    private static List<OrderItem> orderItemWrapperToOrderItem(List<OrderItemWrapper> orderItems, Id orderId, Map<Id, PricebookEntry> pricebookEntriesByProductId) {
+        List<OrderItem> orderItemToInsert = new List<OrderItem>();
+        for(OrderItemWrapper orderItem : orderItems){
+            OrderItem item = new OrderItem();
+            item.OrderId = orderId;
+            item.Product2Id = orderItem.product2Id;
+            item.Quantity = orderItem.quantity;
+            item.UnitPrice = orderItem.unitPrice;
+            item.PricebookEntryId = pricebookEntriesByProductId.get(orderItem.product2Id).Id;
+            orderItemToInsert.add(item);
+        }
+        return orderItemToInsert;
     }
 }
