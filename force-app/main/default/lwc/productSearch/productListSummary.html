@@ -15,13 +15,36 @@
                     draft-values={draftValues}
                     hide-checkbox-column
                     suppress-bottom-bar
-                >
-                </lightning-datatable>
-                <div class="slds-grid slds-grid_align-end">
-                    <p class="slds-m-bottom_small slds-col">
-                        Total Price: {totalPrice}
-                    </p>
-                </div>
+                ></lightning-datatable>
+                <!-- <div class="slds-float_right slds-m-top_medium" style="width: 40%;"> -->
+                    <div class="slds-p-right_medium slds-m-top_medium">
+                        <p class="slds-text-align_right">
+                            Total Amount: 
+                            <lightning-formatted-number 
+                                value={totalPrice} 
+                                format-style="currency"
+                                class="slds-p-left_xx-small"
+                            ></lightning-formatted-number>
+                        </p>
+                        <!-- <p class="slds-text-align_right">
+                            Discount Amount: 
+                            <lightning-formatted-number 
+                                value={discountAmount} 
+                                format-style="currency"
+                                class="slds-p-left_xx-small"
+                            ></lightning-formatted-number>
+                        </p>
+                        <hr class="slds-m-vertical_x-small" />
+                        <p class="slds-text-align_right slds-text-heading_medium">
+                            Final Price: 
+                            <lightning-formatted-number 
+                                value={finalPrice} 
+                                format-style="currency"
+                                class="slds-p-left_xx-small"
+                            ></lightning-formatted-number>
+                        </p> -->
+                    </div>
+                <!-- </div> -->
             </div>
             <template if:true={error}>
                 <p class="slds-text-color_error">{error.body.message}</p>
