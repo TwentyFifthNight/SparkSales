@@ -8,6 +8,8 @@ public with sharing class ProductSearchController {
         public Integer recordsPerPage {get;set;}
         @AuraEnabled
         public Integer offset {get;set;}
+        @AuraEnabled
+        public String opportunityId {get;set;}
         
         public ParameterWrapper(){
             recordsPerPage = 10;
@@ -28,21 +30,24 @@ public with sharing class ProductSearchController {
 
     @AuraEnabled(cacheable=true)
     public static Integer getRecordCount(ParameterWrapper parameters){
-        String orderOfQuery = '(1 OR 2)';
+        Id priceBookId = getPricebookId(parameters.opportunityId);
+        String orderOfQuery = '(1 OR 2) AND 3';
         if(!String.isBlank(parameters.Family)){
-            orderOfQuery += ' AND 3';
+            orderOfQuery += ' AND 4';
         }
-        QueryBuilder query = new QueryBuilder('Product2')
+        QueryBuilder query = new QueryBuilder('PricebookEntry')
             .addConditionsWithOrder(orderOfQuery)
-            .add(new QueryBuilder.LikeCondition('Name').likeAnyBoth(parameters.NameAndCode))
-            .add(new QueryBuilder.LikeCondition('ProductCode').likeAnyBoth(parameters.NameAndCode))
-            .add(new QueryBuilder.SimpleCondition('Family = \'' + parameters.Family + '\''))
+            .add(new QueryBuilder.LikeCondition('Product2.Name').likeAnyBoth(parameters.NameAndCode))
+            .add(new QueryBuilder.LikeCondition('Product2.ProductCode').likeAnyBoth(parameters.NameAndCode))
+            .add(new QueryBuilder.SimpleCondition('Pricebook2Id = \'' + priceBookId + '\''))
+            .add(new QueryBuilder.SimpleCondition('Product2.Family = \'' + parameters.Family + '\''))
             .endConditions();
         return Database.countQuery(query.toStringCount());
     }
 
     @AuraEnabled(cacheable=true)
     public static List<Product2> getRecordList(ParameterWrapper parameters){
+        Id priceBookId = getPricebookId(parameters.opportunityId);
         if (parameters.recordsPerPage == null || parameters.recordsPerPage < 1) {
             parameters.recordsPerPage = 10;
         }
@@ -50,23 +55,46 @@ public with sharing class ProductSearchController {
             parameters.offset  = 0;
         }
 
-        String orderOfQuery = '(1 OR 2)';
+        String orderOfQuery = '(1 OR 2) AND 3';
         if(!String.isBlank(parameters.Family)){
-            orderOfQuery += ' AND 3';
+            orderOfQuery += ' AND 4';
         }
 
-        QueryBuilder query = new QueryBuilder('Product2')
-            .addField('Name')
-            .addField('ProductCode')
-            .addField('Family')
+        QueryBuilder query = new QueryBuilder('PricebookEntry')
+            .addField('Product2Id')
+            .addField('Product2.Name')
+            .addField('Product2.ProductCode')
+            .addField('Product2.Family')
             .addConditionsWithOrder(orderOfQuery)
-            .add(new QueryBuilder.LikeCondition('Name').likeAnyBoth(parameters.NameAndCode))
-            .add(new QueryBuilder.LikeCondition('ProductCode').likeAnyBoth(parameters.NameAndCode))
-            .add(new QueryBuilder.SimpleCondition('Family = \'' + parameters.Family + '\''))
+            .add(new QueryBuilder.LikeCondition('Product2.Name').likeAnyBoth(parameters.NameAndCode))
+            .add(new QueryBuilder.LikeCondition('Product2.ProductCode').likeAnyBoth(parameters.NameAndCode))
+            .add(new QueryBuilder.SimpleCondition('Pricebook2Id = \'' + priceBookId + '\''))
+            .add(new QueryBuilder.SimpleCondition('Product2.Family = \'' + parameters.Family + '\''))
             .endConditions()
             .setLimit(parameters.recordsPerPage)
             .setOffset(parameters.offset);
-        return Database.query(query.toString());
+        List<PricebookEntry> pricebookEntries = Database.query(query.toString());
+        return pricebookEntryToProduct(pricebookEntries);
+    }
+
+    private static Id getPricebookId(String opportunityId) {
+        Id priceBookId;
+        if (opportunityId != null){
+            priceBookId = [SELECT Id, Pricebook2Id FROM Opportunity WHERE Id = :opportunityId LIMIT 1].Pricebook2Id;
+        }
+        if (priceBookId == null){
+            priceBookId = Constants.STANDARD_PRICEBOOK_ID;
+        }
+        return priceBookId;
+    }
+
+    private static List<Product2> pricebookEntryToProduct(List<PricebookEntry> pricebookEntries){
+        List<Product2> products = new List<Product2>();
+        for(PricebookEntry pricebookEntry : pricebookEntries){
+            Product2 product = new Product2(Id = pricebookEntry.Product2Id, Name = pricebookEntry.Product2.Name, Family = pricebookEntry.Product2.Family, ProductCode = pricebookEntry.Product2.ProductCode);
+            products.add(product);
+        }
+        return products;
     }
 
     @AuraEnabled(cacheable=false)
@@ -170,10 +198,14 @@ public with sharing class ProductSearchController {
         }
         
         Map<Id, PricebookEntry> pricebookEntriesByProductId = new Map<Id, PricebookEntry>();
+        Id pricebookId = opportunity[0].Pricebook2Id;
+        if (pricebookId == null) {
+            pricebookId = Constants.STANDARD_PRICEBOOK_ID;
+        }
         for(PricebookEntry pricebookEntry : [
             SELECT Id, Product2Id
             FROM PricebookEntry
-            WHERE IsActive = true AND Pricebook2Id = :Constants.STANDARD_PRICEBOOK_ID AND Product2Id IN :productId
+            WHERE Pricebook2Id = :pricebookId AND Product2Id IN :productId
         ]) {
             pricebookEntriesByProductId.put(pricebookEntry.Product2Id, pricebookEntry);
         }

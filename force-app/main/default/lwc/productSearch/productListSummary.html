@@ -6,12 +6,16 @@
                 <lightning-spinner alternative-text="Loading" size="medium" style="z-index: 9100;"></lightning-spinner>
             </template>
             <div class="slds-p-horizontal_medium">
-                <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
                     <thead>
                         <tr>
                             <th>Product Name</th>
-                            <th>Quantity</th>
-                            <th>Unit Price</th>
+                            <th>
+                                Quantity<span class="slds-required requiredHeader">*</span>
+                            </th>
+                            <th>
+                                Unit Price<span class="slds-required requiredHeader">*</span>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -19,18 +23,25 @@
                             <tr key={orderItem.product2Id}>
                                 <td>{orderItem.name}</td>
                                 <td>
-                                    <lightning-input type="number" min="0" value={orderItem.quantity}
-                                                    data-target-id={orderItem.product2Id}
-                                                    data-field="quantity"
-                                                    onchange={handleSummaryInputChange}>
+                                    <lightning-input 
+                                        type="number" 
+                                        min="0" 
+                                        value={orderItem.quantity}
+                                        data-id={orderItem.product2Id}
+                                        data-field="quantity"
+                                        onchange={handleSummaryInputChange}>
                                     </lightning-input>
                                 </td>
                                 <td>
-                                    <lightning-input type="number" min="0" step="0.01" value={orderItem.unitPrice}
-                                                    formatter="currency"
-                                                    data-target-id={orderItem.product2Id}
-                                                    data-field="unitPrice"
-                                                    onchange={handleSummaryInputChange}>
+                                    <lightning-input 
+                                        type="number" 
+                                        min="0" 
+                                        step="0.01" 
+                                        value={orderItem.unitPrice}
+                                        formatter="currency"
+                                        data-id={orderItem.product2Id}
+                                        data-field="unitPrice"
+                                        onchange={handleSummaryInputChange}>
                                     </lightning-input>
                                 </td>
                             </tr>

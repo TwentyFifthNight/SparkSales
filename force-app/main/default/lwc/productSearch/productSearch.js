@@ -152,7 +152,6 @@ export default class ProductSearch extends NavigationMixin(LightningElement) {
         const itemId = event.target.dataset.id;
         const field = event.target.dataset.field;
         const value = event.target.value;
-
         this.orderItems = this.orderItems.map(item => {
             if (item.product2Id === itemId) {
                 return { ...item, [field]: parseFloat(value) };
@@ -175,7 +174,7 @@ export default class ProductSearch extends NavigationMixin(LightningElement) {
     
     async getRecordCount(){
         this.isLoading = true;
-        await getRecordCount({ parameters: { nameAndCode: this.nameAndCode, family: this.family } })
+        await getRecordCount({ parameters: { nameAndCode: this.nameAndCode, family: this.family, opportunityId: this.recordId }})
             .then(result => {
                 this.allRecordsCount = result;
             })
@@ -193,7 +192,7 @@ export default class ProductSearch extends NavigationMixin(LightningElement) {
     async getRecords(pageNumber){
         this.isLoading = true;
         let offsetValue = this.recordsPerPage * (pageNumber - 1);
-        await getRecordList({ parameters: { nameAndCode: this.nameAndCode, family: this.family, offset: offsetValue, recordsPerPage: this.recordsPerPage } })
+        await getRecordList({ parameters: { nameAndCode: this.nameAndCode, family: this.family, offset: offsetValue, recordsPerPage: this.recordsPerPage, opportunityId: this.recordId} })
             .then(result => {
                 this.products = result;
             })
@@ -293,6 +292,9 @@ export default class ProductSearch extends NavigationMixin(LightningElement) {
     }
 
     async handleCreateButton(){
+        if(this.validateOrderItems() === false) {
+            return;
+        }
         this.isLoading = true;
         await createNewOrder({orderItems: this.orderItems, opportunityId: this.recordId})
             .then(result => {
@@ -310,6 +312,22 @@ export default class ProductSearch extends NavigationMixin(LightningElement) {
             .finally(() => {
                 this.isLoading = false;
             });
+    }
+
+    validateOrderItems() {
+        for (let i = 0; i < this.orderItems.length; i++) {
+            if (!(this.orderItems[i].quantity > 0) || !(this.orderItems[i].unitPrice > 0)) {
+                const event = new ShowToastEvent({
+                    title: 'Invalid data',
+                    message: `Quantity and Unit Price must be greater than 0 (${this.orderItems[i].name})`,
+                    variant: 'error'
+                });
+                this.dispatchEvent(event);
+                return false;
+            }
+
+        }
+        return true;
     }
 
     async getOrderItemList(){
