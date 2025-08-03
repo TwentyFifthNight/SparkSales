@@ -24,7 +24,13 @@
 		<name>ApexTrigger</name>
 	</types>
 	<types>
+		<members>Discount_Strategy_Setting.Default_strategy</members>
+		<name>CustomMetadata</name>
+	</types>
+	<types>
+		<members>Discount__c</members>
 		<members>Order</members>
+		<members>Discount_Strategy_Setting__mdt</members>
 		<name>CustomObject</name>
 	</types>
 	<types>
@@ -36,6 +42,7 @@
 		<members>leadSiteCss</members>
 		<members>noHeader</members>
 		<members>sparkSalesLogo</members>
+		<members>spinnerHeight</members>
 		<members>webToLeadBackground</members>
 		<name>StaticResource</name>
 	</types>

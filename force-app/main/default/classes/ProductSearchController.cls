@@ -26,6 +26,8 @@ public with sharing class ProductSearchController {
         public Decimal quantity {get;set;}
         @AuraEnabled
         public String product2Id {get;set;}
+        @AuraEnabled
+        public String pricebookId {get;set;}
     }
 
     @AuraEnabled(cacheable=true)
@@ -176,6 +178,7 @@ public with sharing class ProductSearchController {
             orderItem.quantity = quantity;
             orderItem.unitPrice = unitPrice;
             orderItem.name = product.Name;
+            orderItem.pricebookId = opportunit.Pricebook2Id;
             orderItems.add(orderItem);
         }
         return orderItems;
