@@ -1,0 +1,76 @@
+<template>
+    <lightning-card>
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium" style="z-index: 9100;"></lightning-spinner>
+        </template>
+        <div class="slds-m-around_large slds-grid slds-grid_align-end">
+            <lightning-button 
+                label="Add Discount"
+                onclick={openModal} 
+                variant="brand">
+            </lightning-button>
+        </div>
+
+        <template if:false={noResults}>
+            <template if:true={discounts}>
+                <div class="slds-p-horizontal_medium">
+                    <div class="slds-grid slds-grid_align-end">
+                        <lightning-combobox
+                            label="Records per page"
+                            value={recordsPerPageString}
+                            options={pageSizeOptions}
+                            onchange={handlePageSizeChange}
+                            class="slds-m-bottom_small slds-col slds-size_1-of-12"
+                        ></lightning-combobox>
+                    </div>
+
+                    <lightning-datatable
+                        key-field="Id"
+                        data={discounts}
+                        columns={columns}
+                        class="slds-m-top_medium"
+                        hide-checkbox-column
+                    ></lightning-datatable>
+
+                    <div class="slds-m-top_medium slds-align_absolute-center">
+                        <lightning-button label="First" onclick={handleFirstPageClick} disabled={disableFirstAndPreviousButton} class="slds-m-horizontal_x-small"></lightning-button>
+                        <lightning-button label="Previous" onclick={handlePreviousPageClick} disabled={disableFirstAndPreviousButton} class="slds-m-horizontal_x-small"></lightning-button>
+                        <span class="slds-m-horizontal_small">{pageInfo}</span>
+                        <lightning-button label="Next" onclick={handleNextPageClick} disabled={disableNextAndLastButton} class="slds-m-horizontal_x-small"></lightning-button>
+                        <lightning-button label="Last" onclick={handleLastPageClick} disabled={disableNextAndLastButton} class="slds-m-horizontal_x-small"></lightning-button>
+                    </div>
+                </div>
+            </template>
+        </template>
+        <template if:true={noResults}>
+            <div class="slds-m-bottom_large">
+                <p class="slds-text-align_center slds-text-heading_medium">
+                    No records found
+                </p>
+            </div>
+        </template>
+
+        <template if:true={error}>
+            <p class="slds-text-color_error">{error.body.message}</p>
+        </template>
+    </lightning-card>
+
+    
+    <template if:true={isModalOpen}>
+        <div class="my-system-spinner">
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container slds-p-horizontal_small">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-modal__close" title="Close" onclick={closeModal}>
+                        <lightning-icon icon-name="utility:close" alternative-text="Close" variant="bare"></lightning-icon>
+                    </button>
+                </header>
+                <div class="slds-modal__content">
+                    <lightning-flow flow-api-name="Create_New_Discount" onstatuschange={handleFlowStatusChange}></lightning-flow>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </template>
+</template>
