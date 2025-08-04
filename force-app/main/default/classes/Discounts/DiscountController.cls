@@ -21,6 +21,7 @@ public with sharing class DiscountController {
             .addField('isActive__c')
             .setLimit(recordsPerPage)
             .setOffset(offset);
-        return Database.query(query.toString());
+        List<Discount__c> discounts = Database.query(query.toString());
+        return discounts;
     }
 }

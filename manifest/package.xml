@@ -24,13 +24,21 @@
 		<name>ApexTrigger</name>
 	</types>
 	<types>
+		<members>Unsuported_Discount_Type</members>
+		<name>CustomLabel</name>
+	</types>
+	<types>
+		<members>*</members>
+		<name>CustomLabels</name>
+	</types>
+	<types>
 		<members>Discount_Strategy_Setting.Default_strategy</members>
 		<name>CustomMetadata</name>
 	</types>
 	<types>
+		<members>Discount_Strategy_Setting__mdt</members>
 		<members>Discount__c</members>
 		<members>Order</members>
-		<members>Discount_Strategy_Setting__mdt</members>
 		<name>CustomObject</name>
 	</types>
 	<types>
