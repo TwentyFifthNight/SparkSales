@@ -3,7 +3,7 @@
     <lightning-modal-body>
             <div class="slds-is-relative">
                 <template if:true={isLoading}>
-                    <lightning-spinner alternative-text="Loading" size="medium" style="z-index: 9100;"></lightning-spinner>
+                    <lightning-spinner alternative-text={label.loadingSpinnerText} size="medium" style="z-index: 9100;"></lightning-spinner>
                 </template>
                 <div class="slds-p-horizontal_medium slds-p-vertical_small">
                     <div class="slds-grid">

@@ -1,7 +1,7 @@
 <template>
     <lightning-card>
         <template if:true={isLoading}>
-            <lightning-spinner alternative-text="Loading" size="medium" style="z-index: 9100;"></lightning-spinner>
+            <lightning-spinner alternative-text={label.loadingSpinnerText} size="medium" style="z-index: 9100;"></lightning-spinner>
         </template>
         <div class="slds-m-around_large slds-grid slds-grid_align-end">
             <lightning-button 
