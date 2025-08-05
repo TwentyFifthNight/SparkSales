@@ -37,12 +37,12 @@ public with sharing class ProductSearchController {
         if(!String.isBlank(parameters.Family)){
             orderOfQuery += ' AND 4';
         }
-        QueryBuilder query = new QueryBuilder('PricebookEntry')
+        QueryBuilder query = new QueryBuilder(Constants.PricebookEntry.OBJECT_NAME)
             .addConditionsWithOrder(orderOfQuery)
-            .add(new QueryBuilder.LikeCondition('Product2.Name').likeAnyBoth(parameters.NameAndCode))
-            .add(new QueryBuilder.LikeCondition('Product2.ProductCode').likeAnyBoth(parameters.NameAndCode))
-            .add(new QueryBuilder.SimpleCondition('Pricebook2Id = \'' + priceBookId + '\''))
-            .add(new QueryBuilder.SimpleCondition('Product2.Family = \'' + parameters.Family + '\''))
+            .add(new QueryBuilder.LikeCondition(Constants.PricebookEntry.PRODUCT_NAME_FIELD).likeAnyBoth(parameters.NameAndCode))
+            .add(new QueryBuilder.LikeCondition(Constants.PricebookEntry.PRODUCT_CODE_FIELD).likeAnyBoth(parameters.NameAndCode))
+            .add(new QueryBuilder.SimpleCondition(Constants.PricebookEntry.PRICEBOOK_ID_FIELD + ' = \'' + priceBookId + '\''))
+            .add(new QueryBuilder.SimpleCondition(Constants.PricebookEntry.PRODUCT_FAMILY_FIELD + ' = \'' + parameters.Family + '\''))
             .endConditions();
         return Database.countQuery(query.toStringCount());
     }
@@ -62,16 +62,16 @@ public with sharing class ProductSearchController {
             orderOfQuery += ' AND 4';
         }
 
-        QueryBuilder query = new QueryBuilder('PricebookEntry')
-            .addField('Product2Id')
-            .addField('Product2.Name')
-            .addField('Product2.ProductCode')
-            .addField('Product2.Family')
+        QueryBuilder query = new QueryBuilder(Constants.PricebookEntry.OBJECT_NAME)
+            .addField(Constants.PricebookEntry.PRODUCT_ID_FIELD)
+            .addField(Constants.PricebookEntry.PRODUCT_NAME_FIELD)
+            .addField(Constants.PricebookEntry.PRODUCT_CODE_FIELD)
+            .addField(Constants.PricebookEntry.PRODUCT_FAMILY_FIELD)
             .addConditionsWithOrder(orderOfQuery)
-            .add(new QueryBuilder.LikeCondition('Product2.Name').likeAnyBoth(parameters.NameAndCode))
-            .add(new QueryBuilder.LikeCondition('Product2.ProductCode').likeAnyBoth(parameters.NameAndCode))
-            .add(new QueryBuilder.SimpleCondition('Pricebook2Id = \'' + priceBookId + '\''))
-            .add(new QueryBuilder.SimpleCondition('Product2.Family = \'' + parameters.Family + '\''))
+            .add(new QueryBuilder.LikeCondition(Constants.PricebookEntry.PRODUCT_NAME_FIELD).likeAnyBoth(parameters.NameAndCode))
+            .add(new QueryBuilder.LikeCondition(Constants.PricebookEntry.PRODUCT_CODE_FIELD).likeAnyBoth(parameters.NameAndCode))
+            .add(new QueryBuilder.SimpleCondition(Constants.PricebookEntry.PRICEBOOK_ID_FIELD + ' = \'' + priceBookId + '\''))
+            .add(new QueryBuilder.SimpleCondition(Constants.PricebookEntry.PRODUCT_FAMILY_FIELD + ' = \'' + parameters.Family + '\''))
             .endConditions()
             .setLimit(parameters.recordsPerPage)
             .setOffset(parameters.offset);
@@ -193,7 +193,7 @@ public with sharing class ProductSearchController {
             LIMIT 1
         ];
         if (opportunity.size() < 1) {
-            throw new AuraHandledException('The Opportunity was not found');
+            throw new AuraHandledException(System.Label.Opportunity_Not_Found);
         }
         List<Id> productId = new List<Id>();
         for(OrderItemWrapper orderItem : orderItemWrappers){
@@ -209,7 +209,7 @@ public with sharing class ProductSearchController {
         Savepoint savePoint = Database.setSavepoint();
         try{
             Order order = new Order();
-            order.Status = 'Draft';
+            order.Status = Constants.Order.STATUS_DRAFT;
             order.EffectiveDate = System.today();
             order.AccountId = opportunity[0].AccountId;
             order.OwnerId = opportunity[0].OwnerId;

@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
     <labels>
+        <fullName>Opportunity_Not_Found</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Opportunity Not Found</shortDescription>
+        <value>The Opportunity was not found</value>
+    </labels>
+    <labels>
+        <fullName>Restrict_Used_Discount_Edit_Error</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>User can&apos;t edit a discount in use</shortDescription>
+        <value>You cannot edit a discount that is already in use</value>
+    </labels>
+    <labels>
+        <fullName>Unsuported_Discount_Strategy_Type</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Exception message for not implemented strategy Type</shortDescription>
+        <value>Invalid strategy type:</value>
+    </labels>
+    <labels>
         <fullName>Unsuported_Discount_Type</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -13,5 +34,215 @@
         <protected>true</protected>
         <shortDescription>Exception message for invalid recurrence Type</shortDescription>
         <value>Unsuported Recurrence Type:</value>
+    </labels>
+    <labels>
+        <fullName>active</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used in datatable label etc.</shortDescription>
+        <value>Active</value>
+    </labels>
+    <labels>
+        <fullName>addDiscountButton</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for a button</shortDescription>
+        <value>Add Discount</value>
+    </labels>
+    <labels>
+        <fullName>cancelButton</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for a button</shortDescription>
+        <value>Cancel</value>
+    </labels>
+    <labels>
+        <fullName>createOrderButton</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for a button</shortDescription>
+        <value>Create Order</value>
+    </labels>
+    <labels>
+        <fullName>discountAmount</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>LWC text for summary value</shortDescription>
+        <value>Discount Amount</value>
+    </labels>
+    <labels>
+        <fullName>family</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used in datatable label etc.</shortDescription>
+        <value>Family</value>
+    </labels>
+    <labels>
+        <fullName>finalPrice</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>LWC text for summary value</shortDescription>
+        <value>Final Price</value>
+    </labels>
+    <labels>
+        <fullName>firstButton</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for a button</shortDescription>
+        <value>First</value>
+    </labels>
+    <labels>
+        <fullName>invalidData</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used in LWC Toasts etc.</shortDescription>
+        <value>Invalid data</value>
+    </labels>
+    <labels>
+        <fullName>invalidQuantityOrUnitPrice</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message when input contains invalid field value</shortDescription>
+        <value>Quantity and Unit Price must be greater than 0</value>
+    </labels>
+    <labels>
+        <fullName>lastButton</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for a button</shortDescription>
+        <value>Last</value>
+    </labels>
+    <labels>
+        <fullName>missingProductMessage</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message when user don&apos;t choose product/s</shortDescription>
+        <value>Please select at least one product</value>
+    </labels>
+    <labels>
+        <fullName>name</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used in datatable label etc.</shortDescription>
+        <value>Name</value>
+    </labels>
+    <labels>
+        <fullName>nextButton</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for a button</shortDescription>
+        <value>Next</value>
+    </labels>
+    <labels>
+        <fullName>noRecordsFound</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>General message for empty list</shortDescription>
+        <value>No records found</value>
+    </labels>
+    <labels>
+        <fullName>previousButton</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for a button</shortDescription>
+        <value>Previous</value>
+    </labels>
+    <labels>
+        <fullName>pricebook</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used in datatable label etc.</shortDescription>
+        <value>Pricebook</value>
+    </labels>
+    <labels>
+        <fullName>product</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used in datatable label etc.</shortDescription>
+        <value>Product</value>
+    </labels>
+    <labels>
+        <fullName>productCode</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used in datatable label etc.</shortDescription>
+        <value>Product Code</value>
+    </labels>
+    <labels>
+        <fullName>productName</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used in datatable label etc.</shortDescription>
+        <value>Product Name</value>
+    </labels>
+    <labels>
+        <fullName>productSearchTitle</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Modal header</shortDescription>
+        <value>Product Search</value>
+    </labels>
+    <labels>
+        <fullName>productSummaryTitle</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Modal header</shortDescription>
+        <value>Product Summary</value>
+    </labels>
+    <labels>
+        <fullName>quantity</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used in datatable label etc.</shortDescription>
+        <value>Quantity</value>
+    </labels>
+    <labels>
+        <fullName>recordsPerPage</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for pagination picklist</shortDescription>
+        <value>Records per page</value>
+    </labels>
+    <labels>
+        <fullName>resetFiltersButton</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for a button</shortDescription>
+        <value>Reset Filters</value>
+    </labels>
+    <labels>
+        <fullName>searchButton</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for a button</shortDescription>
+        <value>Search</value>
+    </labels>
+    <labels>
+        <fullName>showSelected</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for a button to show only selected items</shortDescription>
+        <value>Show Selected</value>
+    </labels>
+    <labels>
+        <fullName>totalAmount</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>LWC text for summary value</shortDescription>
+        <value>Total Amount</value>
+    </labels>
+    <labels>
+        <fullName>unitPrice</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used in datatable label etc.</shortDescription>
+        <value>Unit Price</value>
+    </labels>
+    <labels>
+        <fullName>viewAll</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for a button to show all elements</shortDescription>
+        <value>View All</value>
     </labels>
 </CustomLabels>

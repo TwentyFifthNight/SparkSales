@@ -14,6 +14,7 @@ import searchPage from './productSearch.html';
 import summaryPage from './productListSummary.html';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { NavigationMixin } from "lightning/navigation";
+import LABELS from './productSearchLabels';
 
 const Page = {
     ProductSearch: 'productSearch',
@@ -21,16 +22,18 @@ const Page = {
 }
 
 export default class ProductSearch extends NavigationMixin(LightningElement) {
+    label = LABELS;
+
     currentLWCPage = Page.ProductSearch;
     columns = [
-        { label: 'Name', fieldName: 'Name', type: 'text'},
-        { label: 'Product Code', fieldName: 'ProductCode', type: 'text'},
-        { label: 'Family', fieldName: 'Family', type: 'text'},
+        { label: this.label.name, fieldName: 'Name', type: 'text'},
+        { label: this.label.productCode, fieldName: 'ProductCode', type: 'text'},
+        { label: this.label.family, fieldName: 'Family', type: 'text'},
     ];
     orderColumns = [
-        { label: 'Product Name', fieldName: 'name', type: 'text'},
-        { label: 'Quantity', fieldName: 'quantity', type: 'number', editable: true },
-        { label: 'Unit Price', fieldName: 'unitPrice', type: 'currency', editable: true},
+        { label: this.label.productName, fieldName: 'name', type: 'text'},
+        { label: this.label.quantity, fieldName: 'quantity', type: 'number', editable: true },
+        { label: this.label.unitPrice, fieldName: 'unitPrice', type: 'currency', editable: true},
     ];
     pageSizeOptions = [
         { label: '5', value: '5' },
@@ -253,7 +256,7 @@ export default class ProductSearch extends NavigationMixin(LightningElement) {
     }
 
     get pageInfo() {
-        return `Page ${this.currentPage} of ${this.totalPages}`;
+        return ` ${this.currentPage} / ${this.totalPages}`;
     }
 
     get disableFirstAndPreviousButton() {
@@ -289,8 +292,8 @@ export default class ProductSearch extends NavigationMixin(LightningElement) {
     async handleNextButton() {
         if(this.selectedProducts.length < 1) {
             const event = new ShowToastEvent({
-                title: 'Missing products',
-                message: 'Please select at least one product',
+                title: this.label.invalidData,
+                message: this.label.missingProductMessage,
                 variant: 'error'
             });
             this.dispatchEvent(event);
@@ -329,8 +332,8 @@ export default class ProductSearch extends NavigationMixin(LightningElement) {
         for (let i = 0; i < this.orderItems.length; i++) {
             if (!(this.orderItems[i].quantity > 0) || !(this.orderItems[i].unitPrice > 0)) {
                 const event = new ShowToastEvent({
-                    title: 'Invalid data',
-                    message: `Quantity and Unit Price must be greater than 0 (${this.orderItems[i].name})`,
+                    title: this.label.invalidData,
+                    message: `${this.label.invalidQuantityOrUnitPrice} (${this.orderItems[i].name})`,
                     variant: 'error'
                 });
                 this.dispatchEvent(event);
@@ -358,7 +361,7 @@ export default class ProductSearch extends NavigationMixin(LightningElement) {
     }
 
     get toggleListViewButtonLabel(){
-        return this.showSelected ? 'View All' : 'Show Selected';
+        return this.showSelected ? this.label.viewAll : this.label.showSelected;
     }
 
     toggleListViewType(){

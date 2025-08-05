@@ -7,9 +7,9 @@ private class ProductSearchControllerTest {
         update standardPricebook;
 
         List<String> familyNames = new List<String>{
-            'Adapters',
-            'Networking',
-            'Cables'
+            Constants.Product.ADAPTERS_FAMILY,
+            Constants.Product.NETWORKING_FAMILY,
+            Constants.Product.CABLES_FAMILY
         };
 
         List<Product2> products = new List<Product2>();
@@ -75,7 +75,7 @@ private class ProductSearchControllerTest {
     static void testProductCountWithAllParameters() {
         ProductSearchController.ParameterWrapper wrapper = new ProductSearchController.ParameterWrapper();
         wrapper.nameAndCode = 'est';
-        wrapper.family = 'Adapters';
+        wrapper.family = Constants.Product.ADAPTERS_FAMILY;
         Test.startTest();
         Integer count = ProductSearchController.getRecordCount(wrapper);
         Test.stopTest();
@@ -130,7 +130,7 @@ private class ProductSearchControllerTest {
     static void testProductListWithAllParameters() {
         ProductSearchController.ParameterWrapper wrapper = new ProductSearchController.ParameterWrapper();
         wrapper.nameAndCode = 'est';
-        wrapper.family = 'Adapters';
+        wrapper.family = Constants.Product.ADAPTERS_FAMILY;
         wrapper.recordsPerPage = 30;
         Test.startTest();
         List<Product2> products = ProductSearchController.getRecordList(wrapper);

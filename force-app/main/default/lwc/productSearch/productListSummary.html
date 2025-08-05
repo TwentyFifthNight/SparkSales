@@ -1,5 +1,5 @@
 <template>
-    <lightning-modal-header label="Product Summary"></lightning-modal-header>
+    <lightning-modal-header label={label.productSummaryTitle}></lightning-modal-header>
     <lightning-modal-body>
         <div class="slds-is-relative">
             <template if:true={isLoading}>
@@ -19,7 +19,7 @@
                 <!-- <div class="slds-float_right slds-m-top_medium" style="width: 40%;"> -->
                     <div class="slds-p-right_medium slds-m-top_medium">
                         <p class="slds-text-align_right">
-                            Total Amount: 
+                            {label.totalAmount}: 
                             <lightning-formatted-number 
                                 value={totalPrice} 
                                 format-style="currency"
@@ -27,7 +27,7 @@
                             ></lightning-formatted-number>
                         </p>
                         <!-- <p class="slds-text-align_right">
-                            Discount Amount: 
+                            {label.discountAmount}: 
                             <lightning-formatted-number 
                                 value={discountAmount} 
                                 format-style="currency"
@@ -36,7 +36,7 @@
                         </p>
                         <hr class="slds-m-vertical_x-small" />
                         <p class="slds-text-align_right slds-text-heading_medium">
-                            Final Price: 
+                            {label.finalPrice}: 
                             <lightning-formatted-number 
                                 value={finalPrice} 
                                 format-style="currency"
@@ -55,13 +55,13 @@
         <lightning-button
             class="slds-button"
             variant="neutral"
-            label="Cancel"
+            label={label.cancelButton}
             onclick={handleDismiss}
         ></lightning-button>
         <lightning-button
             class="slds-button slds-m-left_x-small"
             variant="brand"
-            label="Create Order"
+            label={label.createOrderButton}
             onclick={handleCreateButton}
         ></lightning-button>
     </lightning-modal-footer>
