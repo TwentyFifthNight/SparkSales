@@ -58,19 +58,19 @@
     
     <template if:true={isModalOpen}>
         <div class="my-system-spinner">
-        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
-            <div class="slds-modal__container slds-p-horizontal_small">
-                <header class="slds-modal__header">
-                    <button class="slds-button slds-modal__close" title="Close" onclick={closeModal}>
-                        <lightning-icon icon-name="utility:close" alternative-text="Close" variant="bare"></lightning-icon>
-                    </button>
-                </header>
-                <div class="slds-modal__content">
-                    <lightning-flow flow-api-name="Create_New_Discount" onstatuschange={handleFlowStatusChange}></lightning-flow>
+            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container slds-p-horizontal_small">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-modal__close" title="Close" onclick={closeModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="Close" variant="bare"></lightning-icon>
+                        </button>
+                    </header>
+                    <div class="slds-modal__content">
+                        <lightning-flow flow-api-name="Create_New_Discount" onstatuschange={handleFlowStatusChange}></lightning-flow>
+                    </div>
                 </div>
-            </div>
-        </section>
-        <div class="slds-backdrop slds-backdrop_open"></div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
         </div>
     </template>
 </template>

@@ -1,2 +1,3 @@
-.THIS {
+.THIS.my-system-spinner .slds-spinner_container  {
+    background: unset
 }

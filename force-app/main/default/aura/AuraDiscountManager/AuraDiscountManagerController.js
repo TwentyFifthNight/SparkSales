@@ -17,9 +17,12 @@
 
     handlePageSizeChange : function(component, event, helper) {
         let value = event.getSource().get("v.value");
-        component.set("v.recordsPerPage", parseInt(value));
+        let perPage = parseInt(value);
+        let count = component.get("v.allRecordsCount");
+        component.set("v.recordsPerPage", perPage);
         component.set("v.recordsPerPageString", value);
         component.set("v.currentPage", 1);
+        component.set("v.totalPages", Math.ceil(count / perPage));
         helper.loadRecords(component, 1);
     },
 
