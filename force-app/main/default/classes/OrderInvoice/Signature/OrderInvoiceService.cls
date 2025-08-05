@@ -1,7 +1,7 @@
 public class OrderInvoiceService {
     @future(callout=true)
     public static void handleActivatedOrders(List<Id> orderIds){
-        if (orderIds.size() > 0) {
+        if (!orderIds.isEmpty()) {
             List<Order> orders = [SELECT Id, OrderNumber, isSigned__c FROM Order WHERE Id IN :orderIds];
             createPDFAttachements(orders);
         }

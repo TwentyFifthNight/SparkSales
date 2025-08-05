@@ -123,7 +123,6 @@ public with sharing class AccountSearchController {
             .endConditions()
             .setOffset(offsetValue)
             .setLimit(recordsPerPage);
-        System.debug(Constants.Account.TYPE_FIELD + ' = \'' + type + '\'');
         return query.toString();
     }
 
