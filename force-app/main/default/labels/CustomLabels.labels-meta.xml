@@ -245,4 +245,11 @@
         <shortDescription>Text for a button to show all elements</shortDescription>
         <value>View All</value>
     </labels>
+    <labels>
+        <fullName>loadingSpinnerText</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alternative text for a spinner</shortDescription>
+        <value>Loading</value>
+    </labels>
 </CustomLabels>

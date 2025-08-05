@@ -25,6 +25,7 @@ import totalAmount from '@salesforce/label/c.totalAmount';
 import discountAmount from '@salesforce/label/c.discountAmount';
 import finalPrice from '@salesforce/label/c.finalPrice';
 import createOrderButton from '@salesforce/label/c.createOrderButton';
+import loadingSpinnerText from '@salesforce/label/c.loadingSpinnerText';
 
 const LABELS = {
     noRecordFound,
@@ -53,7 +54,8 @@ const LABELS = {
     totalAmount,
     discountAmount,
     finalPrice,
-    createOrderButton
+    createOrderButton,
+    loadingSpinnerText
 }
 
 export default LABELS;

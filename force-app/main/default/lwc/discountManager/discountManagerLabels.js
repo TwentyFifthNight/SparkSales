@@ -9,6 +9,7 @@ import recordsPerPage from '@salesforce/label/c.recordsPerPage';
 import pricebook from '@salesforce/label/c.pricebook';
 import active from '@salesforce/label/c.active';
 import addDiscountButton from '@salesforce/label/c.addDiscountButton';
+import loadingSpinnerText from '@salesforce/label/c.loadingSpinnerText';
 
 const LABELS = {
     // page
@@ -25,6 +26,7 @@ const LABELS = {
     pricebook,
     active,
     addDiscountButton,
+    loadingSpinnerText
 }
 
 export default LABELS;
