@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Amount__c</fullName>
     <inlineHelpText>A fixed amount deducted from the price of the product</inlineHelpText>
-    <label>Amount</label>
+    <label>Discount per Item</label>
     <precision>18</precision>
     <required>false</required>
     <scale>2</scale>

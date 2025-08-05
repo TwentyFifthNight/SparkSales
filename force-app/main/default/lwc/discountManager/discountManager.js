@@ -85,9 +85,6 @@ export default class DiscountManager extends LightningElement {
                     active: discount.isActive__c
                 }));
                 this.error = undefined;
-                this.discounts.forEach(discount => {
-                    console.log(discount.active);
-                });
             })
             .catch(error => {
                 this.error = error;

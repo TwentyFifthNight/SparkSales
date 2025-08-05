@@ -1,5 +1,6 @@
 public class DiscountStrategyFactory {
     public static IDiscountStrategy getStrategy(Discount__c discount) {
+        
         switch on discount.Type__c {
             when 'Recurring' {
                 return new RecurringDiscountStrategy();
@@ -11,7 +12,7 @@ public class DiscountStrategyFactory {
                 return new SpecialDiscountStrategy();
             }
             when else {
-                throw new DiscountException('Unsupported discount type: ' + discount.Type__c);
+                throw new DiscountException(System.Label.Unsuported_Discount_Type + discount.Type__c);
             }
         }
     }

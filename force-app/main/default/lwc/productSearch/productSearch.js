@@ -306,7 +306,8 @@ export default class ProductSearch extends NavigationMixin(LightningElement) {
             return;
         }
         this.isLoading = true;
-        await createNewOrder({orderItems: this.orderItems, opportunityId: this.recordId})
+
+        await createNewOrder({orderItemWrappers: this.orderItems, opportunityId: this.recordId})
             .then(result => {
                 this[NavigationMixin.Navigate]({
                     type: 'standard__recordPage',

@@ -134,8 +134,8 @@ private class OrderItemsDiscountEvaluatorTest {
             discount.Product__c = products[Math.mod(i, products.size())].Id;
             discount.Type__c = 'Recurring';
             discount.Recurrence_Type__c = recurrenceType;
-            discount.Recurrence_Day_Of_Month__c = String.valueOf(startDate.day());
-            discount.Recurrence_Month_Of_Year__c = String.valueOf(startDate.month());
+            discount.Recurrence_Day_Of_Month__c = startDate.day();
+            discount.Recurrence_Month_Of_Year__c = startDate.month();
             discount.Name = 'Test';
             discount.Amount_Type__c = amountType;
             discount.Percentage__c = value;

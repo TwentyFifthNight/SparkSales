@@ -1,3 +1,11 @@
 public class Constants {
-    public static final Id STANDARD_PRICEBOOK_ID = [select Id from Pricebook2 where isStandard = true limit 1].Id;
+    public static Id STANDARD_PRICEBOOK_ID {
+        get {
+            if (STANDARD_PRICEBOOK_ID == null) {
+                STANDARD_PRICEBOOK_ID = [SELECT Id FROM Pricebook2 WHERE IsStandard = true LIMIT 1].Id;
+            }
+            return STANDARD_PRICEBOOK_ID;
+        }
+        private set;
+    }
 }

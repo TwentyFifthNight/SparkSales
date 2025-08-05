@@ -220,8 +220,8 @@ public with sharing class ProductSearchController {
             }
             insert order;
 
-            List<OrderItem> orderItemToInsert = orderItemWrapperToOrderItem(orderItemWrappers, order.Id, pricebookEntriesByProductId);
-            insert orderItemToInsert;
+            List<OrderItem> orderItemsToInsert = orderItemWrapperToOrderItem(orderItemWrappers, order.Id, pricebookEntriesByProductId);
+            insert orderItemsToInsert;
             return order.Id;
         } catch (Exception e) {
             Database.rollback(savePoint);
@@ -242,7 +242,7 @@ public with sharing class ProductSearchController {
     }
 
     private static List<OrderItem> orderItemWrapperToOrderItem(List<OrderItemWrapper> orderItems, Id orderId, Map<Id, PricebookEntry> pricebookEntriesByProductId) {
-        List<OrderItem> orderItemToInsert = new List<OrderItem>();
+        List<OrderItem> orderItemsToInsert = new List<OrderItem>();
         for(OrderItemWrapper orderItem : orderItems){
             OrderItem item = new OrderItem();
             item.OrderId = orderId;
@@ -250,8 +250,8 @@ public with sharing class ProductSearchController {
             item.Quantity = orderItem.quantity;
             item.UnitPrice = orderItem.unitPrice;
             item.PricebookEntryId = pricebookEntriesByProductId.get(orderItem.product2Id).Id;
-            orderItemToInsert.add(item);
+            orderItemsToInsert.add(item);
         }
-        return orderItemToInsert;
+        return orderItemsToInsert;
     }
 }

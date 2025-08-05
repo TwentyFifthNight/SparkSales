@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Timed_dates_validation</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+ ISPICKVAL(Type__c, &apos;Timed&apos;),
+ OR(
+  OR(ISBLANK(Start_Date__c), ISBLANK(End_Date__c)),
+    End_Date__c  &lt;  Start_Date__c 
+ )
+)</errorConditionFormula>
+    <errorMessage>Fill Start and End dates. Make sure the End date is after or the same day as the Start date.</errorMessage>
+</ValidationRule>

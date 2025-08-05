@@ -24,7 +24,6 @@ public class OrderItemsDiscountEvaluator {
         } else {
             setting = DiscountTestingSettings.setting;
         }
-
         Decimal discountPoolRemaining = grandTotal * (setting.Maximum_Discount__c / 100);
 
         Set<Id> productIds = new Set<Id>();
@@ -33,7 +32,7 @@ public class OrderItemsDiscountEvaluator {
         }
 
         List<Discount__c> allDiscounts = [
-            SELECT Type__c, Amount_Type__c, Amount__c, Percentage__c,
+            SELECT Name, Type__c, Amount_Type__c, Amount__c, Percentage__c,
                 Recurrence_Type__c, Recurrence_Day_Of_Month__c, Recurrence_Month_Of_Year__c,
                 Start_Date__c, End_Date__c, Threshold_Amount__c,
                 Product__c
@@ -74,8 +73,8 @@ public class OrderItemsDiscountEvaluator {
                     discountPoolRemaining -= discount.discountAmount;
                 } else {
                     totalForItem += discountPoolRemaining;
+                    discount.discountAmount = discountPoolRemaining;
                     discountPoolRemaining = 0;
-                    break;
                 }
             }
 
