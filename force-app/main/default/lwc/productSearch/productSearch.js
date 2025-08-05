@@ -4,6 +4,7 @@ import getRecordList from '@salesforce/apex/ProductSearchController.getRecordLis
 import getRecordCount from '@salesforce/apex/ProductSearchController.getRecordCount';
 import getSelectedProducts from '@salesforce/apex/ProductSearchController.getOpportunityProducts';
 import generateOrderItemsFromProducts from '@salesforce/apex/ProductSearchController.generateOrderItemsFromProducts';
+import getDiscounts from '@salesforce/apex/ProductSearchController.evaluateOrderItemsDiscounts';
 import createNewOrder from '@salesforce/apex/ProductSearchController.createNewOrder';
 import PRODUCT_OBJECT from '@salesforce/schema/Product2';
 import FAMILY_FIELD from '@salesforce/schema/Product2.Family';
@@ -78,6 +79,8 @@ export default class ProductSearch extends NavigationMixin(LightningElement) {
     afterFirstSearch = false;
     orderItems = undefined;
     totalPrice = 0;
+    discountAmount = 0;
+    finalPrice = 0;
 
     render() {
         switch(this.currentLWCPage) {
@@ -158,7 +161,7 @@ export default class ProductSearch extends NavigationMixin(LightningElement) {
     }
 
     draftValues;
-    handleSummaryInputChange(event){
+    async handleSummaryInputChange(event){
         const changedFields = event.detail.draftValues;
         const itemId = changedFields[0].product2Id;
         const field = Object.keys(changedFields[0])[0];
@@ -170,7 +173,7 @@ export default class ProductSearch extends NavigationMixin(LightningElement) {
             return item;
         });
         this.draftValues = []; // Remove highlighted rows from datatable
-        this.totalPrice = this.orderItems.reduce((total, item) => total + (item.quantity * item.unitPrice), 0);
+        await this.recalculateTotals();
     }
 
     async handleSearchButton(event) {
@@ -358,6 +361,23 @@ export default class ProductSearch extends NavigationMixin(LightningElement) {
             .finally(() => {
                 this.isLoading = false;
             });
+        await this.recalculateTotals();
+    }
+
+    async loadDiscounts() {
+        await getDiscounts({orderItemWrappers: this.orderItems, opportunityId: this.recordId})
+            .then(discounts => {
+                this.discountAmount = discounts.reduce((total, item) => total + item.totalDiscount, 0);
+            })
+            .catch(error => {
+                this.error = error;
+            });
+    }
+
+    async recalculateTotals() {
+        await this.loadDiscounts();
+        this.totalPrice = this.orderItems.reduce((total, item) => total + (item.quantity * item.unitPrice), 0);
+        this.finalPrice = this.totalPrice - this.discountAmount;
     }
 
     get toggleListViewButtonLabel(){
