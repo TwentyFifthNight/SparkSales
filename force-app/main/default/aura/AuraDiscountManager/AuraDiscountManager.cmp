@@ -62,17 +62,19 @@
     </lightning:card>
 
     <aura:if isTrue="{!v.isModalOpen}">
-        <section role="dialog" class="slds-modal slds-fade-in-open slds-backdrop">
-            <div class="slds-modal__container slds-p-horizontal_small">
-                <header class="slds-modal__header">
-                    <button class="slds-button slds-modal__close" onclick="{!c.closeModal}" title="Close">
-                        <lightning:icon iconName="utility:close" alternativeText="Close" variant="bare"/>
-                    </button>
-                </header>
-                <div class="slds-modal__content">
-                    <lightning:flow aura:id="discountFlow" onstatuschange="{!c.handleFlowStatusChange}"/>
+        <div class="my-system-spinner">
+            <section role="dialog" class="slds-modal slds-fade-in-open slds-backdrop">
+                <div class="slds-modal__container slds-p-horizontal_small">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-modal__close" onclick="{!c.closeModal}" title="Close">
+                            <lightning:icon iconName="utility:close" alternativeText="Close" variant="bare"/>
+                        </button>
+                    </header>
+                    <div class="slds-modal__content">
+                        <lightning:flow aura:id="discountFlow" onstatuschange="{!c.handleFlowStatusChange}"/>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </div>
     </aura:if>
 </aura:component>
