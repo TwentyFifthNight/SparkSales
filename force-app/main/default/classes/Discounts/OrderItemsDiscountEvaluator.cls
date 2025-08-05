@@ -2,6 +2,7 @@ public class OrderItemsDiscountEvaluator {
     public class ItemDiscountResult {
         public Id orderItemId;
         public List<ItemDiscountEvaluator.EvaluatedDiscount> appliedDiscounts = new List<ItemDiscountEvaluator.EvaluatedDiscount>();
+        @AuraEnabled
         public Decimal totalDiscount = 0;
     }
 

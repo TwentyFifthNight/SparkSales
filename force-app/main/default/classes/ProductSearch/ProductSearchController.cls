@@ -185,6 +185,28 @@ public with sharing class ProductSearchController {
     }
 
     @AuraEnabled(cacheable=false)
+    public static List<OrderItemsDiscountEvaluator.ItemDiscountResult> evaluateOrderItemsDiscounts(List<OrderItemWrapper> orderItemWrappers, Id opportunityId) {
+        Opportunity opportunit = [
+            SELECT Pricebook2Id
+            FROM Opportunity
+            WHERE Id = :opportunityId
+            LIMIT 1
+        ];
+
+        List<OrderItem> orderItems = new List<OrderItem>();
+        for (OrderItemWrapper orderItemWrapper : orderItemWrappers) {
+            OrderItem item = new OrderItem();
+            item.Id = null;
+            item.Product2Id = orderItemWrapper.product2Id;
+            item.Quantity = orderItemWrapper.quantity;
+            item.UnitPrice = orderItemWrapper.unitPrice;
+            orderItems.add(item);
+        }
+        List<OrderItemsDiscountEvaluator.ItemDiscountResult> results = OrderItemsDiscountEvaluator.evaluate(orderItems, opportunit.Pricebook2Id);
+        return results;
+    }
+
+    @AuraEnabled(cacheable=false)
     public static Id createNewOrder(List<OrderItemWrapper> orderItemWrappers, Id opportunityId){
         List<Opportunity> opportunity = [
             SELECT AccountId, Pricebook2Id, OwnerId
