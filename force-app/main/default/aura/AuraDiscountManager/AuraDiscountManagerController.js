@@ -1,10 +1,10 @@
 ({
     init : function(component, event, helper) {
         component.set("v.columns", [
-            { label: "Name", fieldName: "recordLink", type: "url", typeAttributes: { label: { fieldName: "Name" }, target: "_blank" } },
-            { label: "Product", fieldName: "productLink", type: "url", typeAttributes: { label: { fieldName: "productName" }, target: "_blank" } },
-            { label: "Pricebook", fieldName: "pricebookLink", type: "url", typeAttributes: { label: { fieldName: "pricebookName" }, target: "_blank" } },
-            { label: "Active", fieldName: "active", type: "boolean" }
+            { label: $A.get("$Label.c.name"), fieldName: "recordLink", type: "url", typeAttributes: { label: { fieldName: "Name" }, target: "_blank" } },
+            { label: $A.get("$Label.c.product"), fieldName: "productLink", type: "url", typeAttributes: { label: { fieldName: "productName" }, target: "_blank" } },
+            { label: $A.get("$Label.c.pricebook"), fieldName: "pricebookLink", type: "url", typeAttributes: { label: { fieldName: "pricebookName" }, target: "_blank" } },
+            { label: $A.get("$Label.c.active"), fieldName: "active", type: "boolean" }
         ]);
         component.set("v.pageSizeOptions", [
             { label: "5", value: "5" },
