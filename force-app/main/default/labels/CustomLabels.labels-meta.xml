@@ -7,4 +7,11 @@
         <shortDescription>Exception message for invalid discount Type</shortDescription>
         <value>Unsupported discount type:</value>
     </labels>
+    <labels>
+        <fullName>Unsuported_Recurrence_Type</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Exception message for invalid recurrence Type</shortDescription>
+        <value>Unsuported Recurrence Type:</value>
+    </labels>
 </CustomLabels>
