@@ -3,7 +3,7 @@ private class ItemDiscountEvaluatorTest {
 
     @isTest
     static void testEmptyDiscountList() {
-        String strategy = 'Highest';
+        String strategy = Constants.Discount.STRATEGY_HIGHEST;
         List<ItemDiscountEvaluator.EvaluatedDiscount> discounts = new List<ItemDiscountEvaluator.EvaluatedDiscount>();
         Test.startTest();
         List<ItemDiscountEvaluator.EvaluatedDiscount> result = ItemDiscountEvaluator.applyStrategy(discounts, strategy);
@@ -13,7 +13,7 @@ private class ItemDiscountEvaluatorTest {
 
     @isTest
     static void testInvalidStrategy() {
-        String strategy = 'Nothig';
+        String strategy = 'Nothing';
         List<ItemDiscountEvaluator.EvaluatedDiscount> discounts = new List<ItemDiscountEvaluator.EvaluatedDiscount>();
         discounts.add(new ItemDiscountEvaluator.EvaluatedDiscount(new Discount__c(Name = 'Test'), 100));
 
@@ -22,14 +22,14 @@ private class ItemDiscountEvaluatorTest {
             List<ItemDiscountEvaluator.EvaluatedDiscount> result = ItemDiscountEvaluator.applyStrategy(discounts, strategy);
             System.assert(false, 'Expected DiscountException');
         } catch (DiscountException e) {
-            System.assertEquals('Invalid strategy type: ' + strategy, e.getMessage());
+            System.assertEquals(System.Label.Unsuported_Discount_Strategy_Type + strategy, e.getMessage());
         }
         Test.stopTest();
     }
 
     @isTest
     static void testHighestStrategy() {
-        String strategy = 'Highest';
+        String strategy = Constants.Discount.STRATEGY_HIGHEST;
         List<ItemDiscountEvaluator.EvaluatedDiscount> discounts = new List<ItemDiscountEvaluator.EvaluatedDiscount>();
         discounts.add(new ItemDiscountEvaluator.EvaluatedDiscount(new Discount__c(Name = 'Test'), 100));
         discounts.add(new ItemDiscountEvaluator.EvaluatedDiscount(new Discount__c(Name = 'Test'), 235));
@@ -45,7 +45,7 @@ private class ItemDiscountEvaluatorTest {
 
     @isTest
     static void testLowestStrategy() {
-        String strategy = 'Lowest';
+        String strategy = Constants.Discount.STRATEGY_LOWEST;
         List<ItemDiscountEvaluator.EvaluatedDiscount> discounts = new List<ItemDiscountEvaluator.EvaluatedDiscount>();
         discounts.add(new ItemDiscountEvaluator.EvaluatedDiscount(new Discount__c(Name = 'Test'), 100));
         discounts.add(new ItemDiscountEvaluator.EvaluatedDiscount(new Discount__c(Name = 'Test'), 235));
@@ -61,7 +61,7 @@ private class ItemDiscountEvaluatorTest {
 
     @isTest
     static void testCombinedStrategy() {
-        String strategy = 'Combined';
+        String strategy = Constants.Discount.STRATEGY_COMBINED;
         List<ItemDiscountEvaluator.EvaluatedDiscount> discounts = new List<ItemDiscountEvaluator.EvaluatedDiscount>();
         discounts.add(new ItemDiscountEvaluator.EvaluatedDiscount(new Discount__c(Name = 'Test'), 100));
         discounts.add(new ItemDiscountEvaluator.EvaluatedDiscount(new Discount__c(Name = 'Test'), 235));

@@ -20,6 +20,11 @@ public with sharing class QueryBuilder {
         return this;
     }
 
+    public QueryBuilder addFields(List<String> fieldsNameList){
+        this.fieldsNameSet.addAll(fieldsNameList);
+        return this;
+    }
+
     public QueryBuilder setLimit(Integer limitValue){
         this.limitValue = String.valueOf(limitValue);
         return this;

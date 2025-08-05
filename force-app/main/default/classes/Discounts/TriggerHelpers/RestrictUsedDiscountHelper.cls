@@ -1,10 +1,13 @@
 public class RestrictUsedDiscountHelper {
     public static List<String> getUpdatedRestrictedFields(SObject oldObject, SObject newObject) {
-        String SobjectApiName = 'Discount__c';
+        String sobjectApiName = Constants.Discount.OBJECT_NAME;
+        String activeFieldName = Constants.Discount.IS_ACTIVE_FIELD.toLowerCase();
+
         Map<String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
-        Map<String, Schema.SObjectField> fieldMap = new Map<String, Schema.SObjectField>(schemaMap.get(SobjectApiName).getDescribe().fields.getMap());
-        if (fieldMap.containsKey('isactive__c')) {
-            fieldMap.keySet().remove('isactive__c');
+        Map<String, Schema.SObjectField> fieldMap = new Map<String, Schema.SObjectField>(schemaMap.get(sobjectApiName).getDescribe().fields.getMap());
+        // When the discount is used, we do not allow changes to any other fields than isActive__c
+        if (fieldMap.containsKey(activeFieldName)) {
+            fieldMap.keySet().remove(activeFieldName);
         }
         List<String> changedFields = getChangedFields(oldObject, newObject, fieldMap);
         return changedFields;

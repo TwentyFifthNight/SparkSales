@@ -3,6 +3,7 @@ import getRecordList from '@salesforce/apex/DiscountController.getRecordList';
 import getRecordCount from '@salesforce/apex/DiscountController.getRecordCount';
 import { loadStyle } from 'lightning/platformResourceLoader';
 import spinnerHeight from '@salesforce/resourceUrl/spinnerHeight'
+import LABELS from './discountManagerLabels';
 
 export default class DiscountManager extends LightningElement {
     discounts;
@@ -14,27 +15,29 @@ export default class DiscountManager extends LightningElement {
     totalPages = 0;
     allRecordsCount = 0;
 
+    label = LABELS;
+
     columns = [
         {
-            label: 'Name',
+            label: this.label.name,
             fieldName: 'recordLink',
             type: 'url',
             typeAttributes: { label: { fieldName: 'Name' }, target: '_blank' }
         },
         {
-            label: 'Product',
+            label: this.label.product,
             fieldName: 'productLink',
             type: 'url',
             typeAttributes: { label: { fieldName: 'productName' }, target: '_blank' }
         },
         {
-            label: 'Pricebook',
+            label: this.label.pricebook,
             fieldName: 'pricebookLink',
             type: 'url',
             typeAttributes: { label: { fieldName: 'pricebookName' }, target: '_blank' }
         },
         {
-            label: 'Active',
+            label: this.label.active,
             fieldName: 'active',
             type: 'boolean'
         }
@@ -129,7 +132,7 @@ export default class DiscountManager extends LightningElement {
     }
 
     get pageInfo() {
-        return `Page ${this.currentPage} of ${this.totalPages}`;
+        return `${this.currentPage} / ${this.totalPages}`;
     }
 
     get disableFirstAndPreviousButton() {

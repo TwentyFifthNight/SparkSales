@@ -8,9 +8,9 @@ private class DiscountUpdateTest {
 
         Discount__c discount = new Discount__c(
             Name = 'Test Discount',
-            Amount_Type__c = 'Percentage',
+            Amount_Type__c = Constants.Discount.PERCENTAGE_AMOUNT_TYPE,
             Percentage__c = 10,
-            Type__c = 'Timed',
+            Type__c = Constants.Discount.TIMED_TYPE,
             Start_Date__c = System.today(),
             End_Date__c = System.today().addDays(30)
         );
@@ -21,7 +21,7 @@ private class DiscountUpdateTest {
 
         Order order = new Order(
             Name = 'Test Order',
-            Status = 'Draft',
+            Status = Constants.Order.STATUS_DRAFT,
             AccountId = account.Id,
             EffectiveDate = System.today(),
             Pricebook2Id = Constants.STANDARD_PRICEBOOK_ID
@@ -59,11 +59,11 @@ private class DiscountUpdateTest {
             update discount;
             System.assert(false, 'Expected DiscountException');
         } catch (DmlException e) {
-            System.assert(e.getMessage().contains('You cannot edit a discount that is already in use'));
+            System.assert(e.getMessage().contains(System.Label.Restrict_Used_Discount_Edit_Error), 'Expected error message not found: ' + e.getMessage());
         }
         Test.stopTest();
         Discount__c updatedDiscount = [SELECT Id, Name FROM Discount__c WHERE Id = :discount.Id];
-        System.assertNotEquals('Updated Discount Name', updatedDiscount.Name);
+        System.assertNotEquals('Updated Discount Name', updatedDiscount.Name, 'Discount name should not be updated when used in an order');
     }
 
     @isTest
@@ -89,6 +89,6 @@ private class DiscountUpdateTest {
         }
         Test.stopTest();
         Discount__c updatedDiscount = [SELECT isActive__c FROM Discount__c WHERE Id = :discount.Id];
-        System.assertEquals(true, updatedDiscount.isActive__c);
+        System.assertEquals(true, updatedDiscount.isActive__c, 'Discount should be active after update');
     }
 }

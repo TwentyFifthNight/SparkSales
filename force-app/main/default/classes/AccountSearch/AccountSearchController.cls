@@ -4,19 +4,7 @@ public with sharing class AccountSearchController {
     
     @AuraEnabled(cacheable=false)
     public static Integer getAccountCount(String name, String type, String industry){
-        Map<String,String> fieldToValueMap = new Map<String,String>{
-            'Name' => name,
-            'Type' => type,
-            'Industry' => industry
-        };
-        List<String> whereClauses = buildWhereClauses(fieldToValueMap);
-        
-        String queryString = buildQueryString('SELECT COUNT()', whereClauses);
-        return Database.countQuery(queryString);
-    }
-
-    private static String queryStringToURLFormat(String query){
-        return query.trim().replace(' ', '+').replace('%', '%25');
+        return Database.countQuery(buildCountQuery(name, type, industry));
     }
     
     @AuraEnabled(cacheable=false)
@@ -27,16 +15,8 @@ public with sharing class AccountSearchController {
         if (recordsPerPage == null || recordsPerPage < 1) {
             recordsPerPage = 10;
         }
-
-        Map<String,String> fieldToValueMap = new Map<String,String>{
-            'Name' => name,
-            'Type' => type,
-            'Industry' => industry
-        };
-        List<String> whereClauses = buildWhereClauses(fieldToValueMap);
         Integer queryOffset = recordsPerPage * (pageNumber - 1);
-        
-        String query = buildQueryString('SELECT Id, Name, Type, Industry, Phone', whereClauses, recordsPerPage, queryOffset);
+        String query = buildSearchQuery(name, type, industry, queryOffset, recordsPerPage);
         return Database.query(query);
     }
     
@@ -44,13 +24,7 @@ public with sharing class AccountSearchController {
     public static Integer getAccountCountFromWiktor(String name, String type, String industry){
         Http http = new Http();
         HttpRequest request = new HttpRequest();
-        Map<String,String> fieldToValueMap = new Map<String,String>{
-            'Name' => name,
-            'Type' => type,
-            'Industry' => industry
-        };
-        List<String> whereClauses = buildWhereClauses(fieldToValueMap);
-        String queryString = buildQueryString('SELECT COUNT()', whereClauses);
+        String queryString = buildCountQuery(name, type, industry);
         queryString = queryStringToURLFormat(queryString);
         String endpoint = QUERY_WIKTOR_ENDPOINT + queryString;
         
@@ -68,22 +42,9 @@ public with sharing class AccountSearchController {
 
     @AuraEnabled(cacheable=false)
     public static List<Account> searchAccountsFromWiktor(String name, String type, String industry, Integer offset, Integer recordsPerPage){
-        if(offset == null || offset < 0) {
-            offset = 0;
-        }
-        if(recordsPerPage == null || recordsPerPage < 1) {
-            recordsPerPage = 10;
-        }
-
         Http http = new Http();
         HttpRequest request = new HttpRequest();
-        Map<String,String> fieldToValueMap = new Map<String,String>{
-            'Name' => name,
-            'Type' => type,
-            'Industry' => industry
-        };
-        List<String> whereClauses = buildWhereClauses(fieldToValueMap);
-        String queryString = buildQueryString('SELECT Id, Name, Type, Industry, Phone', whereClauses, recordsPerPage, offset);
+        String queryString = buildSearchQuery(name, type, industry, offset, recordsPerPage);
         queryString = queryStringToURLFormat(queryString);
         String endpoint = QUERY_WIKTOR_ENDPOINT + queryString;
         
@@ -110,44 +71,66 @@ public with sharing class AccountSearchController {
         return accounts;
     }
 
-    private static List<String> buildWhereClauses(Map<String, String> fieldToValueMap) {
-        List<String> whereClauses = new List<String>();
-        for(String fieldName : fieldToValueMap.keySet()){
-            String fieldValue = fieldToValueMap.get(fieldName);
-            if(!String.isBlank(fieldValue)){
-                String filter = fieldName + ' LIKE \'%' + fieldValue + '%\'';
-                whereClauses.add(filter);
-            }
+    private static String buildCountQuery(String name, String type, String industry) {
+        if (String.isBlank(name)) {
+            name = '';
         }
-        return whereClauses;
+        String orderOfQuery = '1';
+        if(!String.isBlank(type)){
+            orderOfQuery += ' AND 2';
+        }
+        if(!String.isBlank(industry)){
+            orderOfQuery += ' AND 3';
+        }
+
+        QueryBuilder query = new QueryBuilder(Constants.Account.OBJECT_NAME)
+            .addConditionsWithOrder(orderOfQuery)
+            .add(new QueryBuilder.LikeCondition(Constants.Account.NAME_FIELD).likeAnyBoth(name))
+            .add(new QueryBuilder.SimpleCondition(Constants.Account.TYPE_FIELD + '= \'' + type + '\''))
+            .add(new QueryBuilder.SimpleCondition(Constants.Account.INDUSTRY_FIELD + '= \'' + industry + '\''))
+            .endConditions();
+        return query.toStringCount();
     }
 
-    private static String buildQueryString(String queryHead, List<String> whereClauses, Integer queryLimit, Integer queryOffset){
-        String queryTemplate = '{0} LIMIT {1} OFFSET {2}';
-        String queryString = String.format(
-            queryTemplate,
-            new List<String> {
-                buildQueryString(queryHead, whereClauses),
-                String.valueOf(queryLimit),
-                String.valueOf(queryOffset)
-            }
-        );
-        return queryString;
+    private static String buildSearchQuery(String name, String type, String industry, Integer offsetValue, Integer recordsPerPage){
+        if (offsetValue == null || offsetValue < 0) {
+            offsetValue  = 0;
+        }
+        if (recordsPerPage == null || recordsPerPage < 1) {
+            recordsPerPage = 10;
+        }
+        
+        if (String.isBlank(name)) {
+            name = '';
+        }
+        String orderOfQuery = '1';
+        if(!String.isBlank(type)){
+            orderOfQuery += ' AND 2';
+        }
+        if(!String.isBlank(industry)){
+            orderOfQuery += ' AND 3';
+        }
+
+        QueryBuilder query = new QueryBuilder(Constants.Account.OBJECT_NAME)
+            .addFields(new List<String>{
+                Constants.Account.ID_FIELD, Constants.Account.NAME_FIELD, Constants.Account.TYPE_FIELD, 
+                Constants.Account.INDUSTRY_FIELD, Constants.Account.PHONE_FIELD
+            })
+            .addConditionsWithOrder(orderOfQuery)
+            .add(new QueryBuilder.LikeCondition(Constants.account.NAME_FIELD).likeAnyBoth(name))
+            .add(new QueryBuilder.SimpleCondition(Constants.Account.TYPE_FIELD + ' = \'' + type + '\''))
+            .add(new QueryBuilder.SimpleCondition(Constants.Account.INDUSTRY_FIELD + ' = \'' + industry + '\''))
+            .endConditions()
+            .setOffset(offsetValue)
+            .setLimit(recordsPerPage);
+        System.debug(Constants.Account.TYPE_FIELD + ' = \'' + type + '\'');
+        return query.toString();
     }
 
-    private static String buildQueryString(String queryHead, List<String> whereClauses){
-        String queryTemplate = '{0} FROM Account {1} {2}';
-        String queryString = String.format(
-            queryTemplate,
-            new List<String> {
-                queryHead,
-                whereClauses.size() > 0 ? 'WHERE' : '',
-                String.join(whereClauses, ' AND ')
-            }
-        );
-        return queryString;
+    private static String queryStringToURLFormat(String query){
+        return query.trim().replace(' ', '+').replace('%', '%25');
     }
-
+    
     @AuraEnabled(cacheable=false)
     public static Boolean createNewAccount(String name, String type, String industry, String destination){
         if (destination == 'Local'){

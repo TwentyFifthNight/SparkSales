@@ -5,7 +5,7 @@
         </template>
         <div class="slds-m-around_large slds-grid slds-grid_align-end">
             <lightning-button 
-                label="Add Discount"
+                label={label.addDiscountButton}
                 onclick={openModal} 
                 variant="brand">
             </lightning-button>
@@ -16,7 +16,7 @@
                 <div class="slds-p-horizontal_medium">
                     <div class="slds-grid slds-grid_align-end">
                         <lightning-combobox
-                            label="Records per page"
+                            label={label.recordsPerPage}
                             value={recordsPerPageString}
                             options={pageSizeOptions}
                             onchange={handlePageSizeChange}
@@ -33,11 +33,11 @@
                     ></lightning-datatable>
 
                     <div class="slds-m-top_medium slds-align_absolute-center">
-                        <lightning-button label="First" onclick={handleFirstPageClick} disabled={disableFirstAndPreviousButton} class="slds-m-horizontal_x-small"></lightning-button>
-                        <lightning-button label="Previous" onclick={handlePreviousPageClick} disabled={disableFirstAndPreviousButton} class="slds-m-horizontal_x-small"></lightning-button>
+                        <lightning-button label={label.firstButton} onclick={handleFirstPageClick} disabled={disableFirstAndPreviousButton} class="slds-m-horizontal_x-small"></lightning-button>
+                        <lightning-button label={label.previousButton} onclick={handlePreviousPageClick} disabled={disableFirstAndPreviousButton} class="slds-m-horizontal_x-small"></lightning-button>
                         <span class="slds-m-horizontal_small">{pageInfo}</span>
-                        <lightning-button label="Next" onclick={handleNextPageClick} disabled={disableNextAndLastButton} class="slds-m-horizontal_x-small"></lightning-button>
-                        <lightning-button label="Last" onclick={handleLastPageClick} disabled={disableNextAndLastButton} class="slds-m-horizontal_x-small"></lightning-button>
+                        <lightning-button label={label.nextButton} onclick={handleNextPageClick} disabled={disableNextAndLastButton} class="slds-m-horizontal_x-small"></lightning-button>
+                        <lightning-button label={label.lastButton} onclick={handleLastPageClick} disabled={disableNextAndLastButton} class="slds-m-horizontal_x-small"></lightning-button>
                     </div>
                 </div>
             </template>
@@ -45,7 +45,7 @@
         <template if:true={noResults}>
             <div class="slds-m-bottom_large">
                 <p class="slds-text-align_center slds-text-heading_medium">
-                    No records found
+                    {label.noRecordFoundLabel}
                 </p>
             </div>
         </template>

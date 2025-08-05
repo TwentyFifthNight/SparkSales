@@ -14,11 +14,11 @@ public with sharing class DiscountController {
             offset  = 0;
         }
 
-        QueryBuilder query = new QueryBuilder('Discount__c')
-            .addField('Name')
-            .addField('Product__r.Name')
-            .addField('Pricebook__r.Name')
-            .addField('isActive__c')
+        QueryBuilder query = new QueryBuilder(Constants.Discount.OBJECT_NAME)
+            .addField(Constants.Discount.NAME_FIELD)
+            .addField(Constants.Discount.PRODUCT_NAME_FIELD)
+            .addField(Constants.Discount.PRICEBOOK_NAME_FIELD)
+            .addField(Constants.Discount.IS_ACTIVE_FIELD)
             .setLimit(recordsPerPage)
             .setOffset(offset);
         List<Discount__c> discounts = Database.query(query.toString());

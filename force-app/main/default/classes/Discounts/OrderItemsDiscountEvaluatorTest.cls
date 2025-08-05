@@ -16,7 +16,7 @@ private class OrderItemsDiscountEvaluatorTest {
 
         Order order = new Order();
         order.Name = 'TestOrder';
-        order.Status = 'Draft';
+        order.Status = Constants.Order.STATUS_DRAFT;
         order.AccountId = acc.Id;
         order.EffectiveDate = System.today();
         order.Pricebook2Id = standardPricebook.Id;
@@ -42,9 +42,9 @@ private class OrderItemsDiscountEvaluatorTest {
 
         Id pricebookId = Test.getStandardPricebookId();
 
-        List<Discount__c> timedDiscounts = CreateTestTimedDiscounts(true, 'Percentage', 5, 5);
+        List<Discount__c> timedDiscounts = CreateTestTimedDiscounts(true, Constants.Discount.PERCENTAGE_AMOUNT_TYPE, 5, 5);
         insert timedDiscounts;
-        timedDiscounts = CreateTestTimedDiscounts(false, 'Percentage', 5, 5);
+        timedDiscounts = CreateTestTimedDiscounts(false, Constants.Discount.PERCENTAGE_AMOUNT_TYPE, 5, 5);
         insert timedDiscounts;
 
         Test.startTest();
@@ -59,8 +59,8 @@ private class OrderItemsDiscountEvaluatorTest {
             }
             totalDiscount += resultItem.totalDiscount;
         }
-        System.assertEquals(5, appliedDiscounts.size());
-        System.assertEquals(2.5, totalDiscount);
+        System.assertEquals(5, appliedDiscounts.size(), 'Expected 5 applied discounts');
+        System.assertEquals(2.5, totalDiscount, 'Expected total discount to be 2.5');
     }
 
     @isTest
@@ -68,7 +68,7 @@ private class OrderItemsDiscountEvaluatorTest {
         List<OrderItem> orderItems = [SELECT UnitPrice, Quantity, PricebookEntryId, Product2Id FROM OrderItem];
 
         Id pricebookId = Test.getStandardPricebookId();
-        List<Discount__c> timedDiscounts = CreateTestTimedDiscounts(false, 'Percentage', 5, 5);
+        List<Discount__c> timedDiscounts = CreateTestTimedDiscounts(false, Constants.Discount.PERCENTAGE_AMOUNT_TYPE, 5, 5);
         insert timedDiscounts;
 
         Test.startTest();
@@ -83,8 +83,8 @@ private class OrderItemsDiscountEvaluatorTest {
             }
             totalDiscount += resultItem.totalDiscount;
         }
-        System.assertEquals(0, appliedDiscounts.size());
-        System.assertEquals(0, totalDiscount);
+        System.assertEquals(0, appliedDiscounts.size(), 'Expected 0 applied discounts');
+        System.assertEquals(0, totalDiscount, 'Expected total discount to be 0');
     }
 
     private static List<Discount__c> CreateTestTimedDiscounts(Boolean valid, String amountType, Decimal value, Integer cnt) {
@@ -103,12 +103,12 @@ private class OrderItemsDiscountEvaluatorTest {
             Discount__c discount = new Discount__c();
             discount.Pricebook__c = pricebookId;
             discount.Product__c = products[Math.mod(i, products.size())].Id;
-            discount.Type__c = 'Timed';
+            discount.Type__c = Constants.Discount.TIMED_TYPE;
             discount.Start_Date__c = startDate;
             discount.End_Date__c = endDate;
             discount.Name = 'Test';
             discount.Amount_Type__c = amountType;
-            if (amountType == 'Percentage') {
+            if (amountType == Constants.Discount.PERCENTAGE_AMOUNT_TYPE) {
                 discount.Percentage__c = value;
             } else {
                 discount.Amount__c = value;
@@ -132,7 +132,7 @@ private class OrderItemsDiscountEvaluatorTest {
             Discount__c discount = new Discount__c();
             discount.Pricebook__c = pricebookId;
             discount.Product__c = products[Math.mod(i, products.size())].Id;
-            discount.Type__c = 'Recurring';
+            discount.Type__c = Constants.Discount.RECURRING_TYPE;
             discount.Recurrence_Type__c = recurrenceType;
             discount.Recurrence_Day_Of_Month__c = startDate.day();
             discount.Recurrence_Month_Of_Year__c = startDate.month();
