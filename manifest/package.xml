@@ -39,6 +39,7 @@
 		<members>Discount_Strategy_Setting__mdt</members>
 		<members>Discount__c</members>
 		<members>Order</members>
+		<members>OrderDiscount__c</members>
 		<name>CustomObject</name>
 	</types>
 	<types>
