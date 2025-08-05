@@ -7,7 +7,9 @@ public class OrderItemsDiscountEvaluator {
     }
 
     public static List<ItemDiscountResult> evaluate(List<OrderItem> items, Id pricebookId) {
-        if (items.isEmpty()) return new List<ItemDiscountResult>();
+        if (items.isEmpty()) { 
+            return new List<ItemDiscountResult>();
+        }
 
         Decimal grandTotal = 0;
         for (OrderItem item : items) {
@@ -17,11 +19,7 @@ public class OrderItemsDiscountEvaluator {
 
         Discount_Strategy_Setting__mdt setting;
         if (!Test.isRunningTest()){
-            setting = [
-                SELECT Maximum_Discount__c, Strategy__c
-                FROM Discount_Strategy_Setting__mdt
-                LIMIT 1
-            ];
+            setting = Constants.DISCOUNT_STRATEGY_SETTING;
         } else {
             setting = DiscountTestingSettings.setting;
         }

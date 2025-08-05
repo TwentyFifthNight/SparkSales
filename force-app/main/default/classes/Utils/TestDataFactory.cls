@@ -1,4 +1,4 @@
-public with sharing class TestDataFactory {
+public class TestDataFactory {
     public static List<Product2> ConstructProducts(Integer cnt){
         List<Product2> products = new List<Product2>();
         for(Integer i = 0; i < cnt; i++){

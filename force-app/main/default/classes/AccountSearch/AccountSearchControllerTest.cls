@@ -4,16 +4,22 @@ private class AccountSearchControllerTest {
     @TestSetup
     static void setup(){
         List<Account> accounts = new List<Account>();
-        for(Integer i = 0; i < 30; i++){
-            accounts.add(new Account(Name='Account ' + i, Type='Prospect', Industry='Banking'));
-        }
-        for(Integer i = 0; i < 30; i++){
-            accounts.add(new Account(Name='Account ' + i, Type='Other', Industry='Banking'));
-        }
-        for(Integer i = 0; i < 30; i++){
-            accounts.add(new Account(Name='Account ' + i, Type='Other', Industry='Chemicals'));
-        }
+        accounts.addAll(generateAccounts(30, 'Prospect', 'Banking'));
+        accounts.addAll(generateAccounts(30, 'Other', 'Banking'));
+        accounts.addAll(generateAccounts(30, 'Other', 'Chemicals'));
         insert accounts;
+    }
+
+    private static List<Account> generateAccounts(Integer count, String type, String industry) {
+        List<Account> accounts = new List<Account>();
+        for (Integer i = 0; i < count; i++) {
+            Account account = (Account)new AccountTestDataBuilder()
+                .withType(type)
+                .withIndustry(industry)
+                .create();
+            accounts.add(account);
+        }
+        return accounts;
     }
 
     @isTest
@@ -137,5 +143,19 @@ private class AccountSearchControllerTest {
         Test.stopTest();
 
         System.assert(result == true);
+    }
+
+    private class AccountTestDataBuilder extends BaseAccountTestDataBuilder {
+        public AccountTestDataBuilder withType(String type) {
+            Account account = (Account) record;
+            account.Type = type;
+            return this;
+        }
+
+        public AccountTestDataBuilder withIndustry(String industry) {
+            Account account = (Account) record;
+            account.Industry = industry;
+            return this;
+        }
     }
 }

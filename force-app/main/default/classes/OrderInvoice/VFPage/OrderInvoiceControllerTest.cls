@@ -7,36 +7,38 @@ private class OrderInvoiceControllerTest {
 
         TestDataFactory.insertTestData(5);
 
-        Account account = new Account(Name = 'Account');
+        Account account = (Account)new BaseAccountTestDataBuilder().create();
         insert account;
 
-        Contract contract = new Contract(
-            Status = 'Draft',
-            AccountId = account.Id,
-            StartDate = Date.today(),
-            ContractTerm = 12
-        );
+        Contract contract = (Contract)new ContractTestDataBuilder()
+            .withAccount(account)
+            .create();
         insert contract;
 
-        Order order = new Order(
-            Status = 'Draft',
-            AccountId = account.Id,
-            EffectiveDate = Date.today(),
-            ContractId = contract.Id,
-            Pricebook2Id = standardPricebook.Id
-        );
+        Order order = (Order)new OrderTestDataBuilder()
+            .withContract(contract)
+            .withAccount(account)
+            .create();
         insert order;
 
-        contract.Status = 'Activated';
+        contract.Status = Constants.Contract.STATUS_ACTIVATED;
         update contract;
 
-        List<PricebookEntry> entries = [SELECT Id FROM PricebookEntry];
+        List<PricebookEntry> entries = [SELECT Id, Product2Id FROM PricebookEntry];
+        List<OrderItem> orderItems = generateOrderItems(order, entries);
+        insert orderItems;
+    }
+
+    private static List<OrderItem> generateOrderItems(Order order, List<PricebookEntry> pricebookEntries) {
         List<OrderItem> orderItems = new List<OrderItem>();
-        for(PricebookEntry item : entries) {
-            OrderItem orderItem = new OrderItem(OrderId = order.Id, Quantity = 1, PricebookEntryId = item.Id, UnitPrice = 10);
+        for(PricebookEntry item : pricebookEntries) {
+            OrderItem orderItem = (OrderItem)new OrderItemTestDataBuilder()
+                .withOrder(order)
+                .withPricebookEntry(item)
+                .create();
             orderItems.add(orderItem);
         }
-        insert orderItems;
+        return orderItems;
     }
 
     @isTest
@@ -47,12 +49,48 @@ private class OrderInvoiceControllerTest {
         Test.setCurrentPage(Page.OrderInvoice);
         ApexPages.currentPage().getParameters().put('id', String.valueOf(order.Id));
         Test.startTest();
-            OrderInvoiceController controller = new OrderInvoiceController(new ApexPages.StandardController(order));
-            AggregateResult[] ordersPrice = [SELECT OrderId, SUM(TotalPrice) Total FROM OrderItem WHERE OrderId=:order.Id GROUP BY OrderId];
-            Decimal subtotal = (Decimal)ordersPrice[0].get('Total');
-            System.assertEquals(subtotal, controller.SubTotal);
-            System.assertEquals(subtotal + subtotal * controller.Tax / 100 , controller.TotalAmount);
-            System.assertEquals(orderItemsSize, controller.OrderItems.size());
+        OrderInvoiceController controller = new OrderInvoiceController(new ApexPages.StandardController(order));
         Test.stopTest();
+        
+        AggregateResult[] ordersPrice = [SELECT OrderId, SUM(TotalPrice) Total FROM OrderItem WHERE OrderId=:order.Id GROUP BY OrderId];
+        Decimal subtotal = (Decimal)ordersPrice[0].get('Total');
+        System.assertEquals(subtotal, controller.SubTotal, 'Subtotal should match the total price of order items');
+        System.assertEquals(subtotal + subtotal * controller.Tax / 100 , controller.TotalAmount, 'Total amount should include tax');
+        System.assertEquals(orderItemsSize, controller.OrderItems.size(), 'Order items size should match the number of order items');
+    }
+
+    private class ContractTestDataBuilder extends BaseContractTestDataBuilder {
+        protected override void prepare() {
+            super.prepare();
+            Contract contract = (Contract)record;
+            contract.Status = Constants.Contract.STATUS_DRAFT;
+            contract.StartDate = Date.today();
+            contract.ContractTerm = 12;
+        }
+    }
+
+    private class OrderTestDataBuilder extends BaseOrderTestDataBuilder {
+        protected override void prepare() {
+            super.prepare();
+            Order order = (Order)record;
+            order.Status = Constants.Order.STATUS_DRAFT;
+            order.EffectiveDate = Date.today();
+            order.Pricebook2Id = Test.getStandardPricebookId();
+        }
+
+        public OrderTestDataBuilder withContract(Contract contract) {
+            Order order = (Order) record;
+            order.ContractId = contract.Id;
+            return this;
+        }
+    }
+
+    private class OrderItemTestDataBuilder extends BaseOrderItemTestDataBuilder {
+        protected override void prepare() {
+            super.prepare();
+            OrderItem orderItem = (OrderItem)record;
+            orderItem.Quantity = 1;
+            orderItem.UnitPrice = 10;
+        }
     }
 }

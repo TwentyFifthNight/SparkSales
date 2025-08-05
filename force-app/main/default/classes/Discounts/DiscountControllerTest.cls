@@ -57,14 +57,19 @@ private class DiscountControllerTest {
     private static void createTestDiscounts() {
         List<Discount__c> discounts = new List<Discount__c>();
         for (Integer i = 0; i < 30; i++) {
-            Discount__c discount = new Discount__c();
-            discount.Name = 'Test Discount ' + i;
+            discounts.add((Discount__c) new DiscountTestDataBuilder().create());
+        }
+        insert discounts;
+    }
+
+    private class DiscountTestDataBuilder extends BaseDiscountTestDataBuilder {
+        protected override void prepare(){
+            super.prepare();
+            Discount__c discount = (Discount__c) record;
             discount.Type__c = Constants.Discount.SPECIAL_TYPE;
             discount.Threshold_Amount__c = 100;
             discount.Amount_Type__c = Constants.Discount.FIXED_AMOUNT_TYPE;
             discount.Amount__c = 10;
-            discounts.add(discount);
         }
-        insert discounts;
     }
 }

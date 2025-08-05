@@ -14,8 +14,7 @@ private class ItemDiscountEvaluatorTest {
     @isTest
     static void testInvalidStrategy() {
         String strategy = 'Nothing';
-        List<ItemDiscountEvaluator.EvaluatedDiscount> discounts = new List<ItemDiscountEvaluator.EvaluatedDiscount>();
-        discounts.add(new ItemDiscountEvaluator.EvaluatedDiscount(new Discount__c(Name = 'Test'), 100));
+        List<ItemDiscountEvaluator.EvaluatedDiscount> discounts = createTestDiscounts(new List<Decimal>{100, 200});
 
         Test.startTest();
         try{
@@ -30,11 +29,7 @@ private class ItemDiscountEvaluatorTest {
     @isTest
     static void testHighestStrategy() {
         String strategy = Constants.Discount.STRATEGY_HIGHEST;
-        List<ItemDiscountEvaluator.EvaluatedDiscount> discounts = new List<ItemDiscountEvaluator.EvaluatedDiscount>();
-        discounts.add(new ItemDiscountEvaluator.EvaluatedDiscount(new Discount__c(Name = 'Test'), 100));
-        discounts.add(new ItemDiscountEvaluator.EvaluatedDiscount(new Discount__c(Name = 'Test'), 235));
-        discounts.add(new ItemDiscountEvaluator.EvaluatedDiscount(new Discount__c(Name = 'Test'), 57));
-        discounts.add(new ItemDiscountEvaluator.EvaluatedDiscount(new Discount__c(Name = 'Test'), 5));
+        List<ItemDiscountEvaluator.EvaluatedDiscount> discounts = createTestDiscounts(new List<Decimal>{100, 235, 57, 5});
         
         Test.startTest();
         List<ItemDiscountEvaluator.EvaluatedDiscount> result = ItemDiscountEvaluator.applyStrategy(discounts, strategy);
@@ -46,11 +41,7 @@ private class ItemDiscountEvaluatorTest {
     @isTest
     static void testLowestStrategy() {
         String strategy = Constants.Discount.STRATEGY_LOWEST;
-        List<ItemDiscountEvaluator.EvaluatedDiscount> discounts = new List<ItemDiscountEvaluator.EvaluatedDiscount>();
-        discounts.add(new ItemDiscountEvaluator.EvaluatedDiscount(new Discount__c(Name = 'Test'), 100));
-        discounts.add(new ItemDiscountEvaluator.EvaluatedDiscount(new Discount__c(Name = 'Test'), 235));
-        discounts.add(new ItemDiscountEvaluator.EvaluatedDiscount(new Discount__c(Name = 'Test'), 57));
-        discounts.add(new ItemDiscountEvaluator.EvaluatedDiscount(new Discount__c(Name = 'Test'), 5));
+        List<ItemDiscountEvaluator.EvaluatedDiscount> discounts = createTestDiscounts(new List<Decimal>{100, 235, 57, 5});
         
         Test.startTest();
         List<ItemDiscountEvaluator.EvaluatedDiscount> result = ItemDiscountEvaluator.applyStrategy(discounts, strategy);
@@ -62,11 +53,7 @@ private class ItemDiscountEvaluatorTest {
     @isTest
     static void testCombinedStrategy() {
         String strategy = Constants.Discount.STRATEGY_COMBINED;
-        List<ItemDiscountEvaluator.EvaluatedDiscount> discounts = new List<ItemDiscountEvaluator.EvaluatedDiscount>();
-        discounts.add(new ItemDiscountEvaluator.EvaluatedDiscount(new Discount__c(Name = 'Test'), 100));
-        discounts.add(new ItemDiscountEvaluator.EvaluatedDiscount(new Discount__c(Name = 'Test'), 235));
-        discounts.add(new ItemDiscountEvaluator.EvaluatedDiscount(new Discount__c(Name = 'Test'), 57));
-        discounts.add(new ItemDiscountEvaluator.EvaluatedDiscount(new Discount__c(Name = 'Test'), 8));
+        List<ItemDiscountEvaluator.EvaluatedDiscount> discounts = createTestDiscounts(new List<Decimal>{100, 235, 57, 8});
         
         Test.startTest();
         List<ItemDiscountEvaluator.EvaluatedDiscount> result = ItemDiscountEvaluator.applyStrategy(discounts, strategy);
@@ -77,5 +64,14 @@ private class ItemDiscountEvaluatorTest {
             total += item.discountAmount;
         }
         System.Assert.areEqual(400, total);
+    }
+
+    private static List<ItemDiscountEvaluator.EvaluatedDiscount> createTestDiscounts(List<Decimal> amounts) {
+        List<ItemDiscountEvaluator.EvaluatedDiscount> discounts = new List<ItemDiscountEvaluator.EvaluatedDiscount>();
+        for (Decimal amount : amounts) {
+            Discount__c discount = (Discount__c)new BaseDiscountTestDataBuilder().create();
+            discounts.add(new ItemDiscountEvaluator.EvaluatedDiscount(discount, amount));
+        }
+        return discounts;
     }
 }

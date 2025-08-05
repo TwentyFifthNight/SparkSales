@@ -7,27 +7,22 @@ private class SignatureControllerTest {
 
         TestDataFactory.insertTestData(5);
 
-        Account account = new Account(Name = 'Account');
+        Account account = (Account)new BaseAccountTestDataBuilder().create(); 
         insert account;
 
-        Contract contract = new Contract(
-            Status = 'Draft',
-            AccountId = account.Id,
-            StartDate = Date.today(),
-            ContractTerm = 12
-        );
+        Contract contract = (Contract)new ContractTestDataBuilder()
+            .withAccount(account)
+            .create();
         insert contract;
 
-        Order order = new Order(
-            Status = 'Draft',
-            AccountId = account.Id,
-            EffectiveDate = Date.today(),
-            ContractId = contract.Id,
-            Pricebook2Id = standardPricebook.Id
-        );
+        Order order = (Order)new OrderTestDataBuilder()
+            .withContract(contract)
+            .withAccount(account)
+            .create();
+        
         insert order;
 
-        contract.Status = 'Activated';
+        contract.Status = Constants.Contract.STATUS_ACTIVATED;
         update contract;
 
         PricebookEntry entry = [SELECT Id FROM PricebookEntry LIMIT 1];
@@ -39,14 +34,14 @@ private class SignatureControllerTest {
     static void testSigningInvoice() {
         Order order = [SELECT Id, Status FROM Order LIMIT 1];
         Test.startTest();
-        order.Status = 'Activated';
+        order.Status = Constants.Order.STATUS_ACTIVATED;
         update order;
 
         SignatureController.saveSignature('ssdbfsdfg34q4', order.Id);
         Test.stopTest();
         List<ContentVersion> orderFiles = [SELECT ContentDocumentId, PathOnClient, Title, FileExtension FROM ContentVersion WHERE FirstPublishLocationId = :order.Id];
-        System.assertEquals(1, orderFiles.size());
-        System.assertEquals('pdf', orderFiles[0].FileExtension);
+        System.assertEquals(1, orderFiles.size(), 'Order should have one file attached');
+        System.assertEquals('pdf', orderFiles[0].FileExtension, 'File should be a PDF');
     }
 
     @isTest
@@ -56,6 +51,32 @@ private class SignatureControllerTest {
         SignatureController.saveSignature('ssdbfsdfg34q4', order.Id);
         Test.stopTest();
         List<ContentVersion> orderFiles = [SELECT ContentDocumentId, PathOnClient, Title, FileExtension FROM ContentVersion WHERE FirstPublishLocationId = :order.Id];
-        System.assertEquals(0, orderFiles.size());
+        System.assertEquals(0, orderFiles.size(), 'Order should not have any files attached without a PDF');
+    }
+
+    private class ContractTestDataBuilder extends BaseContractTestDataBuilder {
+        protected override void prepare() {
+            super.prepare();
+            Contract contract = (Contract)record;
+            contract.Status = Constants.Contract.STATUS_DRAFT;
+            contract.StartDate = Date.today();
+            contract.ContractTerm = 12;
+        }
+    }
+
+    private class OrderTestDataBuilder extends BaseOrderTestDataBuilder {
+        protected override void prepare() {
+            super.prepare();
+            Order order = (Order)record;
+            order.Status = Constants.Order.STATUS_DRAFT;
+            order.EffectiveDate = Date.today();
+            order.Pricebook2Id = Test.getStandardPricebookId();
+        }
+
+        public OrderTestDataBuilder withContract(Contract contract) {
+            Order order = (Order) record;
+            order.ContractId = contract.Id;
+            return this;
+        }
     }
 }
