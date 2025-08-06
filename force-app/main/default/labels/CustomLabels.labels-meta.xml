@@ -36,6 +36,13 @@
         <value>Unsuported Recurrence Type:</value>
     </labels>
     <labels>
+        <fullName>Unsuported_Amount_Type</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Exception message for invalid amount Type</shortDescription>
+        <value>Unsuported Amount Type:</value>
+    </labels>
+    <labels>
         <fullName>active</fullName>
         <language>en_US</language>
         <protected>true</protected>

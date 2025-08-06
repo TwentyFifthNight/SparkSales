@@ -8,6 +8,6 @@
     </values>
     <values>
         <field>Strategy__c</field>
-        <value xsi:type="xsd:string">Highest</value>
+        <value xsi:type="xsd:string">Combined</value>
     </values>
 </CustomMetadata>

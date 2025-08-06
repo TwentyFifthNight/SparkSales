@@ -10,6 +10,16 @@ public class Constants {
         private set;
     }
 
+    public static Discount_Strategy_Setting__mdt DISCOUNT_STRATEGY_SETTING {
+        get {
+            if (DISCOUNT_STRATEGY_SETTING == null) {
+                DISCOUNT_STRATEGY_SETTING = [SELECT Maximum_Discount__c, Strategy__c FROM Discount_Strategy_Setting__mdt LIMIT 1];
+            }
+            return DISCOUNT_STRATEGY_SETTING;
+        }
+        private set;
+    }
+
     public static AccountConstants Account {
         get {
             if (Account == null) {
@@ -56,6 +66,16 @@ public class Constants {
                 Discount = new DiscountConstants();
             }
             return Discount;
+        }
+        private set;
+    }
+
+    public static ContractConstants Contract {
+        get {
+            if (Contract == null) {
+                Contract = new ContractConstants();
+            }
+            return Contract;
         }
         private set;
     }

@@ -1,10 +1,11 @@
 public class RecurringDiscountStrategy extends BaseDiscountStrategy {
+    private static final String PREFIX = RecurringDiscountStrategy.class.getName().split(':')[0];
+
     public override Boolean isApplicable(Discount__c discount, Decimal totalOrderAmount) {
         Date today = Date.today();
 
         try{
-            String className = String.valueOf(this).split(':')[0];
-            RecurrenceType recurrenceType = (RecurrenceType)Type.forName(className + '.' + discount.Recurrence_Type__c).newInstance();
+            RecurrenceType recurrenceType = (RecurrenceType)Type.forName(PREFIX + '.' + discount.Recurrence_Type__c).newInstance();
             return recurrenceType.isApplicable(discount, totalOrderAmount);
         } catch (Exception e) {
             throw new DiscountException(System.Label.Unsuported_Recurrence_Type + discount.Recurrence_Type__c);

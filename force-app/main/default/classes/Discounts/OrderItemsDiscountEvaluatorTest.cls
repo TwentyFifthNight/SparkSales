@@ -2,28 +2,55 @@
 private class OrderItemsDiscountEvaluatorTest {
     @testSetup
     static void setup(){
-        Account acc = new Account(Name = 'Test Account');
-        insert acc;
-
         Pricebook2 standardPricebook = new Pricebook2(Id = Test.getStandardPricebookId(), IsActive = true);
         update standardPricebook;
 
-        List<Product2> products = TestDataFactory.ConstructProducts(5);
+        Account account = (Account)new BaseAccountTestDataBuilder().create();
+        insert account;
+
+        List<Product2> products = ConstructProducts(5);
         insert products;
 
-        List<PricebookEntry> pricebookEntries = TestDataFactory.ConstructPricebookEntries(products);
+        List<PricebookEntry> pricebookEntries = ConstructPricebookEntries(products);
         insert pricebookEntries;
 
-        Order order = new Order();
-        order.Name = 'TestOrder';
-        order.Status = Constants.Order.STATUS_DRAFT;
-        order.AccountId = acc.Id;
-        order.EffectiveDate = System.today();
-        order.Pricebook2Id = standardPricebook.Id;
+        Order order = (Order) new OrderTestDataBuilder()
+            .withAccount(account)
+            .create();
         insert order;
 
-        List<OrderItem> orderItems = TestDataFactory.ConstructOrderItems(5, order, pricebookEntries);
+        List<OrderItem> orderItems = ConstructOrderItems(5, order, pricebookEntries);
         insert orderItems;
+    }
+
+    private static List<Product2> ConstructProducts(Integer count) {
+        List<Product2> products = new List<Product2>();
+        for (Integer i = 0; i < count; i++) {
+            Product2 product = (Product2) new ProductTestDataBuilder().create();
+            products.add(product);
+        }
+        return products;
+    }
+
+    private static List<PricebookEntry> ConstructPricebookEntries(List<Product2> products) {
+        List<PricebookEntry> pricebookEntries = new List<PricebookEntry>();
+        for (Product2 product : products) {
+            PricebookEntry entry = (PricebookEntry) new PricebookEntryTestDataBuilder().withProduct(product).create();
+            pricebookEntries.add(entry);
+        }
+        return pricebookEntries;
+    }
+
+    private static List<OrderItem> ConstructOrderItems(Integer count, Order order, List<PricebookEntry> pricebookEntries) {
+        List<OrderItem> orderItems = new List<OrderItem>();
+        for (Integer i = 0; i < count; i++) {
+            OrderItem oi = (OrderItem) new OrderItemTestDataBuilder()
+                .withOrder(order)
+                .withPricebookEntry(pricebookEntries[Math.mod(i, pricebookEntries.size())])
+                .create();
+            orderItems.add(oi);
+        }
+        return orderItems;
     }
 
     @isTest
@@ -39,12 +66,11 @@ private class OrderItemsDiscountEvaluatorTest {
     @isTest
     static void testPercentageDiscount() {
         List<OrderItem> orderItems = [SELECT UnitPrice, Quantity, PricebookEntryId, Product2Id FROM OrderItem];
-
         Id pricebookId = Test.getStandardPricebookId();
 
-        List<Discount__c> timedDiscounts = CreateTestTimedDiscounts(true, Constants.Discount.PERCENTAGE_AMOUNT_TYPE, 5, 5);
+        List<Discount__c> timedDiscounts = CreateTestTimedPercentageDiscounts(true, 5, 5);
         insert timedDiscounts;
-        timedDiscounts = CreateTestTimedDiscounts(false, Constants.Discount.PERCENTAGE_AMOUNT_TYPE, 5, 5);
+        timedDiscounts = CreateTestTimedPercentageDiscounts(false, 5, 5);
         insert timedDiscounts;
 
         Test.startTest();
@@ -66,9 +92,9 @@ private class OrderItemsDiscountEvaluatorTest {
     @isTest
     static void testInvalidTimedDiscount() {
         List<OrderItem> orderItems = [SELECT UnitPrice, Quantity, PricebookEntryId, Product2Id FROM OrderItem];
-
         Id pricebookId = Test.getStandardPricebookId();
-        List<Discount__c> timedDiscounts = CreateTestTimedDiscounts(false, Constants.Discount.PERCENTAGE_AMOUNT_TYPE, 5, 5);
+        
+        List<Discount__c> timedDiscounts = CreateTestTimedPercentageDiscounts(false, 5, 5);
         insert timedDiscounts;
 
         Test.startTest();
@@ -87,10 +113,7 @@ private class OrderItemsDiscountEvaluatorTest {
         System.assertEquals(0, totalDiscount, 'Expected total discount to be 0');
     }
 
-    private static List<Discount__c> CreateTestTimedDiscounts(Boolean valid, String amountType, Decimal value, Integer cnt) {
-        List<Product2> products = [SELECT Id FROM Product2];
-        
-        Id pricebookId = Constants.STANDARD_PRICEBOOK_ID;
+    private static List<Discount__c> CreateTestTimedPercentageDiscounts(Boolean valid, Decimal value, Integer cnt) {
         Date startDate = Date.today().addDays(-2);
         Date endDate = Date.today().addDays(2);
         if (!valid) {
@@ -98,50 +121,142 @@ private class OrderItemsDiscountEvaluatorTest {
             endDate = Date.today().addDays(5);
         }
 
+        List<Product2> products = [SELECT Id FROM Product2];
         List<Discount__c> discounts = new List<Discount__c>();
         for (Integer i = 0; i < cnt; i++) {
-            Discount__c discount = new Discount__c();
-            discount.Pricebook__c = pricebookId;
-            discount.Product__c = products[Math.mod(i, products.size())].Id;
-            discount.Type__c = Constants.Discount.TIMED_TYPE;
-            discount.Start_Date__c = startDate;
-            discount.End_Date__c = endDate;
-            discount.Name = 'Test';
-            discount.Amount_Type__c = amountType;
-            if (amountType == Constants.Discount.PERCENTAGE_AMOUNT_TYPE) {
-                discount.Percentage__c = value;
-            } else {
-                discount.Amount__c = value;
-            }
-            discount.isActive__c = true;
+            Discount__c discount = (Discount__c) new DiscountTestDataBuilder()
+                .withProduct(products[Math.mod(i, products.size())])
+                .withType(Constants.Discount.TIMED_TYPE)
+                .withStartDate(startDate)
+                .withEndDate(endDate)
+                .withAmountType(Constants.Discount.PERCENTAGE_AMOUNT_TYPE)
+                .withPercentage(value)
+                .create();
             discounts.add(discount);
         }
         return discounts;
     }
 
-    private static List<Discount__c> CreateTestRecuringDiscounts(Boolean valid, String amountType, Decimal value, String recurrenceType, Integer cnt) {
-        List<Product2> products = [SELECT Id FROM Product2];
-        Id pricebookId = Test.getStandardPricebookId();
+    private static List<Discount__c> CreateTestRecuringAmountDiscounts(Boolean valid, Decimal value, String recurrenceType, Integer cnt) {
         Date startDate = Date.today();
         if (!valid) {
             startDate = Date.today().addDays(2);
         }
 
+        List<Product2> products = [SELECT Id FROM Product2];
         List<Discount__c> discounts = new List<Discount__c>();
         for (Integer i = 0; i < cnt; i++) {
-            Discount__c discount = new Discount__c();
-            discount.Pricebook__c = pricebookId;
-            discount.Product__c = products[Math.mod(i, products.size())].Id;
-            discount.Type__c = Constants.Discount.RECURRING_TYPE;
-            discount.Recurrence_Type__c = recurrenceType;
-            discount.Recurrence_Day_Of_Month__c = startDate.day();
-            discount.Recurrence_Month_Of_Year__c = startDate.month();
-            discount.Name = 'Test';
-            discount.Amount_Type__c = amountType;
-            discount.Percentage__c = value;
-            discount.isActive__c = true;
+            Discount__c discount = (Discount__c) new DiscountTestDataBuilder()
+                .withProduct(products[Math.mod(i, products.size())])
+                .withType(Constants.Discount.RECURRING_TYPE)
+                .withRecurrenceType(recurrenceType)
+                .withRecurrenceDate(startDate)
+                .withAmountType(Constants.Discount.FIXED_AMOUNT_TYPE)
+                .withAmount(value)
+                .create();
             discounts.add(discount);
         }
         return discounts;
+    }
+
+    private class DiscountTestDataBuilder extends BaseDiscountTestDataBuilder {
+        protected override void prepare(){
+            super.prepare();
+            Discount__c discount = (Discount__c) record;
+            discount.Pricebook__c = Constants.STANDARD_PRICEBOOK_ID;
+            discount.isActive__c = true;
+        }
+
+        public DiscountTestDataBuilder withProduct(Product2 product) {
+            Discount__c discount = (Discount__c) record;
+            discount.Product__c = product.Id;
+            return this;
+        }
+
+        public DiscountTestDataBuilder withType(String type) {
+            Discount__c discount = (Discount__c) record;
+            discount.Type__c = type;
+            return this;
+        }
+
+        public DiscountTestDataBuilder withAmountType(String amountType) {
+            Discount__c discount = (Discount__c) record;
+            discount.Amount_Type__c = amountType;
+            return this;
+        }
+
+        public DiscountTestDataBuilder withPercentage(Decimal percentage) {
+            Discount__c discount = (Discount__c) record;
+            discount.Percentage__c = percentage;
+            return this;
+        }
+
+        public DiscountTestDataBuilder withAmount(Decimal amount) {
+            Discount__c discount = (Discount__c) record;
+            discount.Amount__c = amount;
+            return this;
+        }
+
+        public DiscountTestDataBuilder withStartDate(Date startDate) {
+            Discount__c discount = (Discount__c) record;
+            discount.Start_Date__c = startDate;
+            return this;
+        }
+
+        public DiscountTestDataBuilder withEndDate(Date endDate) {
+            Discount__c discount = (Discount__c) record;
+            discount.End_Date__c = endDate;
+            return this;
+        }
+
+        public DiscountTestDataBuilder withRecurrenceType(String recurrenceType) {
+            Discount__c discount = (Discount__c) record;
+            discount.Recurrence_Type__c = recurrenceType;
+            return this;
+        }
+
+        public DiscountTestDataBuilder withRecurrenceDate(Date dateValue) {
+            Discount__c discount = (Discount__c) record;
+            discount.Recurrence_Day_Of_Month__c = dateValue.day();
+            discount.Recurrence_Month_Of_Year__c = dateValue.month();
+            return this;
+        }
+    }
+
+    private class ProductTestDataBuilder extends BaseProductTestDataBuilder {
+        protected override void prepare(){
+            super.prepare();
+            Product2 product = (Product2) record;
+            product.IsActive = true;
+        }
+    }
+
+    private class PricebookEntryTestDataBuilder extends BasePricebookEntryTestDataBuilder {
+        protected override void prepare(){
+            super.prepare();
+            PricebookEntry entry = (PricebookEntry) record;
+            entry.Pricebook2Id = Constants.STANDARD_PRICEBOOK_ID;
+            entry.UnitPrice = 1;
+            entry.IsActive = true;
+        }
+    }
+
+    private class OrderTestDataBuilder extends BaseOrderTestDataBuilder {
+        protected override void prepare(){
+            super.prepare();
+            Order order = (Order) record;
+            order.Status = Constants.Order.STATUS_DRAFT;
+            order.EffectiveDate = System.today();
+            order.Pricebook2Id = Constants.STANDARD_PRICEBOOK_ID;
+        }
+    }
+
+    private class OrderItemTestDataBuilder extends BaseOrderItemTestDataBuilder {
+        protected override void prepare(){
+            super.prepare();
+            OrderItem orderItem = (OrderItem) record;
+            orderItem.Quantity = 1;
+            orderItem.UnitPrice = 10;
+        }
     }
 }

@@ -6,26 +6,15 @@ private class DiscountUpdateTest {
         Pricebook2 standardPricebook = new Pricebook2(Id = Test.getStandardPricebookId(), IsActive = true);
         update standardPricebook;
 
-        Discount__c discount = new Discount__c(
-            Name = 'Test Discount',
-            Amount_Type__c = Constants.Discount.PERCENTAGE_AMOUNT_TYPE,
-            Percentage__c = 10,
-            Type__c = Constants.Discount.TIMED_TYPE,
-            Start_Date__c = System.today(),
-            End_Date__c = System.today().addDays(30)
-        );
+        Discount__c discount = (Discount__c)new DiscountTestDataBuilder().create();
         insert discount;
         
-        Account account = new Account(Name = 'Test Account');
+        Account account = (Account)new BaseAccountTestDataBuilder().create();
         insert account;
 
-        Order order = new Order(
-            Name = 'Test Order',
-            Status = Constants.Order.STATUS_DRAFT,
-            AccountId = account.Id,
-            EffectiveDate = System.today(),
-            Pricebook2Id = Constants.STANDARD_PRICEBOOK_ID
-        );
+        Order order = (Order)new OrderTestDataBuilder()
+            .withAccount(account)
+            .create();
         insert order;
     }
 
@@ -45,12 +34,10 @@ private class DiscountUpdateTest {
 
         Order order = [SELECT Name FROM Order WHERE Name = 'Test Order' LIMIT 1];
         Discount__c discount = [SELECT Name FROM Discount__c WHERE Name = 'Test Discount' LIMIT 1];
-        OrderDiscount__c orderDiscount = new OrderDiscount__c(
-            Order__c = order.Id,
-            Discount__c = discount.Id,
-            Discount_Amount__c = 10,
-            Name = 'Test Order Discount'
-        );
+        OrderDiscount__c orderDiscount = (OrderDiscount__c)new OrderDiscountTestDataBuilder()
+            .withOrder(order)
+            .withDiscount(discount)
+            .create();
         insert orderDiscount;
 
         discount.Name = 'Updated Discount Name';
@@ -71,12 +58,10 @@ private class DiscountUpdateTest {
 
         Order order = [SELECT Name FROM Order WHERE Name = 'Test Order' LIMIT 1];
         Discount__c discount = [SELECT Name FROM Discount__c WHERE Name = 'Test Discount' LIMIT 1];
-        OrderDiscount__c orderDiscount = new OrderDiscount__c(
-            Order__c = order.Id,
-            Discount__c = discount.Id,
-            Discount_Amount__c = 10,
-            Name = 'Test Order Discount'
-        );
+        OrderDiscount__c orderDiscount = (OrderDiscount__c)new OrderDiscountTestDataBuilder()
+            .withOrder(order)
+            .withDiscount(discount)
+            .create();
         insert orderDiscount;
 
         discount.isActive__c = true;
@@ -90,5 +75,40 @@ private class DiscountUpdateTest {
         Test.stopTest();
         Discount__c updatedDiscount = [SELECT isActive__c FROM Discount__c WHERE Id = :discount.Id];
         System.assertEquals(true, updatedDiscount.isActive__c, 'Discount should be active after update');
+    }
+
+    private class DiscountTestDataBuilder extends TestDataBuilder {
+        public DiscountTestDataBuilder() {
+            record = new Discount__c();
+        }
+        
+        protected override void prepare(){
+            Discount__c discount = (Discount__c) record;
+            discount.Name = 'Test Discount';
+            discount.Type__c = Constants.Discount.TIMED_TYPE;
+            discount.Start_Date__c = System.today();
+            discount.End_Date__c = System.today().addDays(30);
+            discount.Threshold_Amount__c = 100;
+            discount.Amount_Type__c = Constants.Discount.PERCENTAGE_AMOUNT_TYPE;
+            discount.Percentage__c = 10;
+        }
+    }
+
+    private class OrderDiscountTestDataBuilder extends BaseOrderDiscountTestDataBuilder {
+        protected override void prepare(){
+            super.prepare();
+            OrderDiscount__c orderDiscount = (OrderDiscount__c) record;
+            orderDiscount.Discount_Amount__c = 10;
+        }
+    }
+
+    private class OrderTestDataBuilder extends BaseOrderTestDataBuilder {
+        protected override void prepare(){
+            super.prepare();
+            Order order = (Order) record;
+            order.Status = Constants.Order.STATUS_DRAFT;
+            order.EffectiveDate = System.today();
+            order.Pricebook2Id = Constants.STANDARD_PRICEBOOK_ID;
+        }
     }
 }
