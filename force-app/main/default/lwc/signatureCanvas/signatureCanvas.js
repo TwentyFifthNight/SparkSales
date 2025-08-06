@@ -87,10 +87,10 @@ export default class Signature extends LightningElement {
     }
 
     renderedCallback() {
-    canvasElement = this.template.querySelector('canvas');
-    ctx = canvasElement.getContext("2d");
-    ctx.lineCap = 'round';
-    this.addEvents();
+        canvasElement = this.template.querySelector('canvas');
+        ctx = canvasElement.getContext("2d");
+        ctx.lineCap = 'round';
+        this.addEvents();
     }
 
     setupCoordinate(eventParam) {

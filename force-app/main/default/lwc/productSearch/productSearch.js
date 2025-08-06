@@ -179,6 +179,9 @@ export default class ProductSearch extends NavigationMixin(LightningElement) {
     async handleSearchButton(event) {
         this.currentPage = 1;
         await this.getPageCount();
+        if (this.error) {
+            return;
+        }
         await this.handleRecordRequest(1);
         this.afterFirstSearch = true;
     }
@@ -197,7 +200,9 @@ export default class ProductSearch extends NavigationMixin(LightningElement) {
             .catch(error => {
                 this.error = error;
             })
-        this.isLoading = false;
+            .finally(() => {
+                this.isLoading = false;
+            });
     }
 
     async handleRecordRequest(pageNumber) {
