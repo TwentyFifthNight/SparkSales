@@ -44,14 +44,14 @@
         </template>
         <template if:true={noResults}>
             <div class="slds-m-bottom_large">
-                <p class="slds-text-align_center slds-text-heading_medium">
-                    {label.noRecordFoundLabel}
+                <p class="slds-text-align_center slds-text-heading_medium" data-id="no-records">
+                    {label.noRecordFound}
                 </p>
             </div>
         </template>
 
         <template if:true={error}>
-            <p class="slds-text-color_error">{error.body.message}</p>
+            <p class="slds-text-color_error" data-id="error-message">{error.body.message}</p>
         </template>
     </lightning-card>
 
