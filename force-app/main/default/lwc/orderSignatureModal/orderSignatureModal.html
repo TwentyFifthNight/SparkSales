@@ -1,7 +1,7 @@
 <template>
     <lightning-card title="Signature Panel">
         <template if:true={isLoading}>
-            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            <lightning-spinner alternative-text={label.loadingSpinnerText} size="medium"></lightning-spinner>
         </template>
 
         <lightning-record-view-form record-id={recordId} object-api-name="Order" class="slds-align_absolute-center">
@@ -29,7 +29,7 @@
                 
                 <div class="slds-col slds-size_1-of-1 slds-align_absolute-center" >
                     <div class="slds-p-horizontal_small" style="width: 100%; max-width: 500px;">
-                        <c-signature-canvas></c-signature-canvas>
+                        <c-signature-canvas header-text={headerText}></c-signature-canvas>
                         <p class="slds-m-bottom_small"> 
                         <lightning-button variant="brand" label="Save Signature" title="Save" 
                             onclick={handleSaveButton} class="slds-m-left_x-small"></lightning-button>

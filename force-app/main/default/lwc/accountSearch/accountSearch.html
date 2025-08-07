@@ -1,11 +1,11 @@
 <template>
     <lightning-card title="Account Search">
         <template if:true={isLoading}>
-            <lightning-spinner alternative-text="Loading" size="medium" style="z-index: 9100;"></lightning-spinner>
+            <lightning-spinner alternative-text={label.loadingSpinnerText} size="medium" style="z-index: 9100;"></lightning-spinner>
         </template>
         <div class="slds-m-around_large slds-grid slds-grid_align-end">
             <lightning-button 
-                label="Add Account"
+                label={label.addAccountButton}
                 onclick={addNewAccountClick} 
                 variant="brand">
             </lightning-button>
@@ -14,7 +14,7 @@
         <div class="slds-p-horizontal_medium slds-p-vertical_small">
             <div class="slds-grid">
                 <lightning-input 
-                    label="Name"
+                    label={label.name}
                     name="name"
                     value={name}
                     onchange={handleInputChange}
@@ -22,7 +22,7 @@
                 </lightning-input>
 
                 <lightning-combobox 
-                    label="Type"
+                    label={label.typeLabel}
                     name="type"
                     value={type}
                     placeholder="All"
@@ -32,7 +32,7 @@
                 </lightning-combobox>
 
                 <lightning-combobox 
-                    label="Industry"
+                    label={label.industry}
                     name="industry"
                     value={industry}
                     placeholder="All" 
@@ -42,8 +42,8 @@
                 </lightning-combobox>
             </div>
             <div class="slds-m-top_medium slds-p-horizontal_medium">
-                <lightning-button label="Search" onclick={handleSearchButton} class="slds-m-right_small"></lightning-button>
-                <lightning-button label="Reset Filters" onclick={resetFilters} variant="destructive"></lightning-button>
+                <lightning-button label={label.searchButton} onclick={handleSearchButton} class="slds-m-right_small"></lightning-button>
+                <lightning-button label={label.resetFiltersButton} onclick={resetFilters} variant="destructive"></lightning-button>
             </div>
         </div>
 
@@ -52,7 +52,7 @@
                 <div class="slds-p-horizontal_medium">
                     <div class="slds-grid slds-grid_align-end">
                         <lightning-combobox
-                            label="Records per page"
+                            label={label.recordsPerPage}
                             value={recordsPerPageString}
                             options={pageSizeOptions}
                             onchange={handlePageSizeChange}
@@ -70,11 +70,11 @@
                     ></lightning-datatable>
 
                     <div class="slds-m-top_medium slds-align_absolute-center">
-                        <lightning-button label="First" onclick={handleFirstPageClick} disabled={disableFirstAndPreviousButton} class="slds-m-horizontal_x-small"></lightning-button>
-                        <lightning-button label="Previous" onclick={handlePreviousPageClick} disabled={disableFirstAndPreviousButton} class="slds-m-horizontal_x-small"></lightning-button>
+                        <lightning-button label={label.firstButton} onclick={handleFirstPageClick} disabled={disableFirstAndPreviousButton} class="slds-m-horizontal_x-small"></lightning-button>
+                        <lightning-button label={label.previousButton} onclick={handlePreviousPageClick} disabled={disableFirstAndPreviousButton} class="slds-m-horizontal_x-small"></lightning-button>
                         <span class="slds-m-horizontal_small">{pageInfo}</span>
-                        <lightning-button label="Next" onclick={handleNextPageClick} disabled={disableNextAndLastButton} class="slds-m-horizontal_x-small"></lightning-button>
-                        <lightning-button label="Last" onclick={handleLastPageClick} disabled={disableNextAndLastButton} class="slds-m-horizontal_x-small"></lightning-button>
+                        <lightning-button label={label.nextButton} onclick={handleNextPageClick} disabled={disableNextAndLastButton} class="slds-m-horizontal_x-small"></lightning-button>
+                        <lightning-button label={label.lastButton} onclick={handleLastPageClick} disabled={disableNextAndLastButton} class="slds-m-horizontal_x-small"></lightning-button>
                     </div>
                 </div>
             </template>
@@ -82,7 +82,7 @@
         <template if:true={noResults}>
             <div class="slds-m-bottom_large">
                 <p class="slds-text-align_center slds-text-heading_medium">
-                    No records found
+                    {label.noRecordFound}
                 </p>
             </div>
         </template>
@@ -102,7 +102,7 @@
                 <div class="slds-modal__content slds-p-around_large">
                     <div class="slds-grid slds-grid_vertical slds-p-horizontal_xx-large">
                         <lightning-input 
-                            label="Account Name" 
+                            label={label.accountNameLabel} 
                             value={editAccount.Name} 
                             onchange={handleEditChange} 
                             name="Name"
@@ -115,7 +115,7 @@
                         </lightning-input>
 
                         <lightning-combobox 
-                            label="Type" 
+                            label={label.typeLabel} 
                             value={editAccount.Type} 
                             options={typeOptions} 
                             onchange={handleEditChange} 
@@ -125,7 +125,7 @@
                         </lightning-combobox>
 
                         <lightning-combobox 
-                            label="Industry" 
+                            label={label.industry} 
                             value={editAccount.Industry} 
                             options={industryOptions} 
                             onchange={handleEditChange} 
@@ -135,7 +135,7 @@
                         </lightning-combobox>
                         <lightning-combobox 
                             if:true={isCreatingNewAccount}
-                            label="Destination" 
+                            label={label.destinationLabel} 
                             value={editAccount.Destination} 
                             options={destinationOptions} 
                             onchange={handleEditChange} 
@@ -146,8 +146,8 @@
                     </div>
                 
                     <div class="slds-m-top_medium slds-p-horizontal_medium slds-align_absolute-center">
-                        <lightning-button variant="neutral" label="Cancel" onclick={closeEditModal}></lightning-button>
-                        <lightning-button variant="brand" label="Save" onclick={saveEditedAccount} class="slds-m-left_small"></lightning-button>
+                        <lightning-button variant="neutral" label={label.cancelButton} onclick={closeEditModal}></lightning-button>
+                        <lightning-button variant="brand" label={label.saveButton} onclick={saveEditedAccount} class="slds-m-left_small"></lightning-button>
                     </div>
                 </div>
             </div>

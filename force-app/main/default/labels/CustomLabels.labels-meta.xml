@@ -57,11 +57,32 @@
         <value>Add Discount</value>
     </labels>
     <labels>
+        <fullName>addAccountButton</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for a button</shortDescription>
+        <value>Add Account</value>
+    </labels>
+    <labels>
         <fullName>cancelButton</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Text for a button</shortDescription>
         <value>Cancel</value>
+    </labels>
+    <labels>
+        <fullName>saveButton</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for a button</shortDescription>
+        <value>Save</value>
+    </labels>
+    <labels>
+        <fullName>allLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Picklist value etc.</shortDescription>
+        <value>All</value>
     </labels>
     <labels>
         <fullName>createOrderButton</fullName>
@@ -132,6 +153,63 @@
         <protected>true</protected>
         <shortDescription>Used in datatable label etc.</shortDescription>
         <value>Name</value>
+    </labels>
+    <labels>
+        <fullName>typeLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used in datatable label etc.</shortDescription>
+        <value>Type</value>
+    </labels>
+    <labels>
+        <fullName>industry</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used in datatable label etc.</shortDescription>
+        <value>Industry</value>
+    </labels>
+    <labels>
+        <fullName>phone</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used in datatable label etc.</shortDescription>
+        <value>Phone</value>
+    </labels>
+    <labels>
+        <fullName>source</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used in datatable label etc.</shortDescription>
+        <value>Source</value>
+    </labels>
+    <labels>
+        <fullName>localSourceLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used in input fields etc.</shortDescription>
+        <value>Local</value>
+    </labels>
+    <labels>
+        <fullName>externalSourceLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used in input fields etc.</shortDescription>
+        <value>External</value>
+    </labels>
+    <labels>
+        <fullName>accountNameLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used in datatable label etc.</shortDescription>
+        <value>Account Name</value>
+    </labels>
+
+    <labels>
+        <fullName>destinationLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used in datatable label etc.</shortDescription>
+        <value>Destination</value>
     </labels>
     <labels>
         <fullName>nextButton</fullName>
