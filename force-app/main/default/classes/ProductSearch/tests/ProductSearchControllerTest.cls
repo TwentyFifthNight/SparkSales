@@ -1,6 +1,6 @@
 @isTest
 private class ProductSearchControllerTest {
-
+    
     @TestSetup
     static void setup(){
         Pricebook2 standardPricebook = new Pricebook2(Id = Test.getStandardPricebookId(), IsActive = true);
