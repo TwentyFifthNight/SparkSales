@@ -35,4 +35,28 @@ public class AccountConstants {
         }
         private set;
     }
+    public final String TYPE_PROSPECT {
+        get {
+            return 'Prospect';
+        }
+        private set;
+    }
+    public final String TYPE_OTHER {
+        get {
+            return 'Other';
+        }
+        private set;
+    }
+    public final String INDUSTRY_BANKING {
+        get {
+            return 'Banking';
+        }
+        private set;
+    }
+    public final String INDUSTRY_CHEMICALS {
+        get {
+            return 'Chemicals';
+        }
+        private set;
+    }
 }

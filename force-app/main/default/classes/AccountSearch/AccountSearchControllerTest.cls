@@ -4,9 +4,9 @@ private class AccountSearchControllerTest {
     @TestSetup
     static void setup(){
         List<Account> accounts = new List<Account>();
-        accounts.addAll(generateAccounts(30, 'Prospect', 'Banking'));
-        accounts.addAll(generateAccounts(30, 'Other', 'Banking'));
-        accounts.addAll(generateAccounts(30, 'Other', 'Chemicals'));
+        accounts.addAll(generateAccounts(30, Constants.Account.TYPE_PROSPECT, Constants.Account.INDUSTRY_BANKING));
+        accounts.addAll(generateAccounts(30, Constants.Account.TYPE_OTHER, Constants.Account.INDUSTRY_BANKING));
+        accounts.addAll(generateAccounts(30, Constants.Account.TYPE_OTHER, Constants.Account.INDUSTRY_CHEMICALS));
         insert accounts;
     }
 
@@ -34,8 +34,8 @@ private class AccountSearchControllerTest {
 
     @isTest
     static void testSearchAccountByTypeAndIndustry() {
-        String type = 'Other';
-        String industry = 'Banking';
+        String type = Constants.Account.TYPE_OTHER;
+        String industry = Constants.Account.INDUSTRY_BANKING;
         Test.startTest();
         List<Account> accounts = AccountSearchController.searchAccounts(null, type, industry, 1, 100);
         Test.stopTest();
@@ -86,8 +86,8 @@ private class AccountSearchControllerTest {
     @isTest
     static void testCreateAccount() {
         String name = 'Acc';
-        String type = 'Prospect';
-        String industry = 'Banking';
+        String type = Constants.Account.TYPE_PROSPECT;
+        String industry = Constants.Account.INDUSTRY_BANKING;
 
         Test.startTest();
         Boolean result = AccountSearchController.createNewAccount(name, type, industry, 'Local');
@@ -102,8 +102,8 @@ private class AccountSearchControllerTest {
     @isTest
     static void testCreateExternalAccount() {
         String name = 'Acc';
-        String type = 'Prospect';
-        String industry = 'Banking';
+        String type = Constants.Account.TYPE_PROSPECT;
+        String industry = Constants.Account.INDUSTRY_BANKING;
         Test.setMock(HttpCalloutMock.class, new MockWiktorOrgCreateUpdateResponse());
         Test.startTest();
         Boolean result = AccountSearchController.createNewAccount(name, type, industry, 'External');
@@ -114,8 +114,8 @@ private class AccountSearchControllerTest {
     @isTest
     static void testUpdateAccount() {
         String name = 'Acc';
-        String type = 'Prospect';
-        String industry = 'Banking';
+        String type = Constants.Account.TYPE_PROSPECT;
+        String industry = Constants.Account.INDUSTRY_BANKING;
 
         Account account = new Account(Name = name, Type = type, Industry = industry);
         insert account;
@@ -134,8 +134,8 @@ private class AccountSearchControllerTest {
     @isTest
     static void testUpdateExternalAccount() {
         String name = 'Acc';
-        String type = 'Prospect';
-        String industry = 'Banking';
+        String type = Constants.Account.TYPE_PROSPECT;
+        String industry = Constants.Account.INDUSTRY_BANKING;
 
         Test.setMock(HttpCalloutMock.class, new MockWiktorOrgCreateUpdateResponse());
         Test.startTest();
