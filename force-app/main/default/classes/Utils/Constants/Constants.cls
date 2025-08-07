@@ -79,4 +79,14 @@ public class Constants {
         }
         private set;
     }
+
+    public static OpportunityConstants Opportunity {
+        get {
+            if (Opportunity == null) {
+                Opportunity = new OpportunityConstants();
+            }
+            return Opportunity;
+        }
+        private set;
+    }
 }

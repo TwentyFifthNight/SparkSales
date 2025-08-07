@@ -266,8 +266,8 @@ private class ProductSearchControllerTest {
         protected override void prepare() {
             super.prepare();
             Opportunity opportunity = (Opportunity) record;
-            opportunity.Type = 'New Business';
-            opportunity.StageName = 'Qualification';
+            opportunity.Type = Constants.Opportunity.TYPE_NEW_BUSINESS;
+            opportunity.StageName = Constants.Opportunity.STAGE_NAME_QUALIFICATION;
             opportunity.CloseDate = System.today();
             opportunity.Pricebook2Id = Constants.STANDARD_PRICEBOOK_ID;
             opportunity.Amount = 1000;

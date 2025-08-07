@@ -1,7 +1,12 @@
 public with sharing class AccountSearchController {
     private static final String QUERY_WIKTOR_ENDPOINT = 'callout:Wiktor_Named/services/data/v62.0/query?q=';
     private static final String POST_ACCOUNT_WIKTOR_ENDPOINT = 'callout:Wiktor_Named/services/data/v62.0/sobjects/Account/';
-    
+    private static final String DESTINATION_LOCAL = 'Local';
+    private static final String DESTINATION_EXTERNAL = 'External';
+    private static final String REQUEST_NAME_FIELD = 'name';
+    private static final String REQUEST_TYPE_FIELD = 'type';
+    private static final String REQUEST_INDUSTRY_FIELD = 'industry';
+
     @AuraEnabled(cacheable=false)
     public static Integer getAccountCount(String name, String type, String industry){
         return Database.countQuery(buildCountQuery(name, type, industry));
@@ -59,11 +64,11 @@ public with sharing class AccountSearchController {
                 for (Object record : records) {
                     Map<String,Object> recordMap = (Map<String,Object>) record;
                     Account account = new Account();
-                    account.Id = (String) recordMap.get('Id');
-                    account.Name = (String) recordMap.get('Name');
-                    account.Type = (String) recordMap.get('Type');
-                    account.Industry = (String) recordMap.get('Industry');
-                    account.Phone = (String) recordMap.get('Phone');
+                    account.Id = (String) recordMap.get(Constants.Account.ID_FIELD);
+                    account.Name = (String) recordMap.get(Constants.Account.NAME_FIELD);
+                    account.Type = (String) recordMap.get(Constants.Account.TYPE_FIELD);
+                    account.Industry = (String) recordMap.get(Constants.Account.INDUSTRY_FIELD);
+                    account.Phone = (String) recordMap.get(Constants.Account.PHONE_FIELD);
                     accounts.add(account);
                 }
             }
@@ -132,7 +137,7 @@ public with sharing class AccountSearchController {
     
     @AuraEnabled(cacheable=false)
     public static Boolean createNewAccount(String name, String type, String industry, String destination){
-        if (destination == 'Local'){
+        if (destination == DESTINATION_LOCAL){
             try {
                 Account newAccount = new Account(
                     Name = name,
@@ -145,7 +150,7 @@ public with sharing class AccountSearchController {
                 return false;
             }
         }
-        else if (destination == 'External'){
+        else if (destination == DESTINATION_EXTERNAL){
             return createWiktorAccount(name, type, industry);
         }
 
@@ -160,9 +165,9 @@ public with sharing class AccountSearchController {
         request.setHeader('Content-Type', 'application/json');
         request.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionId());
         String requestBody = JSON.serialize(new Map<String, String>{
-            'name' => name,
-            'type' => type,
-            'industry' => industry
+            REQUEST_NAME_FIELD => name,
+            REQUEST_TYPE_FIELD => type,
+            REQUEST_INDUSTRY_FIELD => industry
         });
         request.setBody(requestBody);
         HttpResponse response = http.send(request);
@@ -174,7 +179,7 @@ public with sharing class AccountSearchController {
 
     @AuraEnabled(cacheable=false)
     public static Boolean updateAccount(String accountId, String name, String type, String industry, String destination){
-        if (destination == 'Local'){
+        if (destination == DESTINATION_LOCAL){
             try {
                 Account oldAccount = [SELECT Name, Type, Industry FROM Account WHERE Id = :accountId];
                 oldAccount.Type = type;
@@ -186,7 +191,7 @@ public with sharing class AccountSearchController {
                 return false;
             }
         }
-        else if (destination == 'External'){
+        else if (destination == DESTINATION_EXTERNAL){
             return updateWiktorAccount(accountId, name, type, industry);
         }
         return false;
@@ -201,9 +206,9 @@ public with sharing class AccountSearchController {
         request.setHeader('Content-Type', 'application/json');
         request.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionId());
         String requestBody = JSON.serialize(new Map<String, String>{
-            'name' => name,
-            'type' => type,
-            'industry' => industry
+            REQUEST_NAME_FIELD => name,
+            REQUEST_TYPE_FIELD => type,
+            REQUEST_INDUSTRY_FIELD => industry
         });
         request.setBody(requestBody);
         HttpResponse response = http.send(request);
