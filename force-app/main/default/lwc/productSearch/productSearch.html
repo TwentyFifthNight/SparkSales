@@ -8,6 +8,7 @@
                 <div class="slds-p-horizontal_medium slds-p-vertical_small">
                     <div class="slds-grid">
                         <lightning-input
+                            data-id="name-code-input"
                             label={label.product}
                             name="nameAndCode"
                             value={nameAndCode}
@@ -16,6 +17,7 @@
                         </lightning-input>
 
                         <lightning-combobox 
+                            data-id="category-combobox"
                             label={label.family}
                             name="family"
                             value={family}
@@ -27,7 +29,7 @@
                     </div>
                     <div class="slds-m-top_medium slds-p-horizontal_medium">
                         <lightning-button label={label.searchButton} onclick={handleSearchButton} class="slds-m-right_small" data-id="search-button"></lightning-button>
-                        <lightning-button label={label.resetFiltersButton} onclick={resetFilters} variant="destructive"></lightning-button>
+                        <lightning-button label={label.resetFiltersButton} onclick={resetFilters} variant="destructive" data-id="reset-button"></lightning-button>
                     </div>
                 </div>
 
