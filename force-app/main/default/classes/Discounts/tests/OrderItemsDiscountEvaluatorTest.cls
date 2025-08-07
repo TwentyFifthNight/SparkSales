@@ -126,10 +126,10 @@ private class OrderItemsDiscountEvaluatorTest {
         for (Integer i = 0; i < cnt; i++) {
             Discount__c discount = (Discount__c) new DiscountTestDataBuilder()
                 .withProduct(products[Math.mod(i, products.size())])
-                .withType(Constants.Discount.TIMED_TYPE)
+                .withType(Constants.Discount.Type.TIMED)
                 .withStartDate(startDate)
                 .withEndDate(endDate)
-                .withAmountType(Constants.Discount.PERCENTAGE_AMOUNT_TYPE)
+                .withAmountType(Constants.Discount.AmountType.PERCENTAGE)
                 .withPercentage(value)
                 .create();
             discounts.add(discount);
@@ -148,10 +148,10 @@ private class OrderItemsDiscountEvaluatorTest {
         for (Integer i = 0; i < cnt; i++) {
             Discount__c discount = (Discount__c) new DiscountTestDataBuilder()
                 .withProduct(products[Math.mod(i, products.size())])
-                .withType(Constants.Discount.RECURRING_TYPE)
+                .withType(Constants.Discount.Type.RECURRING)
                 .withRecurrenceType(recurrenceType)
                 .withRecurrenceDate(startDate)
-                .withAmountType(Constants.Discount.FIXED_AMOUNT_TYPE)
+                .withAmountType(Constants.Discount.AmountType.FIXED)
                 .withAmount(value)
                 .create();
             discounts.add(discount);
@@ -245,7 +245,7 @@ private class OrderItemsDiscountEvaluatorTest {
         protected override void prepare(){
             super.prepare();
             Order order = (Order) record;
-            order.Status = Constants.Order.STATUS_DRAFT;
+            order.Status = Constants.Order.Status.DRAFT;
             order.EffectiveDate = System.today();
             order.Pricebook2Id = Constants.STANDARD_PRICEBOOK_ID;
         }

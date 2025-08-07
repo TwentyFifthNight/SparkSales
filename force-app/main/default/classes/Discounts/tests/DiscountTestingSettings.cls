@@ -5,7 +5,7 @@ public class DiscountTestingSettings {
             if(setting == null) {
                 setting = new Discount_Strategy_Setting__mdt(
                     Maximum_Discount__c = 35,
-                    Strategy__c = Constants.Discount.STRATEGY_HIGHEST
+                    Strategy__c = Constants.Discount.Strategy.HIGHEST
                 );
             }
             return setting;

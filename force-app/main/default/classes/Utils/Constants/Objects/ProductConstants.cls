@@ -1,29 +1,13 @@
 public class ProductConstants {
-    public final String OBJECT_NAME {
+    public final Family Family {
         get {
-            return 'Product2';
+            return new Family();
         }
-        private set;
     }
 
-    public final String ADAPTERS_FAMILY {
-        get {
-            return 'Adapters';
-        }
-        private set;
-    }
-
-    public final String CABLES_FAMILY {
-        get {
-            return 'Cables';
-        }
-        private set;
-    }
-    
-    public final String NETWORKING_FAMILY {
-        get {
-            return 'Networking';
-        }
-        private set;
+    public class Family {
+        public final String ADAPTERS { get { return 'Adapters'; } }
+        public final String CABLES { get { return 'Cables'; } }
+        public final String NETWORKING { get { return 'Networking'; } }
     }
 }

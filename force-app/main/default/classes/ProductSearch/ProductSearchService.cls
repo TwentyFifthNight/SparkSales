@@ -7,12 +7,13 @@ public with sharing class ProductSearchService {
             orderOfQuery += ' AND 4';
         }
         
-        QueryBuilder query = new QueryBuilder(Constants.PricebookEntry.OBJECT_NAME)
+        String pricebookProductRelationship = PricebookEntry.Product2Id.getDescribe().getRelationshipName();
+        QueryBuilder query = new QueryBuilder(PricebookEntry.sObjectType)
             .addConditionsWithOrder(orderOfQuery)
-            .add(new QueryBuilder.LikeCondition(Constants.PricebookEntry.PRODUCT_NAME_FIELD).likeAnyBoth(parameters.NameAndCode))
-            .add(new QueryBuilder.LikeCondition(Constants.PricebookEntry.PRODUCT_CODE_FIELD).likeAnyBoth(parameters.NameAndCode))
-            .add(new QueryBuilder.SimpleCondition(Constants.PricebookEntry.PRICEBOOK_ID_FIELD + ' = \'' + priceBookId + '\''))
-            .add(new QueryBuilder.SimpleCondition(Constants.PricebookEntry.PRODUCT_FAMILY_FIELD + ' = \'' + parameters.Family + '\''))
+            .add(new QueryBuilder.LikeCondition(pricebookProductRelationship + '.' + Product2.Name).likeAnyBoth(parameters.NameAndCode))
+            .add(new QueryBuilder.LikeCondition(pricebookProductRelationship + '.' + Product2.ProductCode).likeAnyBoth(parameters.NameAndCode))
+            .add(new QueryBuilder.SimpleCondition(PricebookEntry.Pricebook2Id + ' = \'' + priceBookId + '\''))
+            .add(new QueryBuilder.SimpleCondition(pricebookProductRelationship + '.' + Product2.Family + ' = \'' + parameters.Family + '\''))
             .endConditions();
         return Database.countQuery(query.toStringCount());
     }
@@ -31,16 +32,17 @@ public with sharing class ProductSearchService {
             orderOfQuery += ' AND 4';
         }
 
-        QueryBuilder query = new QueryBuilder(Constants.PricebookEntry.OBJECT_NAME)
-            .addField(Constants.PricebookEntry.PRODUCT_ID_FIELD)
-            .addField(Constants.PricebookEntry.PRODUCT_NAME_FIELD)
-            .addField(Constants.PricebookEntry.PRODUCT_CODE_FIELD)
-            .addField(Constants.PricebookEntry.PRODUCT_FAMILY_FIELD)
+        String pricebookProductRelationship = PricebookEntry.Product2Id.getDescribe().getRelationshipName();
+        QueryBuilder query = new QueryBuilder(PricebookEntry.sObjectType)
+            .addField(PricebookEntry.Product2Id)
+            .addField(pricebookProductRelationship + '.' + Product2.Name)
+            .addField(pricebookProductRelationship + '.' + Product2.ProductCode)
+            .addField(pricebookProductRelationship + '.' + Product2.Family)
             .addConditionsWithOrder(orderOfQuery)
-            .add(new QueryBuilder.LikeCondition(Constants.PricebookEntry.PRODUCT_NAME_FIELD).likeAnyBoth(parameters.NameAndCode))
-            .add(new QueryBuilder.LikeCondition(Constants.PricebookEntry.PRODUCT_CODE_FIELD).likeAnyBoth(parameters.NameAndCode))
-            .add(new QueryBuilder.SimpleCondition(Constants.PricebookEntry.PRICEBOOK_ID_FIELD + ' = \'' + priceBookId + '\''))
-            .add(new QueryBuilder.SimpleCondition(Constants.PricebookEntry.PRODUCT_FAMILY_FIELD + ' = \'' + parameters.Family + '\''))
+            .add(new QueryBuilder.LikeCondition(pricebookProductRelationship + '.' + Product2.Name).likeAnyBoth(parameters.NameAndCode))
+            .add(new QueryBuilder.LikeCondition(pricebookProductRelationship + '.' + Product2.ProductCode).likeAnyBoth(parameters.NameAndCode))
+            .add(new QueryBuilder.SimpleCondition(PricebookEntry.Pricebook2Id + ' = \'' + priceBookId + '\''))
+            .add(new QueryBuilder.SimpleCondition(pricebookProductRelationship + '.' + Product2.Family + ' = \'' + parameters.Family + '\''))
             .endConditions()
             .setLimit(parameters.recordsPerPage)
             .setOffset(parameters.offset);
@@ -196,7 +198,7 @@ public with sharing class ProductSearchService {
         Savepoint savePoint = Database.setSavepoint();
         try{
             Order order = new Order();
-            order.Status = Constants.Order.STATUS_DRAFT;
+            order.Status = Constants.Order.Status.DRAFT;
             order.EffectiveDate = System.today();
             order.AccountId = opportunity[0].AccountId;
             order.OwnerId = opportunity[0].OwnerId;

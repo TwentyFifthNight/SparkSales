@@ -12,8 +12,8 @@ public class UsedDiscountUpdatedHelper {
             
             SObject oldObject = oldDiscountMap.get(discount.Id);
             SObject newObject = newDiscountMap.get(discount.Id);
-            String sobjectApiName = Constants.Discount.OBJECT_NAME;
-            String activeFieldName = Constants.Discount.IS_ACTIVE_FIELD.toLowerCase();
+            String sobjectApiName = String.valueOf(Discount__c.sObjectType);
+            String activeFieldName = Discount__c.isActive__c.getDescribe().getName().toLowerCase();
             List<String> changedFields = ObjectUpdatedFieldsHelper.getUpdatedFields(oldObject, newObject, sobjectApiName, new List<String>{activeFieldName});
             if (!changedFields.isEmpty()){
                 discount.addError(System.Label.Restrict_Used_Discount_Edit_Error);

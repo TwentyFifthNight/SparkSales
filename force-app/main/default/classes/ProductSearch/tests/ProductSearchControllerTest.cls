@@ -7,9 +7,9 @@ private class ProductSearchControllerTest {
         update standardPricebook;
 
         List<String> familyNames = new List<String>{
-            Constants.Product.ADAPTERS_FAMILY,
-            Constants.Product.NETWORKING_FAMILY,
-            Constants.Product.CABLES_FAMILY
+            Constants.Product.Family.ADAPTERS,
+            Constants.Product.Family.NETWORKING,
+            Constants.Product.Family.CABLES
         };
 
         List<Product2> products = constructProducts(30, familyNames);
@@ -99,7 +99,7 @@ private class ProductSearchControllerTest {
     static void testProductCountWithAllParameters() {
         ProductSearchController.ParameterWrapper wrapper = new ProductSearchController.ParameterWrapper();
         wrapper.nameAndCode = 'est';
-        wrapper.family = Constants.Product.ADAPTERS_FAMILY;
+        wrapper.family = Constants.Product.Family.ADAPTERS;
         Test.startTest();
         Integer count = ProductSearchController.getRecordCount(wrapper);
         Test.stopTest();
@@ -154,7 +154,7 @@ private class ProductSearchControllerTest {
     static void testProductListWithAllParameters() {
         ProductSearchController.ParameterWrapper wrapper = new ProductSearchController.ParameterWrapper();
         wrapper.nameAndCode = 'est';
-        wrapper.family = Constants.Product.ADAPTERS_FAMILY;
+        wrapper.family = Constants.Product.Family.ADAPTERS;
         wrapper.recordsPerPage = 30;
         Test.startTest();
         List<Product2> products = ProductSearchController.getRecordList(wrapper);
@@ -266,8 +266,8 @@ private class ProductSearchControllerTest {
         protected override void prepare() {
             super.prepare();
             Opportunity opportunity = (Opportunity) record;
-            opportunity.Type = Constants.Opportunity.TYPE_NEW_BUSINESS;
-            opportunity.StageName = Constants.Opportunity.STAGE_NAME_QUALIFICATION;
+            opportunity.Type = Constants.Opportunity.Type.NEW_BUSINESS;
+            opportunity.StageName = Constants.Opportunity.StageName.QUALIFICATION;
             opportunity.CloseDate = System.today();
             opportunity.Pricebook2Id = Constants.STANDARD_PRICEBOOK_ID;
             opportunity.Amount = 1000;

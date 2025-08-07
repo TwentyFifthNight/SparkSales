@@ -1,22 +1,12 @@
 public class OrderConstants {
-    public final String OBJECT_NAME {
+    public final Status Status {   
         get {
-            return 'Order';
+            return new Status();
         }
-        private set;
     }
 
-    public final String STATUS_DRAFT {
-        get {
-            return 'Draft';
-        }
-        private set;
-    }
-
-    public final String STATUS_ACTIVATED {
-        get {
-            return 'Activated';
-        }
-        private set;
+    public class Status {
+        public final String ACTIVATED { get { return 'Activated'; } }
+        public final String DRAFT { get { return 'Draft'; } }
     }
 }

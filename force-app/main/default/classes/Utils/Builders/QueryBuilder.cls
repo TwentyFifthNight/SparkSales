@@ -15,13 +15,35 @@ public with sharing class QueryBuilder {
         this.conditionsManager = new ConditionsManager(this);
     }
 
+    public QueryBuilder(Schema.SObjectType objectName){
+        this(String.valueOf(objectName));
+    }
+
     public QueryBuilder addField(String fieldName){
         this.fieldsNameSet.add(fieldName);
         return this;
     }
 
+    public QueryBuilder addField(Schema.SObjectField field){
+        this.fieldsNameSet.add(field.getDescribe().getName());
+        return this;
+    }
+
     public QueryBuilder addFields(List<String> fieldsNameList){
         this.fieldsNameSet.addAll(fieldsNameList);
+        return this;
+    }
+
+    public QueryBuilder addField(Schema.SObjectField relationship, Schema.SObjectField field){
+        String fieldName = relationship.getDescribe().getRelationshipName() + '.' + field.getDescribe().getName();
+        addField(fieldName);
+        return this;
+    }
+
+    public QueryBuilder addFields(List<Schema.SObjectField> fieldsNameList){
+        for(Schema.SObjectField fieldName : fieldsNameList){
+            addField(fieldName);
+        }
         return this;
     }
 
@@ -219,6 +241,10 @@ public with sharing class QueryBuilder {
 
         public LikeCondition(String fieldName) {
             super(fieldName);
+        }
+
+        public LikeCondition(Schema.SObjectField fieldName) {
+            super(fieldName.getDescribe().getName());
         }
 
         public Condition likeAnyBoth(String fieldValue) {

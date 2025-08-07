@@ -66,9 +66,9 @@ private class DiscountControllerTest {
         protected override void prepare(){
             super.prepare();
             Discount__c discount = (Discount__c) record;
-            discount.Type__c = Constants.Discount.SPECIAL_TYPE;
+            discount.Type__c = Constants.Discount.Type.SPECIAL;
             discount.Threshold_Amount__c = 100;
-            discount.Amount_Type__c = Constants.Discount.FIXED_AMOUNT_TYPE;
+            discount.Amount_Type__c = Constants.Discount.AmountType.FIXED;
             discount.Amount__c = 10;
         }
     }
