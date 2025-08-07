@@ -213,6 +213,7 @@ public with sharing class ProductSearchService {
             insert orderItemsToInsert;
             return order.Id;
         } catch (Exception e) {
+            System.debug(e.getMessage());
             Database.rollback(savePoint);
             throw new AuraHandledException(e.getMessage());
         }
