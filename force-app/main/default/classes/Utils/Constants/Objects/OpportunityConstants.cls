@@ -1,20 +1,20 @@
 public class OpportunityConstants {
-    public final String OBJECT_NAME {
+    public final Type Type {
         get {
-            return 'Opportunity';
+            return new Type();
         }
-        private set;
     }
-    public final String TYPE_NEW_BUSINESS {
+    public final StageName StageName {
         get {
-            return 'New Business';
+            return new StageName();
         }
-        private set;
     }
-    public final String STAGE_NAME_QUALIFICATION {
-        get {
-            return 'Qualification';
-        }
-        private set;
+
+    public class Type {
+        public final String NEW_BUSINESS { get { return 'New Business'; } }
+    }
+
+    public class StageName {
+        public final String QUALIFICATION { get { return 'Qualification'; } }
     }
 }

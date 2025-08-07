@@ -63,13 +63,13 @@ public with sharing class AccountSearchController {
                 List<Object> records = (List<Object>) result.get('records');
                 for (Object record : records) {
                     Map<String,Object> recordMap = (Map<String,Object>) record;
-                    Account account = new Account();
-                    account.Id = (String) recordMap.get(Constants.Account.ID_FIELD);
-                    account.Name = (String) recordMap.get(Constants.Account.NAME_FIELD);
-                    account.Type = (String) recordMap.get(Constants.Account.TYPE_FIELD);
-                    account.Industry = (String) recordMap.get(Constants.Account.INDUSTRY_FIELD);
-                    account.Phone = (String) recordMap.get(Constants.Account.PHONE_FIELD);
-                    accounts.add(account);
+                    Account accountRecord = new Account();
+                    accountRecord.Id = (String)recordMap.get(String.valueOf(Account.Id));
+                    accountRecord.Name = (String)recordMap.get(String.valueOf(Account.Name));
+                    accountRecord.Type = (String)recordMap.get(String.valueOf(Account.Type));
+                    accountRecord.Industry = (String)recordMap.get(String.valueOf(Account.Industry));
+                    accountRecord.Phone = (String)recordMap.get(String.valueOf(Account.Phone));
+                    accounts.add(accountRecord);
                 }
             }
         }
@@ -87,12 +87,12 @@ public with sharing class AccountSearchController {
         if(!String.isBlank(industry)){
             orderOfQuery += ' AND 3';
         }
-
-        QueryBuilder query = new QueryBuilder(Constants.Account.OBJECT_NAME)
+        
+        QueryBuilder query = new QueryBuilder(Account.sObjectType)
             .addConditionsWithOrder(orderOfQuery)
-            .add(new QueryBuilder.LikeCondition(Constants.Account.NAME_FIELD).likeAnyBoth(name))
-            .add(new QueryBuilder.SimpleCondition(Constants.Account.TYPE_FIELD + '= \'' + type + '\''))
-            .add(new QueryBuilder.SimpleCondition(Constants.Account.INDUSTRY_FIELD + '= \'' + industry + '\''))
+            .add(new QueryBuilder.LikeCondition(Account.Name).likeAnyBoth(name))
+            .add(new QueryBuilder.SimpleCondition(Account.Type + '= \'' + type + '\''))
+            .add(new QueryBuilder.SimpleCondition(Account.Industry + '= \'' + industry + '\''))
             .endConditions();
         return query.toStringCount();
     }
@@ -116,15 +116,15 @@ public with sharing class AccountSearchController {
             orderOfQuery += ' AND 3';
         }
 
-        QueryBuilder query = new QueryBuilder(Constants.Account.OBJECT_NAME)
-            .addFields(new List<String>{
-                Constants.Account.ID_FIELD, Constants.Account.NAME_FIELD, Constants.Account.TYPE_FIELD, 
-                Constants.Account.INDUSTRY_FIELD, Constants.Account.PHONE_FIELD
+        QueryBuilder query = new QueryBuilder(Account.sObjectType)
+            .addFields(new List<Schema.SObjectField>{
+                Account.Id, Account.Name, Account.Type, 
+                Account.Industry, Account.Phone
             })
             .addConditionsWithOrder(orderOfQuery)
-            .add(new QueryBuilder.LikeCondition(Constants.account.NAME_FIELD).likeAnyBoth(name))
-            .add(new QueryBuilder.SimpleCondition(Constants.Account.TYPE_FIELD + ' = \'' + type + '\''))
-            .add(new QueryBuilder.SimpleCondition(Constants.Account.INDUSTRY_FIELD + ' = \'' + industry + '\''))
+            .add(new QueryBuilder.LikeCondition(Account.Name).likeAnyBoth(name))
+            .add(new QueryBuilder.SimpleCondition(Account.Type + ' = \'' + type + '\''))
+            .add(new QueryBuilder.SimpleCondition(Account.Industry + ' = \'' + industry + '\''))
             .endConditions()
             .setOffset(offsetValue)
             .setLimit(recordsPerPage);

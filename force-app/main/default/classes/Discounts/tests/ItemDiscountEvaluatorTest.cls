@@ -3,7 +3,7 @@ private class ItemDiscountEvaluatorTest {
 
     @isTest
     static void testEmptyDiscountList() {
-        String strategy = Constants.Discount.STRATEGY_HIGHEST;
+        String strategy = Constants.Discount.strategy.HIGHEST;
         List<ItemDiscountEvaluator.EvaluatedDiscount> discounts = new List<ItemDiscountEvaluator.EvaluatedDiscount>();
         Test.startTest();
         List<ItemDiscountEvaluator.EvaluatedDiscount> result = ItemDiscountEvaluator.applyStrategy(discounts, strategy);
@@ -28,7 +28,7 @@ private class ItemDiscountEvaluatorTest {
 
     @isTest
     static void testHighestStrategy() {
-        String strategy = Constants.Discount.STRATEGY_HIGHEST;
+        String strategy = Constants.Discount.strategy.HIGHEST;
         List<ItemDiscountEvaluator.EvaluatedDiscount> discounts = createTestDiscounts(new List<Decimal>{100, 235, 57, 5});
         
         Test.startTest();
@@ -40,7 +40,7 @@ private class ItemDiscountEvaluatorTest {
 
     @isTest
     static void testLowestStrategy() {
-        String strategy = Constants.Discount.STRATEGY_LOWEST;
+        String strategy = Constants.Discount.strategy.LOWEST;
         List<ItemDiscountEvaluator.EvaluatedDiscount> discounts = createTestDiscounts(new List<Decimal>{100, 235, 57, 5});
         
         Test.startTest();
@@ -52,7 +52,7 @@ private class ItemDiscountEvaluatorTest {
 
     @isTest
     static void testCombinedStrategy() {
-        String strategy = Constants.Discount.STRATEGY_COMBINED;
+        String strategy = Constants.Discount.strategy.COMBINED;
         List<ItemDiscountEvaluator.EvaluatedDiscount> discounts = createTestDiscounts(new List<Decimal>{100, 235, 57, 8});
         
         Test.startTest();

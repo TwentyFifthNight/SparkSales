@@ -1,62 +1,23 @@
 public class AccountConstants {
-    public final String OBJECT_NAME {
+    public final Type Type {
         get {
-            return 'Account';
+            return new Type();
         }
-        private set;
     }
-    public final String ID_FIELD {
+
+    public final Industry Industry {
         get {
-            return 'Id';
+            return new Industry();
         }
-        private set;
     }
-    public final String NAME_FIELD {
-        get {
-            return 'Name';
-        }
-        private set;
+
+    public class Type {
+        public final String PROSPECT { get { return 'Prospect'; } }
+        public final String OTHER { get { return 'Other'; } }
     }
-    public final String TYPE_FIELD {
-        get {
-            return 'Type';
-        }
-        private set;
-    }
-    public final String INDUSTRY_FIELD {
-        get {
-            return 'Industry';
-        }
-        private set;
-    }
-    public final String PHONE_FIELD {
-        get {
-            return 'Phone';
-        }
-        private set;
-    }
-    public final String TYPE_PROSPECT {
-        get {
-            return 'Prospect';
-        }
-        private set;
-    }
-    public final String TYPE_OTHER {
-        get {
-            return 'Other';
-        }
-        private set;
-    }
-    public final String INDUSTRY_BANKING {
-        get {
-            return 'Banking';
-        }
-        private set;
-    }
-    public final String INDUSTRY_CHEMICALS {
-        get {
-            return 'Chemicals';
-        }
-        private set;
+
+    public class Industry {
+        public final String BANKING { get { return 'Banking'; } }
+        public final String CHEMICALS { get { return 'Chemicals'; } }
     }
 }

@@ -21,7 +21,7 @@ private class OrderInvoiceControllerTest {
             .create();
         insert order;
 
-        contract.Status = Constants.Contract.STATUS_ACTIVATED;
+        contract.Status = Constants.Contract.Status.ACTIVATED;
         update contract;
 
         List<PricebookEntry> entries = [SELECT Id, Product2Id FROM PricebookEntry];
@@ -63,7 +63,7 @@ private class OrderInvoiceControllerTest {
         protected override void prepare() {
             super.prepare();
             Contract contract = (Contract)record;
-            contract.Status = Constants.Contract.STATUS_DRAFT;
+            contract.Status = Constants.Contract.Status.DRAFT;
             contract.StartDate = Date.today();
             contract.ContractTerm = 12;
         }
@@ -73,7 +73,7 @@ private class OrderInvoiceControllerTest {
         protected override void prepare() {
             super.prepare();
             Order order = (Order)record;
-            order.Status = Constants.Order.STATUS_DRAFT;
+            order.Status = Constants.Order.Status.DRAFT;
             order.EffectiveDate = Date.today();
             order.Pricebook2Id = Test.getStandardPricebookId();
         }

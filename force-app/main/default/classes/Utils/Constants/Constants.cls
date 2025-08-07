@@ -22,70 +22,42 @@ public class Constants {
 
     public static AccountConstants Account {
         get {
-            if (Account == null) {
-                Account = new AccountConstants();
-            }
-            return Account;
-        }
-        private set;
-    }
-
-    public static PricebookEntryConstants PricebookEntry {
-        get {
-            if (PricebookEntry == null) {
-                PricebookEntry = new PricebookEntryConstants();
-            }
-            return PricebookEntry;
+            return new AccountConstants();
         }
         private set;
     }
 
     public static OrderConstants Order {
         get {
-            if (Order == null) {
-                Order = new OrderConstants();
-            }
-            return Order;
+            return new OrderConstants();
         }
         private set;
     }
 
     public static ProductConstants Product {
         get {
-            if (Product == null) {
-                Product = new ProductConstants();
-            }
-            return Product;
+            return new ProductConstants();
         }
         private set;
     }
 
     public static DiscountConstants Discount {
         get {
-            if (Discount == null) {
-                Discount = new DiscountConstants();
-            }
-            return Discount;
+            return new DiscountConstants();
         }
         private set;
     }
 
     public static ContractConstants Contract {
         get {
-            if (Contract == null) {
-                Contract = new ContractConstants();
-            }
-            return Contract;
+            return new ContractConstants();
         }
         private set;
     }
 
     public static OpportunityConstants Opportunity {
         get {
-            if (Opportunity == null) {
-                Opportunity = new OpportunityConstants();
-            }
-            return Opportunity;
+            return new OpportunityConstants();
         }
         private set;
     }

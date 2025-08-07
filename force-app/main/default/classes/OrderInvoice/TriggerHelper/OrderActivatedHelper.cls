@@ -2,7 +2,7 @@ public class OrderActivatedHelper {
     public static void handleBeforeUpdate(List<Order> newOrders, Map<Id, Order> oldOrderMap) {
         for (Order order : newOrders) {
             Order oldOrder = oldOrderMap.get(order.Id);
-            if (order.Status == Constants.Order.STATUS_ACTIVATED && oldOrder.Status != Constants.Order.STATUS_ACTIVATED) {
+            if (order.Status == Constants.Order.Status.ACTIVATED && oldOrder.Status != Constants.Order.Status.ACTIVATED) {
                 order.isSigned__c = false;
             }
         }
@@ -12,7 +12,7 @@ public class OrderActivatedHelper {
         List<Id> activatedOrderIds = new List<Id>();
         for (Order order : newOrders) {
             Order oldOrder = oldOrderMap != null ? oldOrderMap.get(order.Id) : null;
-            if (order.Status == Constants.Order.STATUS_ACTIVATED && (oldOrder == null || oldOrder.Status != Constants.Order.STATUS_ACTIVATED)) {
+            if (order.Status == Constants.Order.Status.ACTIVATED && (oldOrder == null || oldOrder.Status != Constants.Order.Status.ACTIVATED)) {
                 activatedOrderIds.add(order.Id);
             }
         }

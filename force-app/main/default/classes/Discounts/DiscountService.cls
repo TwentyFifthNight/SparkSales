@@ -12,11 +12,11 @@ public  class DiscountService {
             offset = 0;
         }
 
-        QueryBuilder query = new QueryBuilder(Constants.Discount.OBJECT_NAME)
-            .addField(Constants.Discount.NAME_FIELD)
-            .addField(Constants.Discount.PRODUCT_NAME_FIELD)
-            .addField(Constants.Discount.PRICEBOOK_NAME_FIELD)
-            .addField(Constants.Discount.IS_ACTIVE_FIELD)
+        QueryBuilder query = new QueryBuilder(Discount__c.sObjectType)
+            .addField(Discount__c.Name)
+            .addField(Discount__c.Product__c, Product2.Name)
+            .addField(Discount__c.Pricebook__c, Pricebook2.Name)
+            .addField(Discount__c.isActive__c)
             .setLimit(recordsPerPage)
             .setOffset(offset);
         List<Discount__c> discounts = Database.query(query.toString());

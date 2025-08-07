@@ -22,7 +22,7 @@ private class SignatureControllerTest {
         
         insert order;
 
-        contract.Status = Constants.Contract.STATUS_ACTIVATED;
+        contract.Status = Constants.Contract.Status.ACTIVATED;
         update contract;
 
         PricebookEntry entry = [SELECT Id FROM PricebookEntry LIMIT 1];
@@ -34,7 +34,7 @@ private class SignatureControllerTest {
     static void testSigningInvoice() {
         Order order = [SELECT Id, Status FROM Order LIMIT 1];
         Test.startTest();
-        order.Status = Constants.Order.STATUS_ACTIVATED;
+        order.Status = Constants.Order.Status.ACTIVATED;
         update order;
 
         SignatureController.saveSignature('ssdbfsdfg34q4', order.Id);
@@ -58,7 +58,7 @@ private class SignatureControllerTest {
         protected override void prepare() {
             super.prepare();
             Contract contract = (Contract)record;
-            contract.Status = Constants.Contract.STATUS_DRAFT;
+            contract.Status = Constants.Contract.Status.DRAFT;
             contract.StartDate = Date.today();
             contract.ContractTerm = 12;
         }
@@ -68,7 +68,7 @@ private class SignatureControllerTest {
         protected override void prepare() {
             super.prepare();
             Order order = (Order)record;
-            order.Status = Constants.Order.STATUS_DRAFT;
+            order.Status = Constants.Order.Status.DRAFT;
             order.EffectiveDate = Date.today();
             order.Pricebook2Id = Test.getStandardPricebookId();
         }

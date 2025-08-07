@@ -85,11 +85,11 @@ private class DiscountUpdateTest {
         protected override void prepare(){
             Discount__c discount = (Discount__c) record;
             discount.Name = 'Test Discount';
-            discount.Type__c = Constants.Discount.TIMED_TYPE;
+            discount.Type__c = Constants.Discount.Type.TIMED;
             discount.Start_Date__c = System.today();
             discount.End_Date__c = System.today().addDays(30);
             discount.Threshold_Amount__c = 100;
-            discount.Amount_Type__c = Constants.Discount.PERCENTAGE_AMOUNT_TYPE;
+            discount.Amount_Type__c = Constants.Discount.AmountType.PERCENTAGE;
             discount.Percentage__c = 10;
         }
     }
@@ -106,7 +106,7 @@ private class DiscountUpdateTest {
         protected override void prepare(){
             super.prepare();
             Order order = (Order) record;
-            order.Status = Constants.Order.STATUS_DRAFT;
+            order.Status = Constants.Order.Status.DRAFT;
             order.EffectiveDate = System.today();
             order.Pricebook2Id = Constants.STANDARD_PRICEBOOK_ID;
         }
