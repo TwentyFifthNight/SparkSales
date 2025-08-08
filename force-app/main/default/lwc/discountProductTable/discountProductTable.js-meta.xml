@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Pricebook Entry list</masterLabel>
+  <description>Display products from pricebook entries.</description>
+  <targets>
+    <target>lightning__FlowScreen</target>
+  </targets>
+  <targetConfigs>
+    <targetConfig targets="lightning__FlowScreen">
+      <property name="pricebookEntries" label="Input pricebook entry list" type="@salesforce/schema/PricebookEntry[]" role="inputOnly"/>
+      <property name="selectedProductIds" label="List of selected products" type="String[]" />
+    </targetConfig>
+  </targetConfigs>
+</LightningComponentBundle>
