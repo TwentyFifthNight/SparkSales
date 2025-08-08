@@ -12,6 +12,7 @@ import { loadStyle } from 'lightning/platformResourceLoader';
 import NoHeader from '@salesforce/resourceUrl/noHeader';
 import LightningToast from "lightning/toast";
 import createNewAccount from '@salesforce/apex/AccountSearchController.createNewAccount';
+import LABELS from './accountSearchLabels';
 
 const ACTIONS = [
     { label: 'Edit', name: 'edit' },
@@ -25,13 +26,13 @@ const NEW_ACCOUNT = {
 }
 
 export default class AccountSearch extends LightningElement {
+    label = LABELS;
     columns = [
-        { label: 'Name', fieldName: 'Name', type: 'text'},
-        //{ label: 'Name', fieldName: 'URL', type: 'url', typeAttributes: { label: {fieldName: 'Name'}}},
-        { label: 'Type', fieldName: 'Type', type: 'text'},
-        { label: 'Industry', fieldName: 'Industry', type: 'text'},
-        { label: 'Phone', fieldName: 'Phone', type: 'phone'},
-        { label: 'Source', fieldName: 'Source', type: 'text'},
+        { label: this.label.name, fieldName: 'Name', type: 'text'},
+        { label: this.label.typeLabel, fieldName: 'Type', type: 'text'},
+        { label: this.label.industry, fieldName: 'Industry', type: 'text'},
+        { label: this.label.phone, fieldName: 'Phone', type: 'phone'},
+        { label: this.label.source, fieldName: 'Source', type: 'text'},
         { type: 'action', typeAttributes: { rowActions: ACTIONS } }
     ];
     pageSizeOptions = [
@@ -48,7 +49,7 @@ export default class AccountSearch extends LightningElement {
     accounts = undefined;
     industryOptions = [];
     typeOptions = [];
-    destinationOptions = [{label: 'Local', value: 'Local'}, {label: 'External', value: 'External'}];
+    destinationOptions = [{label: this.label.localSourceLabel, value: 'Local'}, {label: this.label.externalSourceLabel, value: 'External'}];
     error = undefined;
     isLoading = false;
     saveUserBlock = false;
@@ -96,14 +97,14 @@ export default class AccountSearch extends LightningElement {
 
     get industryFilterOptions() {
         return [
-            {label: 'All', value: ''},
+            {label: this.label.allLabel, value: ''},
             ...this.industryOptions
         ]
     }
 
     get typeFilterOptions() {
         return [
-            {label: 'All', value: ''},
+            {label: this.label.allLabel, value: ''},
             ...this.typeOptions
         ]
     }

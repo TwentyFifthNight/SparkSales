@@ -16,35 +16,33 @@
                     hide-checkbox-column
                     suppress-bottom-bar
                 ></lightning-datatable>
-                <!-- <div class="slds-float_right slds-m-top_medium" style="width: 40%;"> -->
-                    <div class="slds-p-right_medium slds-m-top_medium">
-                        <p class="slds-text-align_right">
-                            {label.totalAmount}: 
-                            <lightning-formatted-number 
-                                value={totalPrice} 
-                                format-style="currency"
-                                class="slds-p-left_xx-small"
-                            ></lightning-formatted-number>
-                        </p>
-                        <p class="slds-text-align_right">
-                            {label.discountAmount}: 
-                            <lightning-formatted-number 
-                                value={discountAmount} 
-                                format-style="currency"
-                                class="slds-p-left_xx-small"
-                            ></lightning-formatted-number>
-                        </p>
-                        <hr class="slds-m-vertical_x-small" />
-                        <p class="slds-text-align_right slds-text-heading_medium">
-                            {label.finalPrice}: 
-                            <lightning-formatted-number 
-                                value={finalPrice} 
-                                format-style="currency"
-                                class="slds-p-left_xx-small"
-                            ></lightning-formatted-number>
-                        </p>
-                    </div>
-                <!-- </div> -->
+                <div class="slds-p-right_medium slds-m-top_medium">
+                    <p class="slds-text-align_right">
+                        {label.totalAmount}: 
+                        <lightning-formatted-number 
+                            value={totalPrice} 
+                            format-style="currency"
+                            class="slds-p-left_xx-small"
+                        ></lightning-formatted-number>
+                    </p>
+                    <p class="slds-text-align_right">
+                        {label.discountAmount}: 
+                        <lightning-formatted-number 
+                            value={discountAmount} 
+                            format-style="currency"
+                            class="slds-p-left_xx-small"
+                        ></lightning-formatted-number>
+                    </p>
+                    <hr class="slds-m-vertical_x-small" />
+                    <p class="slds-text-align_right slds-text-heading_medium">
+                        {label.finalPrice}: 
+                        <lightning-formatted-number 
+                            value={finalPrice} 
+                            format-style="currency"
+                            class="slds-p-left_xx-small"
+                        ></lightning-formatted-number>
+                    </p>
+                </div>
             </div>
             <template if:true={error}>
                 <p class="slds-text-color_error">{error.body.message}</p>

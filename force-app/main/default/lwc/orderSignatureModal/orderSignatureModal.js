@@ -6,10 +6,13 @@ import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';
 import CONTRACT_OBJECT from '@salesforce/schema/Contract';
 import USER_OBJECT from '@salesforce/schema/User';
+import LABELS from './orderSignatureModalLabels';
 
-export default class SignatureCanvas extends LightningElement {    
+export default class SignatureCanvas extends LightningElement {
+    label = LABELS;
+
     @api recordId;
-    @api headerText='Sign the invoice';
+    headerText='Sign the invoice';
     blockButton=false;
     isLoading=false;
     contractNumberLabel;

@@ -14,7 +14,7 @@ let canvasElement, ctx;
 let dataURL, convertedDataURI;
 
 export default class Signature extends LightningElement {
-    @api headerText='Sign the invoice';
+    @api headerText='';
 
     @api
     getSignatureData() {
