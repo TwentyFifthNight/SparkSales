@@ -26,7 +26,7 @@ private class DiscountUpdateTest {
         update discount;
         Test.stopTest();
         Discount__c updatedDiscount = [SELECT Name FROM Discount__c WHERE Id = :discount.Id];
-        System.assertEquals('Updated Discount Name', updatedDiscount.Name);
+        Assert.areEqual('Updated Discount Name', updatedDiscount.Name);
     }
 
     @isTest
@@ -44,13 +44,13 @@ private class DiscountUpdateTest {
         Test.startTest();
         try {
             update discount;
-            System.assert(false, 'Expected DiscountException');
+            Assert.fail('Expected DiscountException');
         } catch (DmlException e) {
-            System.assert(e.getMessage().contains(System.Label.Restrict_Used_Discount_Edit_Error), 'Expected error message not found: ' + e.getMessage());
+            Assert.isTrue(e.getMessage().contains(System.Label.Restrict_Used_Discount_Edit_Error), 'Expected error message not found: ' + e.getMessage());
         }
         Test.stopTest();
         Discount__c updatedDiscount = [SELECT Id, Name FROM Discount__c WHERE Id = :discount.Id];
-        System.assertNotEquals('Updated Discount Name', updatedDiscount.Name, 'Discount name should not be updated when used in an order');
+        Assert.areNotEqual('Updated Discount Name', updatedDiscount.Name, 'Discount name should not be updated when used in an order');
     }
 
     @isTest
@@ -68,13 +68,12 @@ private class DiscountUpdateTest {
         Test.startTest();
         try {
             update discount;
-            System.assert(true, 'Update should not throw an exception');
         } catch (DmlException e) {
-            System.assert(false, 'Expected no exception, but got: ' + e.getMessage());
+            Assert.fail('Expected no exception, but got: ' + e.getMessage());
         }
         Test.stopTest();
         Discount__c updatedDiscount = [SELECT isActive__c FROM Discount__c WHERE Id = :discount.Id];
-        System.assertEquals(true, updatedDiscount.isActive__c, 'Discount should be active after update');
+        Assert.areEqual(true, updatedDiscount.isActive__c, 'Discount should be active after update');
     }
 
     private class DiscountTestDataBuilder extends TestDataBuilder {

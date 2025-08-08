@@ -2,9 +2,9 @@
 global class MockWiktorOrgCreateUpdateResponse implements HttpCalloutMock {
     private static final String ACCOUNT_WIKTOR_ENDPOINT = 'callout:Wiktor_Named/services/data/v62.0/sobjects/Account/';
     global HttpResponse respond(HttpRequest request) {
-        System.assert(request.getMethod() == 'POST' || request.getMethod() == 'PATCH');
+        Assert.isTrue(request.getMethod() == 'POST' || request.getMethod() == 'PATCH');
         HttpResponse response = new HttpResponse();
-        System.assertEquals(ACCOUNT_WIKTOR_ENDPOINT, request.getEndpoint().substringBeforeLast('/') + '/');
+        Assert.areEqual(ACCOUNT_WIKTOR_ENDPOINT, request.getEndpoint().substringBeforeLast('/') + '/');
         
 
         response.setHeader('Content-Type', 'application/json;charset=UTF-8');

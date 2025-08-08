@@ -8,7 +8,7 @@ private class ItemDiscountEvaluatorTest {
         Test.startTest();
         List<ItemDiscountEvaluator.EvaluatedDiscount> result = ItemDiscountEvaluator.applyStrategy(discounts, strategy);
         Test.stopTest();
-        System.assertEquals(0, result.size());
+        Assert.areEqual(0, result.size());
     }
 
     @isTest
@@ -19,9 +19,9 @@ private class ItemDiscountEvaluatorTest {
         Test.startTest();
         try{
             List<ItemDiscountEvaluator.EvaluatedDiscount> result = ItemDiscountEvaluator.applyStrategy(discounts, strategy);
-            System.assert(false, 'Expected DiscountException');
+            Assert.fail('Expected DiscountException');
         } catch (DiscountException e) {
-            System.assertEquals(System.Label.Unsuported_Discount_Strategy_Type + strategy, e.getMessage());
+            Assert.areEqual(System.Label.Unsuported_Discount_Strategy_Type + strategy, e.getMessage());
         }
         Test.stopTest();
     }
@@ -34,8 +34,8 @@ private class ItemDiscountEvaluatorTest {
         Test.startTest();
         List<ItemDiscountEvaluator.EvaluatedDiscount> result = ItemDiscountEvaluator.applyStrategy(discounts, strategy);
         Test.stopTest();
-        System.assertEquals(1, result.size());
-        System.Assert.areEqual(235, result[0].discountAmount);
+        Assert.areEqual(1, result.size());
+        Assert.areEqual(235, result[0].discountAmount);
     }
 
     @isTest
@@ -46,8 +46,8 @@ private class ItemDiscountEvaluatorTest {
         Test.startTest();
         List<ItemDiscountEvaluator.EvaluatedDiscount> result = ItemDiscountEvaluator.applyStrategy(discounts, strategy);
         Test.stopTest();
-        System.assertEquals(1, result.size());
-        System.Assert.areEqual(5, result[0].discountAmount);
+        Assert.areEqual(1, result.size());
+        Assert.areEqual(5, result[0].discountAmount);
     }
 
     @isTest
@@ -58,12 +58,12 @@ private class ItemDiscountEvaluatorTest {
         Test.startTest();
         List<ItemDiscountEvaluator.EvaluatedDiscount> result = ItemDiscountEvaluator.applyStrategy(discounts, strategy);
         Test.stopTest();
-        System.assertEquals(4, result.size());
+        Assert.areEqual(4, result.size());
         Decimal total = 0;
         for (ItemDiscountEvaluator.EvaluatedDiscount item : result) {
             total += item.discountAmount;
         }
-        System.Assert.areEqual(400, total);
+        Assert.areEqual(400, total);
     }
 
     private static List<ItemDiscountEvaluator.EvaluatedDiscount> createTestDiscounts(List<Decimal> amounts) {

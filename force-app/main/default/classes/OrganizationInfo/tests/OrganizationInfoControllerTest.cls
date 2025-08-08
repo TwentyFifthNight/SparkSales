@@ -18,10 +18,10 @@ private class OrganizationInfoControllerTest {
             LIMIT 1
         ];
         Integer availaleLicenseCount = license.TotalLicenses - license.UsedLicenses;
-        System.assertEquals(apexClassCount, controller.apexClassCount);
-        System.AssertEquals(visualForcePageCount, controller.visualforcePageCount);
-        System.AssertEquals(sessioId, controller.sessionId);
-        System.AssertEquals(availaleLicenseCount, controller.availableLicenseCounts.get(license.Name));
+        Assert.areEqual(apexClassCount, controller.apexClassCount);
+        Assert.areEqual(visualForcePageCount, controller.visualforcePageCount);
+        Assert.areEqual(sessioId, controller.sessionId);
+        Assert.areEqual(availaleLicenseCount, controller.availableLicenseCounts.get(license.Name));
         Test.stopTest();
     }
 }

@@ -60,7 +60,7 @@ private class OrderItemsDiscountEvaluatorTest {
         Test.startTest();
         List<OrderItemsDiscountEvaluator.ItemDiscountResult> result = OrderItemsDiscountEvaluator.Evaluate(orderItems, pricebookId);
         Test.stopTest();
-        System.Assert.areEqual(0, result.size());
+        Assert.areEqual(0, result.size());
     }
 
     @isTest
@@ -85,8 +85,8 @@ private class OrderItemsDiscountEvaluatorTest {
             }
             totalDiscount += resultItem.totalDiscount;
         }
-        System.assertEquals(5, appliedDiscounts.size(), 'Expected 5 applied discounts');
-        System.assertEquals(2.5, totalDiscount, 'Expected total discount to be 2.5');
+        Assert.areEqual(5, appliedDiscounts.size(), 'Expected 5 applied discounts');
+        Assert.areEqual(2.5, totalDiscount, 'Expected total discount to be 2.5');
     }
 
     @isTest
@@ -109,8 +109,8 @@ private class OrderItemsDiscountEvaluatorTest {
             }
             totalDiscount += resultItem.totalDiscount;
         }
-        System.assertEquals(0, appliedDiscounts.size(), 'Expected 0 applied discounts');
-        System.assertEquals(0, totalDiscount, 'Expected total discount to be 0');
+        Assert.areEqual(0, appliedDiscounts.size(), 'Expected 0 applied discounts');
+        Assert.areEqual(0, totalDiscount, 'Expected total discount to be 0');
     }
 
     private static List<Discount__c> CreateTestTimedPercentageDiscounts(Boolean valid, Decimal value, Integer cnt) {
