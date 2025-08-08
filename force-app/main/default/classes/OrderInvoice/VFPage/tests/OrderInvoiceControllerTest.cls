@@ -54,9 +54,9 @@ private class OrderInvoiceControllerTest {
         
         AggregateResult[] ordersPrice = [SELECT OrderId, SUM(TotalPrice) Total FROM OrderItem WHERE OrderId=:order.Id GROUP BY OrderId];
         Decimal subtotal = (Decimal)ordersPrice[0].get('Total');
-        System.assertEquals(subtotal, controller.SubTotal, 'Subtotal should match the total price of order items');
-        System.assertEquals(subtotal + subtotal * controller.Tax / 100 , controller.TotalAmount, 'Total amount should include tax');
-        System.assertEquals(orderItemsSize, controller.OrderItems.size(), 'Order items size should match the number of order items');
+        Assert.areEqual(subtotal, controller.SubTotal, 'Subtotal should match the total price of order items');
+        Assert.areEqual(subtotal + subtotal * controller.Tax / 100 , controller.TotalAmount, 'Total amount should include tax');
+        Assert.areEqual(orderItemsSize, controller.OrderItems.size(), 'Order items size should match the number of order items');
     }
 
     private class ContractTestDataBuilder extends BaseContractTestDataBuilder {

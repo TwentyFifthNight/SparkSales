@@ -82,7 +82,7 @@ private class ProductSearchControllerTest {
         Test.startTest();
         Integer count = ProductSearchController.getRecordCount(wrapper);
         Test.stopTest();
-        System.assertEquals(30, count, 'Expected product count to be 30 without any parameters');
+        Assert.areEqual(30, count, 'Expected product count to be 30 without any parameters');
     }
 
     @isTest
@@ -92,7 +92,7 @@ private class ProductSearchControllerTest {
         Test.startTest();
         Integer count = ProductSearchController.getRecordCount(wrapper);
         Test.stopTest();
-        System.assertEquals(11, count, 'Expected product count to be 11 for name "Product 1" without family filter');
+        Assert.areEqual(11, count, 'Expected product count to be 11 for name "Product 1" without family filter');
     }
 
     @isTest
@@ -103,7 +103,7 @@ private class ProductSearchControllerTest {
         Test.startTest();
         Integer count = ProductSearchController.getRecordCount(wrapper);
         Test.stopTest();
-        System.assertEquals(10, count, 'Expected product count to be 10 with name "est" and family "Adapters"');
+        Assert.areEqual(10, count, 'Expected product count to be 10 with name "est" and family "Adapters"');
     }
 
     @isTest
@@ -113,7 +113,7 @@ private class ProductSearchControllerTest {
         Test.startTest();
         List<Product2> products = ProductSearchController.getRecordList(wrapper);
         Test.stopTest();
-        System.assertEquals(10, products.size(), 'Expected product list size to be 10 without any parameters');
+        Assert.areEqual(10, products.size(), 'Expected product list size to be 10 without any parameters');
     }
 
     @isTest
@@ -124,7 +124,7 @@ private class ProductSearchControllerTest {
         Test.startTest();
         List<Product2> products = ProductSearchController.getRecordList(wrapper);
         Test.stopTest();
-        System.assertEquals(30, products.size(), 'Expected product list size to return all (30) records with recordsPerPage set to 35');
+        Assert.areEqual(30, products.size(), 'Expected product list size to return all (30) records with recordsPerPage set to 35');
     }
 
     @isTest
@@ -136,7 +136,7 @@ private class ProductSearchControllerTest {
         Test.startTest();
         List<Product2> products = ProductSearchController.getRecordList(wrapper);
         Test.stopTest();
-        System.assertEquals(25, products.size(), 'Expected product list size to be 25 with offset of 5 and recordsPerPage of 30');
+        Assert.areEqual(25, products.size(), 'Expected product list size to be 25 with offset of 5 and recordsPerPage of 30');
     }
 
     @isTest
@@ -147,7 +147,7 @@ private class ProductSearchControllerTest {
         Test.startTest();
         List<Product2> products = ProductSearchController.getRecordList(wrapper);
         Test.stopTest();
-        System.assertEquals(11, products.size(), 'Expected product list size to be 11 for name "Test 1" without family filter');
+        Assert.areEqual(11, products.size(), 'Expected product list size to be 11 for name "Test 1" without family filter');
     }
 
     @isTest
@@ -159,7 +159,7 @@ private class ProductSearchControllerTest {
         Test.startTest();
         List<Product2> products = ProductSearchController.getRecordList(wrapper);
         Test.stopTest();
-        System.assertEquals(10, products.size(), 'Expected product list size to be 10 with name "est" and family "Adapters"');
+        Assert.areEqual(10, products.size(), 'Expected product list size to be 10 with name "est" and family "Adapters"');
     }
 
     @isTest
@@ -171,7 +171,7 @@ private class ProductSearchControllerTest {
         Test.startTest();
         List<Product2> products = ProductSearchController.getRecordList(wrapper);
         Test.stopTest();
-        System.assertEquals(10, products.size(), 'Expected product list size to be 10 with invalid pagination parameters');
+        Assert.areEqual(10, products.size(), 'Expected product list size to be 10 with invalid pagination parameters');
     }
 
     @isTest
@@ -181,7 +181,7 @@ private class ProductSearchControllerTest {
         Test.startTest();
         List<Product2> opportunityProducts = ProductSearchController.getOpportunityProducts(opportunities[0].Id);
         Test.stopTest();
-        System.assertEquals(8, opportunityProducts.size(), 'Expected 8 products associated with the opportunity');
+        Assert.areEqual(8, opportunityProducts.size(), 'Expected 8 products associated with the opportunity');
     }
 
     @isTest
@@ -202,7 +202,7 @@ private class ProductSearchControllerTest {
         Id orderId = ProductSearchController.createNewOrder(orderItems, opportunities[0].Id);
         Test.stopTest();
         List<OrderItem> orderItemsList = [SELECT Id FROM OrderItem WHERE OrderId = :orderId];
-        System.assertEquals(10, orderItemsList.size(), 'Expected 10 order items to be created for the new order');
+        Assert.areEqual(10, orderItemsList.size(), 'Expected 10 order items to be created for the new order');
     }
 
     @isTest
@@ -219,10 +219,10 @@ private class ProductSearchControllerTest {
         Test.startTest();
         List<ProductSearchController.OrderItemWrapper> orderItems = ProductSearchController.generateOrderItemsFromProducts(products, opportunities[0].Id);
         Test.stopTest();
-        System.assertEquals(8, orderItems.size(), 'Expected 8 order items to be generated from products associated with the opportunity');
+        Assert.areEqual(8, orderItems.size(), 'Expected 8 order items to be generated from products associated with the opportunity');
         for(ProductSearchController.OrderItemWrapper orderItem : orderItems){
-            System.assertEquals(5, orderItem.quantity, 'Expected each order item to have a quantity of 5');
-            System.assertEquals(10, orderItem.unitPrice, 'Expected each order item to have a unit price of 10');
+            Assert.areEqual(5, orderItem.quantity, 'Expected each order item to have a quantity of 5');
+            Assert.areEqual(10, orderItem.unitPrice, 'Expected each order item to have a unit price of 10');
         }
     }
 

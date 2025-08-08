@@ -15,8 +15,8 @@ private class QueryBuilderTest {
         String queryString = new QueryBuilder('Account')
             .toString();
         List<Account> accounts = Database.query(queryString);
-        System.assertEquals(1, accounts.size());
-        System.assert(accounts[0].Id != null);
+        Assert.areEqual(1, accounts.size());
+        Assert.isNotNull(accounts[0].Id);
     }
 
     @isTest
@@ -26,8 +26,8 @@ private class QueryBuilderTest {
             .addField('Name')
             .toString();
         List<Account> accounts = Database.query(queryString);
-        System.assertEquals(1, accounts.size());
-        System.assertEquals('Test 0', accounts[0].Name);
+        Assert.areEqual(1, accounts.size());
+        Assert.areEqual('Test 0', accounts[0].Name);
     }
 
     @isTest
@@ -37,7 +37,7 @@ private class QueryBuilderTest {
             .setLimit(3)
             .toString();
         List<Account> accounts = Database.query(queryString.toString());
-        System.assertEquals(3, accounts.size());
+        Assert.areEqual(3, accounts.size());
     }
 
     @isTest
@@ -47,7 +47,7 @@ private class QueryBuilderTest {
             .setOffset(2)
             .toString();
         List<Account> accounts = Database.query(queryString.toString());
-        System.assertEquals(3, accounts.size());
+        Assert.areEqual(3, accounts.size());
     }
 
     @isTest
@@ -63,9 +63,9 @@ private class QueryBuilderTest {
             .addOrderBy('Name ASC')
             .toString();
         accounts = Database.query(queryString);
-        System.assertEquals(3, accounts.size());
-        System.assertEquals('Andrew', accounts[0].Name);
-        System.assertEquals('Zaid', accounts[2].Name);
+        Assert.areEqual(3, accounts.size());
+        Assert.areEqual('Andrew', accounts[0].Name);
+        Assert.areEqual('Zaid', accounts[2].Name);
     }
 
     @isTest
@@ -81,9 +81,9 @@ private class QueryBuilderTest {
             .addOrderBy('Name DESC')
             .toString();
         accounts = Database.query(queryString);
-        System.assertEquals(3, accounts.size());
-        System.assertEquals('Zaid', accounts[0].Name);
-        System.assertEquals('Andrew', accounts[2].Name);
+        Assert.areEqual(3, accounts.size());
+        Assert.areEqual('Zaid', accounts[0].Name);
+        Assert.areEqual('Andrew', accounts[2].Name);
     }
 
     @isTest
@@ -101,8 +101,8 @@ private class QueryBuilderTest {
             .endConditions()
             .toString();
         accounts = Database.query(queryString);
-        System.assertEquals(1, accounts.size());
-        System.assertEquals('Zaid', accounts[0].Name);
+        Assert.areEqual(1, accounts.size());
+        Assert.areEqual('Zaid', accounts[0].Name);
     }
 
     @isTest
@@ -120,8 +120,8 @@ private class QueryBuilderTest {
             .endConditions()
             .toString();
         accounts = Database.query(queryString);
-        System.AssertEquals(1, accounts.size());
-        System.AssertEquals('Zaid', accounts[0].Name);
+        Assert.areEqual(1, accounts.size());
+        Assert.areEqual('Zaid', accounts[0].Name);
     }
 
     @isTest
@@ -138,8 +138,8 @@ private class QueryBuilderTest {
             .endConditions()
             .toString();
         accounts = Database.query(queryString);
-        System.AssertEquals(1, accounts.size());
-        System.AssertEquals('Andrew', accounts[0].Name);
+        Assert.areEqual(1, accounts.size());
+        Assert.areEqual('Andrew', accounts[0].Name);
     }
 
     @isTest
@@ -156,8 +156,8 @@ private class QueryBuilderTest {
             .endConditions()
             .toString();
         accounts = Database.query(queryString);
-        System.AssertEquals(1, accounts.size());
-        System.AssertEquals('Andrew', accounts[0].Name);
+        Assert.areEqual(1, accounts.size());
+        Assert.areEqual('Andrew', accounts[0].Name);
     }
 
     @isTest
@@ -174,8 +174,8 @@ private class QueryBuilderTest {
             .endConditions()
             .toString();
         accounts = Database.query(queryString);
-        System.AssertEquals(1, accounts.size());
-        System.AssertEquals('Zaid', accounts[0].Name);
+        Assert.areEqual(1, accounts.size());
+        Assert.areEqual('Zaid', accounts[0].Name);
     }
 
     @isTest
@@ -185,7 +185,7 @@ private class QueryBuilderTest {
         String queryString = new QueryBuilder('Account')
             .toStringCount();
         Integer accountCount = Database.countQuery(queryString);
-        System.AssertEquals(15, accountCount);
+        Assert.areEqual(15, accountCount);
     }
 
     @isTest
@@ -204,7 +204,7 @@ private class QueryBuilderTest {
             .endConditions()
             .toString();
         accounts = Database.query(queryString);
-        System.AssertEquals(2, accounts.size());
+        Assert.areEqual(2, accounts.size());
     }
 
     @isTest
@@ -222,6 +222,6 @@ private class QueryBuilderTest {
             .endConditions()
             .toString();
         accounts = Database.query(queryString);
-        System.AssertEquals(3, accounts.size());
+        Assert.areEqual(3, accounts.size());
     }
 }

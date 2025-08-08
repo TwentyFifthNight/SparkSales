@@ -7,7 +7,7 @@ private class DiscountControllerTest {
         Test.startTest();
         Integer result = DiscountController.getRecordCount();
         Test.stopTest();
-        System.assertEquals(30, result);
+        Assert.areEqual(30, result);
     }
 
     @isTest
@@ -16,7 +16,7 @@ private class DiscountControllerTest {
         Test.startTest();
         List<Discount__c> result = DiscountController.getRecordList(30, 0);
         Test.stopTest();
-        System.assertEquals(30, result.size());
+        Assert.areEqual(30, result.size());
     }
 
     @isTest
@@ -25,7 +25,7 @@ private class DiscountControllerTest {
         Test.startTest();
         List<Discount__c> result = DiscountController.getRecordList(null, 0);
         Test.stopTest();
-        System.assertEquals(10, result.size());
+        Assert.areEqual(10, result.size());
     }
 
     @isTest
@@ -34,7 +34,7 @@ private class DiscountControllerTest {
         Test.startTest();
         List<Discount__c> result = DiscountController.getRecordList(20, null);
         Test.stopTest();
-        System.assertEquals(20, result.size());
+        Assert.areEqual(20, result.size());
     }
 
     @isTest
@@ -42,7 +42,7 @@ private class DiscountControllerTest {
         Test.startTest();
         List<Discount__c> result = DiscountController.getRecordList(20, 0);
         Test.stopTest();
-        System.assertEquals(0, result.size());
+        Assert.areEqual(0, result.size());
     }
 
     @isTest
@@ -51,7 +51,7 @@ private class DiscountControllerTest {
         Test.startTest();
         List<Discount__c> result = DiscountController.getRecordList(30, 10);
         Test.stopTest();
-        System.assertEquals(20, result.size());
+        Assert.areEqual(20, result.size());
     }
 
     private static void createTestDiscounts() {

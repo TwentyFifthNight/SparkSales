@@ -40,8 +40,8 @@ private class SignatureControllerTest {
         SignatureController.saveSignature('ssdbfsdfg34q4', order.Id);
         Test.stopTest();
         List<ContentVersion> orderFiles = [SELECT ContentDocumentId, PathOnClient, Title, FileExtension FROM ContentVersion WHERE FirstPublishLocationId = :order.Id];
-        System.assertEquals(1, orderFiles.size(), 'Order should have one file attached');
-        System.assertEquals('pdf', orderFiles[0].FileExtension, 'File should be a PDF');
+        Assert.areEqual(1, orderFiles.size(), 'Order should have one file attached');
+        Assert.areEqual('pdf', orderFiles[0].FileExtension, 'File should be a PDF');
     }
 
     @isTest
@@ -51,7 +51,7 @@ private class SignatureControllerTest {
         SignatureController.saveSignature('ssdbfsdfg34q4', order.Id);
         Test.stopTest();
         List<ContentVersion> orderFiles = [SELECT ContentDocumentId, PathOnClient, Title, FileExtension FROM ContentVersion WHERE FirstPublishLocationId = :order.Id];
-        System.assertEquals(0, orderFiles.size(), 'Order should not have any files attached without a PDF');
+        Assert.areEqual(0, orderFiles.size(), 'Order should not have any files attached without a PDF');
     }
 
     private class ContractTestDataBuilder extends BaseContractTestDataBuilder {

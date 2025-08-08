@@ -28,8 +28,7 @@ private class AccountSearchControllerTest {
         Test.startTest();
         List<Account> accounts = AccountSearchController.searchAccounts(name, null, null, 1, 100);
         Test.stopTest();
-
-        System.assertEquals(90, accounts.size());
+        Assert.areEqual(90, accounts.size());
     }
 
     @isTest
@@ -40,7 +39,7 @@ private class AccountSearchControllerTest {
         List<Account> accounts = AccountSearchController.searchAccounts(null, type, industry, 1, 100);
         Test.stopTest();
 
-        System.assertEquals(30, accounts.size());
+        Assert.areEqual(30, accounts.size());
     }
 
     @isTest
@@ -49,7 +48,7 @@ private class AccountSearchControllerTest {
         List<Account> accounts = AccountSearchController.searchAccounts(null, null, null, null, null);
         Test.stopTest();
 
-        System.assertEquals(10, accounts.size());
+        Assert.areEqual(10, accounts.size());
     }
 
     @isTest
@@ -59,7 +58,7 @@ private class AccountSearchControllerTest {
         Integer accountCount = AccountSearchController.getAccountCount(name, null, null);
         Test.stopTest();
 
-        System.assertEquals(90, accountCount);
+        Assert.areEqual(90, accountCount);
     }
 
     @isTest
@@ -69,7 +68,7 @@ private class AccountSearchControllerTest {
         Integer accountCount = AccountSearchController.getAccountCountFromWiktor(null, null, null);
         Test.stopTest();
 
-        System.assertEquals(3, accountCount);
+        Assert.areEqual(3, accountCount);
     }
 
     @isTest
@@ -79,8 +78,8 @@ private class AccountSearchControllerTest {
         List<Account> accounts = AccountSearchController.searchAccountsFromWiktor(null, null, null, null, null);
         Test.stopTest();
 
-        System.assert(accounts != null);
-        System.assertEquals(3, accounts.size());
+        Assert.isNotNull(accounts);
+        Assert.areEqual(3, accounts.size());
     }
 
     @isTest
@@ -93,10 +92,10 @@ private class AccountSearchControllerTest {
         Boolean result = AccountSearchController.createNewAccount(name, type, industry, 'Local');
         Test.stopTest();
 
-        System.assert(result == true);
+        Assert.isTrue(result);
         Account[] account = [SELECT Id, Name FROM Account WHERE Name = :name AND Type = :type AND Industry = :industry];
-        System.assert(account != null);
-        System.assertEquals(1, account.size());
+        Assert.isNotNull(account);
+        Assert.areEqual(1, account.size());
     }
 
     @isTest
@@ -108,7 +107,7 @@ private class AccountSearchControllerTest {
         Test.startTest();
         Boolean result = AccountSearchController.createNewAccount(name, type, industry, 'External');
         Test.stopTest();
-        System.assert(result == true);
+        Assert.isTrue(result);
     }
 
     @isTest
@@ -125,10 +124,10 @@ private class AccountSearchControllerTest {
         Boolean result = AccountSearchController.updateAccount(account.Id, name, type, industry, 'Local');
         Test.stopTest();
 
-        System.assert(result == true);
+        Assert.isTrue(result);
         Account[] accounts = [SELECT Id, Name FROM Account WHERE Name = :name AND Type = :type AND Industry = :industry];
-        System.assert(accounts != null);
-        System.assertEquals(1, accounts.size());
+        Assert.isNotNull(accounts);
+        Assert.areEqual(1, accounts.size());
     }
 
     @isTest
@@ -142,7 +141,7 @@ private class AccountSearchControllerTest {
         Boolean result = AccountSearchController.updateAccount('001gL00000AGSEsFQP', name, type, industry, 'External');
         Test.stopTest();
 
-        System.assert(result == true);
+        Assert.isTrue(result);
     }
 
     private class AccountTestDataBuilder extends BaseAccountTestDataBuilder {
