@@ -1,0 +1,12 @@
+<template>
+    <div class="slds-m-vertical_small">
+        <lightning-datatable
+            key-field="Id"
+            data={products}
+            columns={columns}
+            selected-rows={selectedProductIds}
+            onrowselection={handleRowSelection}
+            resize-column-disabled
+        ></lightning-datatable>
+    </div>
+</template>
