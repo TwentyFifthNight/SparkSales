@@ -157,6 +157,9 @@ public with sharing class QueryBuilder {
             String result = this.conditionOrder;
             if (String.isEmpty(result)) {
                 result = '1';
+                for (Integer i = 2; i < this.conditions.size() + 1; i++) {
+                    result += ' AND ' + i;
+                }
             }
             result = this.bracketConditions(result);
             for (Integer i = 0; i < this.conditions.size(); i++) {
@@ -174,7 +177,6 @@ public with sharing class QueryBuilder {
         }
 
         private String bracketConditions(String conditions) {
-            this.conditions.size();
             for (Integer i = 1; i <= this.conditions.size(); i++) {
                 String conditionNumber = '' + i;
                 conditions = conditions.replaceFirst(conditionNumber, this.bracket(conditionNumber));
@@ -245,6 +247,10 @@ public with sharing class QueryBuilder {
 
         public LikeCondition(Schema.SObjectField fieldName) {
             super(fieldName.getDescribe().getName());
+        }
+
+        public LikeCondition(Schema.SObjectField relationship, Schema.SObjectField field){
+            super(relationship.getDescribe().getRelationshipName() + '.' + field.getDescribe().getName());
         }
 
         public Condition likeAnyBoth(String fieldValue) {

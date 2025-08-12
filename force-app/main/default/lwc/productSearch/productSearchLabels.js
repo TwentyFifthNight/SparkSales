@@ -26,12 +26,14 @@ import discountAmount from '@salesforce/label/c.discountAmount';
 import finalPrice from '@salesforce/label/c.finalPrice';
 import createOrderButton from '@salesforce/label/c.createOrderButton';
 import loadingSpinnerText from '@salesforce/label/c.loadingSpinnerText';
+import external from '@salesforce/label/c.external';
 
 const LABELS = {
     noRecordFound,
     name,
     productCode,
     family,
+    external,
     productName,
     quantity,
     unitPrice,

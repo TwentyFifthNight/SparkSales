@@ -20,45 +20,57 @@ public class Constants {
         private set;
     }
 
-    public static AccountConstants Account {
+    public static final String PRODUCT_SYNC_API_ENDPOINT { 
+        get { 
+            return 'callout:External_Data_Org/services/apexrest/Product/sync/';
+        }
+    }
+
+    public static final AccountConstants Account {
         get {
             return new AccountConstants();
         }
-        private set;
     }
 
-    public static OrderConstants Order {
+    public static final OrderConstants Order {
         get {
             return new OrderConstants();
         }
-        private set;
     }
 
-    public static ProductConstants Product {
+    public static final ProductConstants Product {
         get {
             return new ProductConstants();
         }
-        private set;
     }
 
-    public static DiscountConstants Discount {
+    public static final DiscountConstants Discount {
         get {
             return new DiscountConstants();
         }
-        private set;
     }
 
-    public static ContractConstants Contract {
+    public static final ContractConstants Contract {
         get {
             return new ContractConstants();
         }
-        private set;
     }
 
-    public static OpportunityConstants Opportunity {
+    public static final OpportunityConstants Opportunity {
         get {
             return new OpportunityConstants();
         }
-        private set;
+    }
+
+    public static final RESTConstants RestAPI {
+        get {
+            return new RESTConstants();
+        }
+    }
+
+    public static final RequestLogConstants RequestLog {
+        get {
+            return new RequestLogConstants();
+        }
     }
 }

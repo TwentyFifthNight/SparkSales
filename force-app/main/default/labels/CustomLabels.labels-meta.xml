@@ -106,6 +106,13 @@
         <value>Family</value>
     </labels>
     <labels>
+        <fullName>external</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used in datatable label etc.</shortDescription>
+        <value>External</value>
+    </labels>
+    <labels>
         <fullName>finalPrice</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -336,5 +343,19 @@
         <protected>true</protected>
         <shortDescription>Alternative text for a spinner</shortDescription>
         <value>Loading</value>
+    </labels>
+    <labels>
+        <fullName>missingServerResponse</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for when the REST API does not return a response to one of requests</shortDescription>
+        <value>Missing server response</value>
+    </labels>
+    <labels>
+        <fullName>productSyncApiDmlExceeded</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for when the REST API DML limit was exceeded</shortDescription>
+        <value>Limit of DML statements exceeded.</value>
     </labels>
 </CustomLabels>

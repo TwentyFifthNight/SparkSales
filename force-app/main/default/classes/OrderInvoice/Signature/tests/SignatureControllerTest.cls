@@ -5,7 +5,7 @@ private class SignatureControllerTest {
         Pricebook2 standardPricebook = new Pricebook2(Id = Test.getStandardPricebookId(), IsActive = true);
         update standardPricebook;
 
-        TestDataFactory.insertTestData(5);
+        SignatureTestDataFactory.insertTestData(5);
 
         Account account = (Account)new BaseAccountTestDataBuilder().create(); 
         insert account;

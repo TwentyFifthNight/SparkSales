@@ -30,6 +30,7 @@ export default class ProductSearch extends NavigationMixin(LightningElement) {
         { label: this.label.name, fieldName: 'Name', type: 'text'},
         { label: this.label.productCode, fieldName: 'ProductCode', type: 'text'},
         { label: this.label.family, fieldName: 'Family', type: 'text'},
+        { label: this.label.external, fieldName: 'IsExternal__c', type: 'boolean', initialWidth: 100 }
     ];
     orderColumns = [
         { label: this.label.productName, fieldName: 'name', type: 'text'},
@@ -215,6 +216,7 @@ export default class ProductSearch extends NavigationMixin(LightningElement) {
         let offsetValue = this.recordsPerPage * (pageNumber - 1);
         await getRecordList({ parameters: { nameAndCode: this.nameAndCode, family: this.family, offset: offsetValue, recordsPerPage: this.recordsPerPage, opportunityId: this.recordId} })
             .then(result => {
+                console.log(JSON.stringify(result));
                 this.products = result;
             })
             .catch(error => {
