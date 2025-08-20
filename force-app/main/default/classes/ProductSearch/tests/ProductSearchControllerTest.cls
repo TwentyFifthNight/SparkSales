@@ -12,8 +12,7 @@ private class ProductSearchControllerTest {
             Constants.Product.Family.CABLES
         };
 
-        List<Product2> products = constructProducts(30, familyNames);
-        insert products;
+        List<Product2> products = buildProducts(30, familyNames);
 
         List<PricebookEntry> pricebookEntries = constructPricebookEntries(products);
         insert pricebookEntries;
@@ -28,15 +27,14 @@ private class ProductSearchControllerTest {
         insert opportunityLineItems;
     }
 
-    private static List<Product2> constructProducts(Integer count, List<String> familyNames) {
+    private static List<Product2> buildProducts(Integer count, List<String> familyNames) {
         List<Product2> products = new List<Product2>();
         for (Integer i = 0; i < count; i++) {
-            Product2 product = (Product2)new ProductTestDataBuilder()
+            ProductTestDataBuilder builder = new ProductTestDataBuilder()
                 .withName('Product ' + i)
                 .withCode('Test ' + i)
-                .withFamily(familyNames[Math.mod(i, familyNames.size())])
-                .create();
-            products.add(product);
+                .withFamily(familyNames[Math.mod(i, familyNames.size())]);
+            products.addAll((List<Product2>)new ProductTestDataFactory().buildData(1, builder));
         }
         return products;
     }

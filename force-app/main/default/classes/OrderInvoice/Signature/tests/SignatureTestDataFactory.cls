@@ -1,12 +1,7 @@
-public class TestDataFactory {
+@isTest
+public class SignatureTestDataFactory {
     public static List<Product2> ConstructProducts(Integer cnt){
-        List<Product2> products = new List<Product2>();
-        for(Integer i = 0; i < cnt; i++){
-            Product2 product = new Product2();
-            product.Name = 'TEST' + i;
-            product.IsActive = true;
-            products.add(product);
-        }
+        List<Product2> products = (List<Product2>) new ProductTestDataFactory().buildData(cnt, new ProductTestDataBuilder());
         return products;
     }
 
@@ -39,9 +34,16 @@ public class TestDataFactory {
 
     public static void insertTestData(Integer cnt){
         List<Product2> products = ConstructProducts(cnt);
-        insert products;
 
         List<PricebookEntry> pricebookEntries = ConstructPricebookEntries(products);
         insert pricebookEntries;
+    }
+
+    private class ProductTestDataBuilder extends BaseProductTestDataBuilder {
+        protected virtual override void prepare(){
+            super.prepare();
+            Product2 product = (Product2) record;
+            product.IsActive = true;
+        }
     }
 }

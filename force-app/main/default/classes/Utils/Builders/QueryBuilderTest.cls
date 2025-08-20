@@ -125,6 +125,24 @@ private class QueryBuilderTest {
     }
 
     @isTest
+    static void testQueryWithTwoConditions(){
+        List<Account> accounts = new List<Account>{
+            new Account(Name = 'Zaid', Type = 'Prospect'),
+            new Account(Name = 'Andrew', Type = 'Other')
+        };
+        insert accounts;
+        String queryString = new QueryBuilder('Account')
+            .addField('Name')
+            .addConditions()
+            .add(new QueryBuilder.LikeCondition('Name').likeAnyBoth('ai'))
+            .add(new QueryBuilder.SimpleCondition('Type = \'Other\''))
+            .endConditions()
+            .toString();
+        accounts = Database.query(queryString);
+        Assert.areEqual(0, accounts.size());
+    }
+
+    @isTest
     static void testQueryWithLikeAnyLeftCondition(){
         List<Account> accounts = new List<Account>{
             new Account(Name = 'Zaid', Type = 'Prospect'),

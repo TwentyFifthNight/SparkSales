@@ -35,12 +35,13 @@ public with sharing class ProductSearchService {
         String pricebookProductRelationship = PricebookEntry.Product2Id.getDescribe().getRelationshipName();
         QueryBuilder query = new QueryBuilder(PricebookEntry.sObjectType)
             .addField(PricebookEntry.Product2Id)
-            .addField(pricebookProductRelationship + '.' + Product2.Name)
-            .addField(pricebookProductRelationship + '.' + Product2.ProductCode)
-            .addField(pricebookProductRelationship + '.' + Product2.Family)
+            .addField(PricebookEntry.Product2Id, Product2.Name)
+            .addField(PricebookEntry.Product2Id, Product2.ProductCode)
+            .addField(PricebookEntry.Product2Id, Product2.Family)
+            .addField(PricebookEntry.Product2Id, Product2.ExternalId__c)
             .addConditionsWithOrder(orderOfQuery)
-            .add(new QueryBuilder.LikeCondition(pricebookProductRelationship + '.' + Product2.Name).likeAnyBoth(parameters.NameAndCode))
-            .add(new QueryBuilder.LikeCondition(pricebookProductRelationship + '.' + Product2.ProductCode).likeAnyBoth(parameters.NameAndCode))
+            .add(new QueryBuilder.LikeCondition(PricebookEntry.Product2Id, Product2.Name).likeAnyBoth(parameters.NameAndCode))
+            .add(new QueryBuilder.LikeCondition(PricebookEntry.Product2Id, Product2.ProductCode).likeAnyBoth(parameters.NameAndCode))
             .add(new QueryBuilder.SimpleCondition(PricebookEntry.Pricebook2Id + ' = \'' + priceBookId + '\''))
             .add(new QueryBuilder.SimpleCondition(pricebookProductRelationship + '.' + Product2.Family + ' = \'' + parameters.Family + '\''))
             .endConditions()
@@ -64,9 +65,16 @@ public with sharing class ProductSearchService {
     private static List<Product2> pricebookEntryToProduct(List<PricebookEntry> pricebookEntries){
         List<Product2> products = new List<Product2>();
         for(PricebookEntry pricebookEntry : pricebookEntries){
-            Product2 product = new Product2(Id = pricebookEntry.Product2Id, Name = pricebookEntry.Product2.Name, Family = pricebookEntry.Product2.Family, ProductCode = pricebookEntry.Product2.ProductCode);
+            Product2 product = new Product2(
+                Id = pricebookEntry.Product2Id, 
+                Name = pricebookEntry.Product2.Name, 
+                Family = pricebookEntry.Product2.Family, 
+                ProductCode = pricebookEntry.Product2.ProductCode,
+                ExternalId__c = pricebookEntry.Product2.ExternalId__c
+            );
             products.add(product);
         }
+        Formula.recalculateFormulas(products);
         return products;
     }
 
@@ -213,7 +221,6 @@ public with sharing class ProductSearchService {
             insert orderItemsToInsert;
             return order.Id;
         } catch (Exception e) {
-            System.debug(e.getMessage());
             Database.rollback(savePoint);
             throw new AuraHandledException(e.getMessage());
         }

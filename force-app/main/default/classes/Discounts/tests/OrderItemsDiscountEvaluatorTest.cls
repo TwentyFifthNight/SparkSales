@@ -8,8 +8,7 @@ private class OrderItemsDiscountEvaluatorTest {
         Account account = (Account)new BaseAccountTestDataBuilder().create();
         insert account;
 
-        List<Product2> products = ConstructProducts(5);
-        insert products;
+        List<Product2> products = new ProductTestDataFactory().buildData(5, new ProductTestDataBuilder());
 
         List<PricebookEntry> pricebookEntries = ConstructPricebookEntries(products);
         insert pricebookEntries;
