@@ -1,30 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
-		<members>Discount_Strategy_Setting.Default_strategy</members>
-		<members>Trigger_Action.Discount_BlockUpdateOfUsed</members>
-		<members>Trigger_Action.Discount_PreventDeletion</members>
-		<members>Trigger_Action.OrderItem_RecreateDiscountsAfterDelete</members>
-		<members>Trigger_Action.OrderItem_RecreateDiscountsAfterInsert</members>
-		<members>Trigger_Action.OrderItem_RecreateDiscountsAfterUpdate</members>
-		<members>Trigger_Action.Order_CreateInvoiceWhenActivatedOnInsert</members>
-		<members>Trigger_Action.Order_CreateInvoiceWhenActivatedOnUpdate</members>
-		<members>Trigger_Action.Order_ResetSignedStatusAfterActivation</members>
-		<members>Trigger_Action.Product_PreventDeletion</members>
-		<members>Trigger_Action.Product_SendInsertedToExternal</members>
-		<members>Trigger_Action.Product_SendUpdatedToExternal</members>
-		<members>sObject_Trigger_Setting.Discount</members>
-		<members>sObject_Trigger_Setting.Order</members>
-		<members>sObject_Trigger_Setting.OrderItem</members>
-		<members>sObject_Trigger_Setting.Product</members>
-		<members>sObject_Trigger_Setting.RequestLog</members>
-		<name>CustomMetadata</name>
-	</types>
-	<types>
-		<members>Admin_Email_Recipients__c</members>
-		<members>Product2</members>
-		<members>RequestLog__c</members>
-		<members>RequestProduct__c</members>
+		<members>Case</members>
+		<members>ComplaintItem__c</members>
+		<members>ProductComplaintResponseEvent__e</members>
 		<name>CustomObject</name>
 	</types>
 	<version>64.0</version>

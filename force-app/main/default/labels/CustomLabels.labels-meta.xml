@@ -358,4 +358,60 @@
         <shortDescription>Text for when the REST API DML limit was exceeded</shortDescription>
         <value>Limit of DML statements exceeded.</value>
     </labels>
+    <labels>
+        <fullName>productComplaintLabel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text For LWC Modal Label</shortDescription>
+        <value>Product Complaint</value>
+    </labels>
+    <labels>
+        <fullName>complaintCreationSuccessMessage</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Toast message for Complaint LWC</shortDescription>
+        <value>Complaint created successfully</value>
+    </labels>
+    <labels>
+        <fullName>complaintCreationFailMessage</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Toast message for Complaint LWC</shortDescription>
+        <value>Complaint creation failed: </value>
+    </labels>
+    <labels>
+        <fullName>successTitle</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Toast title text</shortDescription>
+        <value>Success</value>
+    </labels>
+    <labels>
+        <fullName>errorTitle</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Toast title text</shortDescription>
+        <value>Error</value>
+    </labels>
+    <labels>
+        <fullName>externalComplaintSendingError</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Aura Exception message</shortDescription>
+        <value>There was an error while sending complaints to external system.</value>
+    </labels>
+    <labels>
+        <fullName>approvalProcessCreationError</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Aura Exception message</shortDescription>
+        <value>There was an error while creating approval processes.</value>
+    </labels>
+    <labels>
+        <fullName>createButton</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for a button</shortDescription>
+        <value>Create</value>
+    </labels>
 </CustomLabels>
