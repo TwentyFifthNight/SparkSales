@@ -1,0 +1,38 @@
+<template>
+    <lightning-modal-header label={label.productComplaintLabel}></lightning-modal-header>
+    <lightning-modal-body>
+        <div class="slds-is-relative">
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text={label.loadingSpinnerText} size="medium" style="z-index: 9100;"></lightning-spinner>
+            </template>
+            <div class="slds-m-vertical_small">
+                <lightning-datatable
+                    key-field="Id"
+                    data={products}
+                    columns={columns}
+                    selected-rows={selectedProductIds}
+                    onrowselection={handleRowSelection}
+                    resize-column-disabled
+                ></lightning-datatable>
+            </div>
+            <template if:true={error}>
+                <p class="slds-text-color_error" data-id="error-message">{error.body.message}</p>
+            </template>
+        </div>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button
+            class="slds-button"
+            variant="neutral"
+            label={label.cancelButton}
+            onclick={handleDismiss}
+        ></lightning-button>
+        <lightning-button lwc:if={showCreateButton}
+            class="slds-button slds-m-left_x-small"
+            variant="brand"
+            label={label.createButton}
+            onclick={handleCreateButton}
+            disabled={disableButton}
+        ></lightning-button>
+    </lightning-modal-footer>
+</template>

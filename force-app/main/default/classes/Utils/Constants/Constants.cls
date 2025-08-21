@@ -26,6 +26,12 @@ public class Constants {
         }
     }
 
+    public static final String EXTERNAL_COMPLAINT_EVENT_API_ENDPOINT {
+        get {
+            return 'callout:External_Data_Org/services/data/v62.0/sobjects/ProductComplaintEvent__e/';
+        }
+    }
+
     public static final AccountConstants Account {
         get {
             return new AccountConstants();
