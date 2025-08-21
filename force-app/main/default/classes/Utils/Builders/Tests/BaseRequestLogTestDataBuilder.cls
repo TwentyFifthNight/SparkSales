@@ -1,6 +1,6 @@
 public virtual class BaseRequestLogTestDataBuilder extends TestDataBuilder {
     public BaseRequestLogTestDataBuilder() {
-         record = new RequestLog__c();
+        record = new RequestLog__c();
     }
 
     protected override void prepare() {

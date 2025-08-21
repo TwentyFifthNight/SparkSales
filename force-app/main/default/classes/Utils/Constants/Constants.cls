@@ -20,6 +20,25 @@ public class Constants {
         private set;
     }
 
+    public static RequestLogSetting__mdt REQUEST_LOG_SETTING {
+        get {
+            if (REQUEST_LOG_SETTING == null) {
+                List<RequestLogSetting__mdt> settings = [SELECT MaxAttemptNumber__c, MaxProductsPerRequest__c, MaxRequestsPerBatch__c FROM RequestLogSetting__mdt LIMIT 1];
+                if (settings.size() > 0) {
+                    REQUEST_LOG_SETTING = settings[0];
+                } else {
+                    return new RequestLogSetting__mdt(
+                        MaxAttemptNumber__c = 3,
+                        MaxProductsPerRequest__c = 50,
+                        MaxRequestsPerBatch__c = 1
+                    );
+                }
+            }
+            return REQUEST_LOG_SETTING;
+        }
+        private set;
+    }
+
     public static final String PRODUCT_SYNC_API_ENDPOINT { 
         get { 
             return 'callout:External_Data_Org/services/apexrest/Product/sync/';

@@ -1,6 +1,6 @@
 public virtual class BaseRequestProductTestDataBuilder extends TestDataBuilder {
     public BaseRequestProductTestDataBuilder() {
-         record = new RequestProduct__c();
+        record = new RequestProduct__c();
     }
 
     public BaseRequestProductTestDataBuilder withProduct(Product2 product) {

@@ -1,0 +1,8 @@
+<html>
+Hello, <br><br>
+
+A new request to send Product to the external system failed its third attempt. Please check the request logs. <br><br>
+
+Request Logs: <br>
+{!logsPlaceholder}
+</html>
