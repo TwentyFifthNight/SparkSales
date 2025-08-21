@@ -1,17 +1,18 @@
 public class BatchSyncFailedRequest implements Database.Batchable<sObject>, Database.AllowsCallouts, Database.Stateful {
     List<Id> requestToEmailIds;
 
-    public Database.QueryLocator start(Database.BatchableContext Bc) {
+    public Database.QueryLocator start(Database.BatchableContext bc) {
         requestToEmailIds = new List<Id>();
+        Integer maxAttemptNumber = (Integer)Constants.REQUEST_LOG_SETTING.MaxAttemptNumber__c;
         return Database.getQueryLocator([
             SELECT Id, AttemptNumber__c, Status__c
             FROM RequestLog__c
             WHERE Status__c = :Constants.RequestLog.Status.FAILED
-            AND AttemptNumber__c < :Constants.RequestLog.MAX_ATTEMPT_NUMBER
+            AND AttemptNumber__c < :maxAttemptNumber
         ]);
     }
     
-    public void execute(Database.BatchableContext Bc, List<RequestLog__c> scope) {
+    public void execute(Database.BatchableContext bc, List<RequestLog__c> scope) {
         Map<Id, RequestLog__c> requestLogMap = new Map<Id, RequestLog__c>();
         for (RequestLog__c requestLog : scope) {
             requestLogMap.put(requestLog.Id, requestLog);
@@ -102,7 +103,7 @@ public class BatchSyncFailedRequest implements Database.Batchable<sObject>, Data
         
         insert oldIdToNewRequestLog.values();
 
-        Integer maxAttempt = Constants.RequestLog.MAX_ATTEMPT_NUMBER;
+        Integer maxAttempt = (Integer)Constants.REQUEST_LOG_SETTING.MaxAttemptNumber__c;
         for (RequestLog__c log : oldIdToNewRequestLog.values()) {
             if (log.Status__c == Constants.RequestLog.Status.FAILED && log.AttemptNumber__c == maxAttempt) {
                 requestToEmailIds.add(log.Id);
@@ -157,11 +158,7 @@ public class BatchSyncFailedRequest implements Database.Batchable<sObject>, Data
         return requestLog;
     }
 
-    public void finish(Database.BatchableContext BC) {
-        if (Test.isRunningTest()) {
-            return;
-        }
-
+    public void finish(Database.BatchableContext bc) {
         List<RequestLog__c> requestLogsToEmail = [
             SELECT Name 
             FROM RequestLog__c 
@@ -172,7 +169,14 @@ public class BatchSyncFailedRequest implements Database.Batchable<sObject>, Data
             return;
         }
 
-        List<Admin_Email_Recipients__c> adminEmails = [SELECT Email_Address__c FROM Admin_Email_Recipients__c];
+        List<Admin_Email_Recipients__c> adminEmails; 
+        if (!Test.isRunningTest()) {
+            adminEmails = [SELECT Email_Address__c FROM Admin_Email_Recipients__c];
+        } else {
+            adminEmails = new List<Admin_Email_Recipients__c>{
+                new Admin_Email_Recipients__c(Email_Address__c = 'example@example.com')
+            };
+        }
         if (adminEmails.isEmpty()) {
             return;
         }

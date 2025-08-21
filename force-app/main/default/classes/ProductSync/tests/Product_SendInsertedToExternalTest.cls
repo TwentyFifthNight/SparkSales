@@ -14,7 +14,7 @@ private class Product_SendInsertedToExternalTest {
         insert productsToSend;
         Test.stopTest();
 
-        Integer expectedSize = productCount / Constants.RequestLog.MAX_PRODUCTS_PER_REQUEST;
+        Integer expectedSize = productCount / (Integer)Constants.REQUEST_LOG_SETTING.MaxProductsPerRequest__c;
         List<RequestLog__c> requestLogs = [SELECT Id, Status__c, AttemptNumber__c FROM RequestLog__c];
         Assert.areEqual(expectedSize, requestLogs.size());
     }

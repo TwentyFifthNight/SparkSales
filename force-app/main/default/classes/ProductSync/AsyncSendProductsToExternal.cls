@@ -10,7 +10,7 @@ public class AsyncSendProductsToExternal implements Queueable, Database.AllowsCa
     public void execute(QueueableContext context) {
         List<RequestLog> requestLogs = new List<RequestLog>();
         List<Product2> productBatch = new List<Product2>();
-        Integer batchSize = Constants.RequestLog.MAX_PRODUCTS_PER_REQUEST;
+        Integer batchSize = (Integer)Constants.REQUEST_LOG_SETTING.MaxProductsPerRequest__c;
         for (Integer i = 0; i < products.size(); i++) {
             productBatch.add(products[i]);
             if (productBatch.size() == batchSize) {
