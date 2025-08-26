@@ -4,8 +4,6 @@ public class Product_SendUpdatedToExternal implements TriggerAction.AfterUpdate 
         for(Product2 product : newList){
             products.add(product);
         }
-        
-        AsyncSendProductsToExternal job = new AsyncSendProductsToExternal(products, Constants.RestAPI.Method.PATCH);
-        System.enqueueJob(job);
+        ProductSendToExternalHelper.createPendingRequests(products);
     }
 }

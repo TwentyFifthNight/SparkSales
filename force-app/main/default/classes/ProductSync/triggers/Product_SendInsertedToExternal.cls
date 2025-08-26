@@ -7,8 +7,7 @@ public class Product_SendInsertedToExternal implements TriggerAction.AfterInsert
             }
         }
         if (!products.isEmpty()) {
-            AsyncSendProductsToExternal job = new AsyncSendProductsToExternal(products, Constants.RestAPI.Method.POST);
-            System.enqueueJob(job);
+            ProductSendToExternalHelper.createPendingRequests(products);
         }
     }
 }

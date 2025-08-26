@@ -4,11 +4,27 @@ public class BatchSyncFailedRequest implements Database.Batchable<sObject>, Data
     public Database.QueryLocator start(Database.BatchableContext bc) {
         requestToEmailIds = new List<Id>();
         Integer maxAttemptNumber = (Integer)Constants.REQUEST_LOG_SETTING.MaxAttemptNumber__c;
+
+        List<AsyncApexJob> jobs = [
+            SELECT Id, Status, JobType
+            FROM AsyncApexJob
+            WHERE JobType = 'BatchApex'
+            AND ApexClass.Name = :BatchSyncFailedRequest.class.getName()
+            AND Status NOT IN ('Completed', 'Aborted')
+        ];
+
+        if(jobs.size() > 1) {
+            return Database.getQueryLocator([
+                SELECT Id, AttemptNumber__c, Status__c, SourceLog__c
+                FROM RequestLog__c
+                WHERE Id = null
+            ]);
+        }
+
         return Database.getQueryLocator([
-            SELECT Id, AttemptNumber__c, Status__c
+            SELECT Id, AttemptNumber__c, Status__c, SourceLog__c
             FROM RequestLog__c
-            WHERE Status__c = :Constants.RequestLog.Status.FAILED
-            AND AttemptNumber__c < :maxAttemptNumber
+            WHERE Status__c = :Constants.RequestLog.Status.PENDING
         ]);
     }
     
@@ -18,15 +34,15 @@ public class BatchSyncFailedRequest implements Database.Batchable<sObject>, Data
             requestLogMap.put(requestLog.Id, requestLog);
         }
 
-        List<RequestProduct__c> failedRequestProducts = [
+        List<RequestProduct__c> requestProducts = [
             SELECT RequestLog__r.Id, Product__c 
             FROM RequestProduct__c 
             WHERE RequestLog__r.Id IN :requestLogMap.keySet()
         ];
 
         Set<Id> productIds = new Set<Id>();
-        for (RequestProduct__c failedRequest : failedRequestProducts) {
-            productIds.add(failedRequest.Product__c);
+        for (RequestProduct__c requestProduct : requestProducts) {
+            productIds.add(requestProduct.Product__c);
         }
         Map<Id, Product2> products = new Map<Id, Product2>([
             SELECT Name, ProductCode, Family, IsActive, ExternalId__c, IsExternal__c, LastModifiedDate 
@@ -35,17 +51,17 @@ public class BatchSyncFailedRequest implements Database.Batchable<sObject>, Data
         ]);
 
         Map<Id, RequestItem> requestItemsMap = new Map<Id, RequestItem>();
-        for (RequestProduct__c failedRequest : failedRequestProducts) {
-            if (!requestItemsMap.containsKey(failedRequest.RequestLog__r.Id)) {
+        for (RequestProduct__c requestProduct : requestProducts) {
+            if (!requestItemsMap.containsKey(requestProduct.RequestLog__r.Id)) {
                 requestItemsMap.put(
-                    failedRequest.RequestLog__r.Id, 
+                    requestProduct.RequestLog__r.Id, 
                     new RequestItem(
-                        requestLogMap.get(failedRequest.RequestLog__r.Id)
+                        requestLogMap.get(requestProduct.RequestLog__r.Id)
                     )
                 );
             }
-            requestItemsMap.get(failedRequest.RequestLog__r.Id).products.add(
-                products.get(failedRequest.Product__c)
+            requestItemsMap.get(requestProduct.RequestLog__r.Id).products.add(
+                products.get(requestProduct.Product__c)
             );
         }
 
@@ -88,48 +104,44 @@ public class BatchSyncFailedRequest implements Database.Batchable<sObject>, Data
     }
 
     private void createRequestLogs(HttpResponse response, List<RequestItem> requestItems) {
-        Map<Id, RequestLog__c> oldIdToNewRequestLog = new Map<Id, RequestLog__c>();
+        List<RequestLog__c> requestLogsToUpdate = new List<RequestLog__c>();
         if (response.getStatus() == 'OK') {
             ProductSyncResponse.ResponseWrapper responseObject = (ProductSyncResponse.ResponseWrapper) JSON.deserialize(response.getBody(), ProductSyncResponse.ResponseWrapper.class);
-            oldIdToNewRequestLog = createOldIdToNewRequestLogMap(responseObject, requestItems);
+            requestLogsToUpdate = createUpdatedLogs(responseObject, requestItems);
         } else {
             String responseBody = response.getBody();
             Integer responseCode = response.getStatusCode();
             for (RequestItem item : requestItems) {
                 RequestLog__c requestLog = createRequestLog(item, responseBody, responseCode);
-                oldIdToNewRequestLog.put(item.log.Id, requestLog);
+                requestLogsToUpdate.add(requestLog);
             }
         }
         
-        insert oldIdToNewRequestLog.values();
+        update requestLogsToUpdate;
 
         Integer maxAttempt = (Integer)Constants.REQUEST_LOG_SETTING.MaxAttemptNumber__c;
-        for (RequestLog__c log : oldIdToNewRequestLog.values()) {
+        for (RequestLog__c log : requestLogsToUpdate) {
             if (log.Status__c == Constants.RequestLog.Status.FAILED && log.AttemptNumber__c == maxAttempt) {
                 requestToEmailIds.add(log.Id);
             }
         }
 
-        List<RequestProduct__c> newRequestProducts = new List<RequestProduct__c>();
-        for (RequestItem item : requestItems) {
-            for (Product2 product : item.products) {
-                RequestProduct__c newProduct = new RequestProduct__c(RequestLog__c = oldIdToNewRequestLog.get(item.log.Id).Id, Product__c = product.Id);
-                newRequestProducts.add(newProduct);
+        List<Id> oldLogIds = new List<Id>();
+        for (RequestLog__c requestLog : requestLogsToUpdate) {
+            if (requestLog.SourceLog__c != null) {
+                oldLogIds.add(requestLog.SourceLog__c);
             }
         }
-        insert newRequestProducts;
 
-
-        List<RequestLog__c> oldLogs = new List<RequestLog__c>();
-        for (RequestItem item : requestItems) {
-            item.log.Status__c = Constants.RequestLog.Status.REATTEMPTED;
-            oldLogs.add(item.log);
+        List<RequestLog__c> oldLogs = [SELECT Id FROM RequestLog__c WHERE Id IN :oldLogIds];
+        for (RequestLog__c oldLog : oldLogs) {
+            oldLog.Status__c = Constants.RequestLog.Status.REATTEMPTED;
         }
         update oldLogs;
     }
 
-    private Map<Id, RequestLog__c> createOldIdToNewRequestLogMap(ProductSyncResponse.ResponseWrapper responseObject, List<RequestItem> requestItems) {
-        Map<Id, RequestLog__c> oldIdToNewRequestLog = new Map<Id, RequestLog__c>();
+    private List<RequestLog__c> createUpdatedLogs(ProductSyncResponse.ResponseWrapper responseObject, List<RequestItem> requestItems) {
+        List<RequestLog__c> updatedLogs = new List<RequestLog__c>();
         for (Integer i = 0; i < requestItems.size(); i += 1) {
             RequestItem item = requestItems[i];
             String responseBody;
@@ -142,23 +154,33 @@ public class BatchSyncFailedRequest implements Database.Batchable<sObject>, Data
                 responseBody = JSON.serialize(responseObject.responseList.get(i).body);
             }
             RequestLog__c requestLog = createRequestLog(item, responseBody, responseCode);
-            oldIdToNewRequestLog.put(item.log.Id, requestLog);
+            updatedLogs.add(requestLog);
         }
-        return oldIdToNewRequestLog;
+        return updatedLogs;
     }
 
     private RequestLog__c createRequestLog(RequestItem item, String responseBody, Integer responseCode) {
-        RequestLog__c requestLog = new RequestLog__c();
+        RequestLog__c requestLog = item.log;
         requestLog.ResponseBody__c = responseBody;
         requestLog.RequestBody__c = item.requestBody;
         Boolean requestSucceeded = String.valueOf(responseCode).startsWith('2');
         requestLog.Status__c = requestSucceeded ? Constants.RequestLog.Status.SUCCESS : Constants.RequestLog.Status.FAILED;
-        requestLog.AttemptNumber__c = item.log.AttemptNumber__c + 1;
-        requestLog.SourceLog__c = item.log.Id;
         return requestLog;
     }
 
     public void finish(Database.BatchableContext bc) {
+        sendFailedRequestsEmail();
+        
+        if (Test.isRunningTest()) {
+            return;
+        }
+        Integer remaining = [SELECT COUNT() FROM RequestLog__c WHERE Status__c = :Constants.RequestLog.Status.PENDING];
+        if (remaining > 0) {
+            Database.executeBatch(new BatchSyncFailedRequest(), (Integer)Constants.REQUEST_LOG_SETTING.MaxRequestsPerBatch__c);
+        }
+    }
+
+    private void sendFailedRequestsEmail() {
         List<RequestLog__c> requestLogsToEmail = [
             SELECT Name 
             FROM RequestLog__c 

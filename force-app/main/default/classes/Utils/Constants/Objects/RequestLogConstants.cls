@@ -9,5 +9,6 @@ public class RequestLogConstants {
         public final String SUCCESS { get { return 'Success'; } }
         public final String FAILED { get { return 'Failed'; } }
         public final String REATTEMPTED { get { return 'Reattempted'; } }
+        public final String PENDING { get { return 'Pending'; } }
     }
 }
