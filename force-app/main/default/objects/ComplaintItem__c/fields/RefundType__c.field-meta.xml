@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Status__c</fullName>
-    <label>Status</label>
+    <fullName>RefundType__c</fullName>
+    <label>Refund Type</label>
     <required>false</required>
     <trackTrending>false</trackTrending>
     <type>Picklist</type>
@@ -10,19 +10,14 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Approved</fullName>
+                <fullName>Full</fullName>
                 <default>false</default>
-                <label>Approved</label>
+                <label>Full</label>
             </value>
             <value>
-                <fullName>Rejected</fullName>
+                <fullName>Partial</fullName>
                 <default>false</default>
-                <label>Rejected</label>
-            </value>
-            <value>
-                <fullName>Error</fullName>
-                <default>false</default>
-                <label>Error</label>
+                <label>Partial</label>
             </value>
         </valueSetDefinition>
     </valueSet>

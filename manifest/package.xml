@@ -1,8 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
-		<members>RequestLog__c</members>
+		<members>Discount_Strategy_Setting.Default_strategy</members>
+		<members>RequestLogSetting.default</members>
+		<name>CustomMetadata</name>
+	</types>
+	<types>
+		<members>Case</members>
+		<members>ComplaintItemCompleted__e</members>
+		<members>ComplaintItem__c</members>
+		<members>Order</members>
+		<members>OrderRefundProduct__c</members>
+		<members>OrderRefund__c</members>
+		<members>ProductComplaintResponseEvent__e</members>
 		<name>CustomObject</name>
+	</types>
+	<types>
+		<members>ComplaintItem_Close_Completed_Case</members>
+		<members>OrderProduct_Prevent_Modyfication_And_Deletion</members>
+		<members>Order_Item_Complaint</members>
+		<members>Partial_Refund_Amount</members>
+		<name>Flow</name>
 	</types>
 	<version>64.0</version>
 </Package>

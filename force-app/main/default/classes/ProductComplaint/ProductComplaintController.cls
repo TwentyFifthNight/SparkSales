@@ -1,4 +1,4 @@
-public class ProductComplaintController {
+public with sharing class ProductComplaintController {
 
     @AuraEnabled(Cacheable=true)
     public static List<Product2> getProducts(String orderId) {
