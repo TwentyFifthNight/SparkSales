@@ -414,4 +414,11 @@
         <shortDescription>Label for a button</shortDescription>
         <value>Create</value>
     </labels>
+    <labels>
+        <fullName>duplicateComplaintError</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Aura Exception message</shortDescription>
+        <value>A complaint has already been created for one of the selected products.</value>
+    </labels>
 </CustomLabels>

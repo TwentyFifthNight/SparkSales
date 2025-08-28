@@ -36,7 +36,7 @@ export default class ProductComplaint extends LightningElement {
             this.products = data;
             this.error = undefined;
         } else if (error) {
-            this.error = result.error;
+            this.error = error;
             this.products = undefined;
         }
         this.isLoading = false;
@@ -136,7 +136,8 @@ export default class ProductComplaint extends LightningElement {
             .catch(error => {
                 this.isLoading = false;
                 this.blockButton = false;
-                this.error = error;
+                //this.error = error;
+                this.showToast(this.label.errorTitle, error.body.message, 'error');
             })
         
     }

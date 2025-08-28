@@ -51,6 +51,12 @@ public class Constants {
         }
     }
 
+    public static final String EXTERNAL_COMPLAINT_COMPLETED_EVENT_API_ENDPOINT {
+        get {
+            return 'callout:External_Data_Org/services/data/v62.0/sobjects/ExternalComplaintCompleted__e/';
+        }
+    }
+
     public static final AccountConstants Account {
         get {
             return new AccountConstants();
@@ -96,6 +102,17 @@ public class Constants {
     public static final RequestLogConstants RequestLog {
         get {
             return new RequestLogConstants();
+        }
+    }
+
+    public static final CaseConstants CaseConstants {
+        get {
+            return new CaseConstants();
+        }
+    }
+    public static final ComplaintItemConstants ComplaintItem {
+        get {
+            return new ComplaintItemConstants();
         }
     }
 }

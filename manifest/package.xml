@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
-		<members>RequestLog__c</members>
-		<name>CustomObject</name>
+		<members>Trigger_Action.ComplaintItemsCompleted_UpdateInternal</members>
+		<members>Trigger_Action.ProductComplaintResponseEvent_UpdateCase</members>
+		<members>sObject_Trigger_Setting.ComplaintItemCompleted</members>
+		<members>sObject_Trigger_Setting.ProductComplaintResponseEvent</members>
+		<name>CustomMetadata</name>
 	</types>
 	<version>64.0</version>
 </Package>
