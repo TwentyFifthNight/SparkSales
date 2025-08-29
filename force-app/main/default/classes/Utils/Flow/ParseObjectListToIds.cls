@@ -1,4 +1,17 @@
 public with sharing class ParseObjectListToIds {
+    private static List<String> parseObjectListToIdList(List<SObject> records) {
+        List<String> ids = new List<String>();
+        if (records == null) {
+            return ids;
+        }
+        for (SObject record : records) {
+            if (record != null && record.Id != null) {
+                ids.add(record.Id);
+            }
+        }
+        return ids;
+    }
+    
     @InvocableMethod(
         label='Parse Object List To Ids'
         description='Parses a list of SObjects from Flow and returns a list of their Ids.'
@@ -10,16 +23,7 @@ public with sharing class ParseObjectListToIds {
             return results;
         }
         for (List<SObject> recordList : records) {
-            List<String> ids = new List<String>();
-            if (recordList == null) {
-                results.add(ids);
-                continue;
-            }
-            for (SObject record : recordList) {
-                if (record != null && record.Id != null) {
-                    ids.add(record.Id);
-                }
-            }
+            List<String> ids = parseObjectListToIdList(recordList);
             results.add(ids);
         }
         return results;

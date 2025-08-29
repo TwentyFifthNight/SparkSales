@@ -1,5 +1,5 @@
 public with sharing class FlowUtils {
-    public static List<String> parseCheckboxGroupString(String checkboxGroupValue) {
+    private static List<String> parseCheckboxGroupString(String checkboxGroupValue) {
         List<String> selectedValues = new List<String>();
         if (String.isBlank(checkboxGroupValue)) {
             return selectedValues;
@@ -19,7 +19,7 @@ public with sharing class FlowUtils {
         description='Parses a semicolon-separated string from a Flow Checkbox Group into a collection of strings.'
         category='Flow Utils'
     )
-    public static List<List<String>> parseCheckboxGroupForFlow(List<String> checkboxGroupStrings) {
+    public static List<List<String>> parseCheckboxGroupOutput(List<String> checkboxGroupStrings) {
         List<List<String>> results = new List<List<String>>();
         for (String singleCheckboxString : checkboxGroupStrings) {
             List<String> parsedValues = parseCheckboxGroupString(singleCheckboxString);
